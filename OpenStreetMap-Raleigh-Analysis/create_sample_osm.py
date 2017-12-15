@@ -1,0 +1,42 @@
+### The majority of this code is provided by the Udacity Data Wrangling Project. ###
+
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import xml.etree.cElementTree as ET  # Use cElementTree or lxml if too slow
+import time
+
+start_time = time.clock()
+
+OSM_FILE = "raleigh_north-carolina.osm"  # Replace this with your osm file
+SAMPLE_FILE = "sample.osm"
+
+k = 100 # Parameter: take every k-th top level element
+
+def get_element(osm_file, tags=('node', 'way', 'relation')):
+    """Yield element if it is the right type of tag
+
+    Reference:
+    http://stackoverflow.com/questions/3095434/inserting-newlines-in-xml-file-generated-via-xml-etree-elementtree-in-python
+    """
+    context = iter(ET.iterparse(osm_file, events=('start', 'end')))
+    _, root = next(context)
+    for event, elem in context:
+        if event == 'end' and elem.tag in tags:
+            yield elem
+            root.clear()
+
+
+with open(SAMPLE_FILE, 'wb') as output:
+    output.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+    output.write('<osm>\n  ')
+
+    # Write every kth top level element
+    for i, element in enumerate(get_element(OSM_FILE)):
+        if i % k == 0:
+            output.write(ET.tostring(element, encoding='utf-8'))
+
+    output.write('</osm>')
+    file
+
+print("Sample osm file write complete! Process took " + str(round(time.clock() - start_time, 2)) + " seconds.")
