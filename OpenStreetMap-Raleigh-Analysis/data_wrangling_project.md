@@ -11,3 +11,5 @@
 * Python Documentation
   * [Regex](https://docs.python.org/3/library/re.html?s)
   * [The ElementTree XML API](https://docs.python.org/3/library/xml.etree.elementtree.html?)
+* StackOverflow
+  * [Printing Dictionaries to Files](https://stackoverflow.com/questions/36965507/writing-a-dictionary-to-a-text-file-in-python)
