@@ -37,8 +37,9 @@ def audit_postcodes(element, tag):
         element = check_postcode("way_tags")
 
     # Writes the changes to a text file and returns audited element.
-    if len(bad_zip4) or len(bad_char) or len(unknown) > 0:
-        with open("changelist.txt", "a") as file:
-            auditted_codes = {"Zip+4":bad_zip4, "Characters":bad_char, "Unknown":unknown}
-            file.write(json.dumps(auditted_codes) + "\n")
+    with open("changelist.txt", "a") as file:
+        auditted_codes = {"Zip+4":bad_zip4, "Characters":bad_char, "Unknown":unknown}
+        for key, value in auditted_codes.items():
+            if len(value) > 0:
+                file.write(key + ":" + json.dumps(value) + "\n")
     return element
