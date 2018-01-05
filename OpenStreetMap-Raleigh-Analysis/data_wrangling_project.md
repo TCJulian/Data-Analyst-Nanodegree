@@ -9,7 +9,8 @@
 
 * [TagInfo](https://taginfo.openstreetmap.org/keys). Identifies the usage and meaning of different keys in OSM files. 
 * Python Documentation
-  * [Regex](https://docs.python.org/3/library/re.html?s)
+  * [regex](https://docs.python.org/3/library/re.html?s)
   * [The ElementTree XML API](https://docs.python.org/3/library/xml.etree.elementtree.html?)
 * StackOverflow
   * [Printing Dictionaries to Files](https://stackoverflow.com/questions/36965507/writing-a-dictionary-to-a-text-file-in-python)
+  * [Using Variables in re](https://stackoverflow.com/questions/6930982/how-to-use-a-variable-inside-a-regular-expression)
