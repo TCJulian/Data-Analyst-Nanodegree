@@ -1,5 +1,5 @@
 #### Count Number of Unique Users
-~~~~
+~~~~SQL
   SELECT COUNT(*) 
     FROM (  SELECT user, COUNT(*)
               FROM nodes 
@@ -8,7 +8,7 @@
 ~~~~
 
 #### Show Top Ten Contributors
-~~~~
+~~~~SQL
   SELECT user, COUNT(*) 
     FROM nodes 
 GROUP BY user 
