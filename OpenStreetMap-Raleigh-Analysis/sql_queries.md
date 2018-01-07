@@ -1,10 +1,10 @@
 #### Count Number of Unique Users
 ~~~~SQL
   SELECT COUNT(*) 
-    FROM (  SELECT user, COUNT(*)
+    FROM (  SELECT user, COUNT(*) AS num
               FROM nodes 
           GROUP BY user 
-          ORDER BY COUNT(*) DESC) AS subquery;
+          ORDER BY num DESC) AS user_nodes;
 ~~~~
 
 #### Show Top Ten Contributors
