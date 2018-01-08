@@ -1,6 +1,49 @@
 # SQL Queries 
 
 This file holds all of the different queries done on the database. Not all are included in the final report.
+## General
+
+#### Total nodes and ways
+~~~~SQL
+SELECT COUNT(*) 
+  FROM (SELECT id 
+          FROM nodes 
+          
+         UNION ALL 
+          
+        SELECT id 
+          FROM ways) AS total_rows;
+~~~~
+
+#### Total Unique Users
+~~~~SQL
+SELECT COUNT(*)
+  FROM (  SELECT user, COUNT(*) AS num
+            FROM nodes
+        GROUP BY user
+
+           UNION
+
+          SELECT user, COUNT(*) AS num
+            FROM ways
+        GROUP BY user) AS total_users;
+~~~~
+
+#### Top Five Contributors
+~~~~SQL
+  SELECT user, num
+    FROM (  SELECT user, COUNT(*) AS num
+              FROM nodes
+          GROUP BY user
+
+             UNION
+
+            SELECT user, COUNT(*) AS num
+              FROM ways
+          GROUP BY user) AS total_users 
+ORDER BY num DESC
+   LIMIT 5;
+~~~~
 
 ## Nodes
 
