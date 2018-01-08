@@ -1,3 +1,15 @@
+# SQL Queries 
+
+This file holds all of the different queries done on the database. Not all are included in the final report.
+
+## Nodes
+
+#### Total nodes
+~~~~SQL
+  SELECT COUNT(*) 
+    FROM nodes;
+~~~~
+
 #### Number of Unique Users for Nodes
 ~~~~SQL
   SELECT COUNT(*) 
@@ -36,3 +48,38 @@ ORDER BY COUNT(*) DESC,
    LIMIT 10;
 ~~~~
 
+## Ways
+
+#### Total ways
+~~~~SQL
+  SELECT COUNT(*) 
+    FROM nodes;
+~~~~
+
+#### Number of Unique Users for Ways
+~~~~SQL
+  SELECT COUNT(*) 
+    FROM (  SELECT user, COUNT(*) AS num
+              FROM ways 
+          GROUP BY user 
+          ORDER BY num DESC) AS user_ways;
+~~~~
+
+#### Top Ten Contributors for ways
+~~~~SQL
+  SELECT user, COUNT(*)
+    FROM ways 
+GROUP BY user 
+ORDER BY COUNT(*) DESC    
+   LIMIT 10;
+~~~~
+ 
+#### Major Counties in ways
+~~~~SQL
+  SELECT value, COUNT(*) 
+    FROM ways_tags 
+   WHERE key="county" 
+GROUP BY value 
+ORDER BY COUNT(*) DESC 
+   LIMIT 10;
+~~~~
