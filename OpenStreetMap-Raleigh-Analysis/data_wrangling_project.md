@@ -15,4 +15,5 @@
   * [sqlstyle](http://www.sqlstyle.guide/)
 * StackOverflow
   * [Printing Dictionaries to Files](https://stackoverflow.com/questions/36965507/writing-a-dictionary-to-a-text-file-in-python)
+  * [Removing carriage return values from sqlite](https://stackoverflow.com/questions/4642535/how-to-remove-carriage-returns-in-a-text-field-in-sqlite)
   * [Using Variables in re](https://stackoverflow.com/questions/6930982/how-to-use-a-variable-inside-a-regular-expression)
