@@ -1,9 +1,26 @@
 # OpenStreet Map Data Wrangling Project
 
+## Overview
+
+Raleigh, North Carolina OSM file download: https://mapzen.com/data/metro-extracts/metro/raleigh_north-carolina/
+
 ## Problems while Auditing OSM file
 
 * name_1 key is a depreciated key.
 * tiger and NHD data sources
+
+## Overview of data
+
+### Size of files
+~~~~
+raleigh_north-carolina.osm ......... 465.0 MB
+OSM_db.db .......................... 250.0 MB
+nodes.csv .......................... 183.0 MB
+ways_nodes.csv .....................  60.7 MB
+ways_tags.csv ......................  29.6 MB
+ways.csv ...........................  13.4 MB
+nodes_tags.csv .....................   2.1 MB
+~~~~
 
 ## Resources
 
