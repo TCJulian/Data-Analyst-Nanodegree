@@ -11,6 +11,7 @@ import cerberus
 
 import schema
 import audit_postalcodes
+import audit_phone_nums
 import audit_street_names
 
 OSM_PATH = "raleigh_north-carolina.osm"
@@ -184,6 +185,7 @@ def process_map(file_in, validate):
                 # Audit functions below were created by myself.
                 el = audit_postalcodes.audit_postcodes(el, element.tag)
                 el = audit_street_names.audit_streetnames(el, element.tag)
+                el = audit_phone_nums.audit_phone_nums(el, element.tag)
                 
                 if validate is True:
                     validate_element(el, validator)
