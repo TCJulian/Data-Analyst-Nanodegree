@@ -42,6 +42,15 @@ ORDER BY COUNT(*) DESC
    LIMIT 5;
 ~~~~
 
+### Max/Min Longitudes and Latitudes
+~~~~SQL
+SELECT MAX(lon) AS max_lon, 
+       MIN(lon) AS min_lon,
+       MAX(lat) AS max_lat,
+       MIN(lat) AS min_lat 
+FROM nodes;
+~~~~
+
 ## Nodes
 
 #### Total nodes
@@ -82,8 +91,17 @@ ORDER BY COUNT(*) DESC
     FROM nodes_tags 
    WHERE key = 'city' 
 GROUP BY value 
-ORDER BY COUNT(*) DESC,
+ORDER BY COUNT(*) DESC
    LIMIT 5;
+~~~~
+
+#### Locations with the name "Triangle"
+~~~~SQL
+SELECT value 
+FROM nodes_tags 
+WHERE value LIKE '%Triangle%'
+AND key = 'name' 
+ORDER BY value ASC;
 ~~~~
 
 ## Ways
