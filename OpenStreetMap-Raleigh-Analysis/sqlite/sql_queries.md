@@ -66,6 +66,15 @@ FROM nodes;
               FROM nodes) AS user_nodes;
 ~~~~
 
+#### Most Popular Keys in node tags
+~~~~SQL
+  SELECT key, COUNT(*) 
+    FROM nodes_tags 
+GROUP BY key 
+ORDER BY COUNT(*) DESC 
+   LIMIT 15;
+~~~~
+
 #### Top Ten Contributors for nodes
 ~~~~SQL
   SELECT user, COUNT(*) 
