@@ -25,18 +25,16 @@ nodes_tags.csv .....................   2.1 MB
 ### Number of Unique Users
 ~~~~SQL
 SELECT COUNT(*)
-  FROM (  SELECT user, COUNT(*) AS num
-            FROM nodes
-        GROUP BY user
+    FROM (  SELECT user
+              FROM nodes
+        
+             UNION
 
-           UNION
-
-          SELECT user, COUNT(*) AS num
-            FROM ways
-        GROUP BY user) AS total_users;
+            SELECT user
+              FROM ways) AS total_users;
 ~~~~
 
-1510
+971
 
 ### Number of nodes
 ~~~~SQL
@@ -80,25 +78,24 @@ parking          70
 
 ### Top Five Contributors
 ~~~~SQL
-  SELECT user, num
-    FROM (  SELECT user, COUNT(*) AS num
+  SELECT user, COUNT(*)
+    FROM (  SELECT user
               FROM nodes
-          GROUP BY user
 
-             UNION
+             UNION ALL
 
-            SELECT user, COUNT(*) AS num
-              FROM ways
-          GROUP BY user) AS total_users 
-ORDER BY num DESC
+            SELECT user
+              FROM ways) AS total_users 
+GROUP BY user 
+ORDER BY COUNT(*) DESC
    LIMIT 5;
 ~~~~
 ~~~~SQL
-jumbanho    1488937
-JMDeMai     194439
-woodpeck_f  113815
-bigal945    94938
-bdiscoe     78914
+jumbanho         1556845
+JMDeMai          219539
+bdiscoe          129730
+woodpeck_fixbot  113815
+bigal945         103684
 ~~~~
 
 #### Major Cities in nodes
@@ -108,7 +105,7 @@ bdiscoe     78914
    WHERE key = 'city' 
 GROUP BY value 
 ORDER BY COUNT(*) DESC
-   LIMIT 10;
+   LIMIT 5;
 ~~~~
 ~~~~SQL
 Cary             294
@@ -116,11 +113,6 @@ Durham           289
 Raleigh          238
 Carrboro         143
 Chapel Hill      83
-Morrisville      75
-raleigh          2
-Chapel Hill, NC  1
-Hillsborough     1
-Research Triang  1
 ~~~~
 
 #### Major Counties in ways
@@ -130,7 +122,7 @@ Research Triang  1
    WHERE key="county" 
 GROUP BY value 
 ORDER BY COUNT(*) DESC 
-   LIMIT 10;
+   LIMIT 5;
 ~~~~
 ~~~~SQL
 Wake, NC         9421
@@ -138,11 +130,20 @@ Durham, NC       5212
 Orange, NC       2188
 Chatham, NC      442
 Granville, NC;   25
-Durham, NC:Oran  15
-Granville, NC    15
-Durham, NC:Wake  11
-Alamance, NC:Or  6
-Granville, NC;D  6
+~~~~
+
+### Max/Min Longitudes and Latitudes
+~~~~SQL
+SELECT MAX(lon) AS max_lon, 
+       MIN(lon) AS min_lon,
+       MAX(lat) AS max_lat,
+       MIN(lat) AS min_lat 
+FROM nodes;
+~~~~
+~~~~
+max_lon          min_lon      max_lat     min_lat
+---------------  -----------  ----------  ----------
+-78.577          -79.1159995  36.0509986  35.759
 ~~~~
 
 ## Resources
