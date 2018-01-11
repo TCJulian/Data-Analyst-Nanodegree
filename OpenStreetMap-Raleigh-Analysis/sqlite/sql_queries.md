@@ -17,31 +17,28 @@ SELECT COUNT(*)
 
 #### Total Unique Users
 ~~~~SQL
-SELECT COUNT(*)
-  FROM (  SELECT user, COUNT(*) AS num
-            FROM nodes
-        GROUP BY user
+  SELECT COUNT(*)
+    FROM (  SELECT user
+              FROM nodes
+        
+             UNION
 
-           UNION
-
-          SELECT user, COUNT(*) AS num
-            FROM ways
-        GROUP BY user) AS total_users;
+            SELECT user
+              FROM ways) AS total_users;
 ~~~~
 
 #### Top Five Contributors
 ~~~~SQL
-  SELECT user, num
-    FROM (  SELECT user, COUNT(*) AS num
+  SELECT user, COUNT(*)
+    FROM (  SELECT user
               FROM nodes
-          GROUP BY user
 
-             UNION
+             UNION ALL
 
-            SELECT user, COUNT(*) AS num
-              FROM ways
-          GROUP BY user) AS total_users 
-ORDER BY num DESC
+            SELECT user
+              FROM ways) AS total_users 
+GROUP BY user 
+ORDER BY COUNT(*) DESC
    LIMIT 5;
 ~~~~
 
@@ -56,10 +53,8 @@ ORDER BY num DESC
 #### Number of Unique Users for Nodes
 ~~~~SQL
   SELECT COUNT(*) 
-    FROM (  SELECT user, COUNT(*) AS num
-              FROM nodes 
-          GROUP BY user 
-          ORDER BY num DESC) AS user_nodes;
+    FROM (  SELECT DISTINCT(user)
+              FROM nodes) AS user_nodes;
 ~~~~
 
 #### Top Ten Contributors for nodes
@@ -88,7 +83,7 @@ ORDER BY COUNT(*) DESC
    WHERE key = 'city' 
 GROUP BY value 
 ORDER BY COUNT(*) DESC,
-   LIMIT 10;
+   LIMIT 5;
 ~~~~
 
 ## Ways
@@ -102,10 +97,8 @@ ORDER BY COUNT(*) DESC,
 #### Number of Unique Users for Ways
 ~~~~SQL
   SELECT COUNT(*) 
-    FROM (  SELECT user, COUNT(*) AS num
-              FROM ways 
-          GROUP BY user 
-          ORDER BY num DESC) AS user_ways;
+    FROM (  SELECT DISTINCT(user)
+              FROM ways) AS user_ways;
 ~~~~
 
 #### Top Ten Contributors for ways
@@ -124,5 +117,5 @@ ORDER BY COUNT(*) DESC
    WHERE key="county" 
 GROUP BY value 
 ORDER BY COUNT(*) DESC 
-   LIMIT 10;
+   LIMIT 5;
 ~~~~
