@@ -48,7 +48,7 @@ SELECT MAX(lon) AS max_lon,
        MIN(lon) AS min_lon,
        MAX(lat) AS max_lat,
        MIN(lat) AS min_lat 
-FROM nodes;
+  FROM nodes;
 ~~~~
 
 ## Nodes
@@ -106,10 +106,10 @@ ORDER BY COUNT(*) DESC
 
 #### Locations with the name "Triangle"
 ~~~~SQL
-SELECT value 
-FROM nodes_tags 
-WHERE value LIKE '%Triangle%'
-AND key = 'name' 
+  SELECT value 
+    FROM nodes_tags 
+   WHERE value LIKE '%Triangle%'
+     AND key = 'name' 
 ORDER BY value ASC;
 ~~~~
 
