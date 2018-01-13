@@ -1,9 +1,15 @@
-import collections
-import json
+from json import dumps
 import re
 
 def audit_phone_nums(element, tag):
+    """Audits phone number, writes changelist to file, and returns an updated element.
+
+    Keyword arguments:
+    element -- A shaped element, created by `osm_to_cvs` script
+    tag -- The tag type (`node` or `way`) as a string
+    """
     def audit():
+        """Checks each `phone` tag value, updates value in shaped element, and adds changes to changelist."""
         for tags in element['node_tags']:
             if tags['key'] == 'phone':
                 old_value = tags['value']
@@ -18,6 +24,7 @@ def audit_phone_nums(element, tag):
         return element
 
     def check_phone(num):
+        """Returns phone number with all non-digit characters removed."""
         if not correct_re.search(num):
             num = re.sub(r'\D', '', num)
             if not correct_re.search(num):
@@ -33,7 +40,7 @@ def audit_phone_nums(element, tag):
         element = audit()
 
     # Writes the changes to a text file and returns audited element.
-    with open("phone_changelist.txt", "a") as file:
+    with open("changelist_phone.txt", "a") as file:
         if len(changelist) > 0:
-            file.write(json.dumps(changelist) + "\n")
+            file.write(dumps(changelist) + "\n")
     return element
