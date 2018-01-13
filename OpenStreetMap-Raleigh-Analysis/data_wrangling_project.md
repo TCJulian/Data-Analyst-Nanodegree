@@ -4,12 +4,18 @@
 
 Raleigh, North Carolina OSM file download: https://mapzen.com/data/metro-extracts/metro/raleigh_north-carolina/
 
-## Problems while Auditing OSM file
+Audit and conversion from XML to csv took approximately 30 minutes.
 
-* name_1 key is a depreciated key.
-* tiger and NHD data sources
+## Problems while Auditing/Converting OSM file
 
-## Overview of data
+* Depreciated second level "key" tags in node and way tags ("name_1", "Street_1", and "zipcode")
+* Various formats of phone numbers ("+1-(919)-680-6333", "919 908 1023")
+* Zip+4 postal code format ("27603-1407")
+* Inconsistent street name abbreviations ("Crawford Ct", "Chapel Hill Rd")
+* tiger and NHD data sources in second level "key" tags
+* Carriage return values in SQL entries upon XML to csv converions
+
+## Overview of database 
 
 ### Size of files
 ~~~~
@@ -54,7 +60,7 @@ SELECT COUNT(*)
 241260
 
 
-#### Top Ten Amenities for nodes
+### Top Ten Amenities for nodes
 ~~~~SQL
    SELECT value, COUNT(*) 
      FROM nodes_tags 
@@ -98,7 +104,7 @@ woodpeck_fixbot  113815
 bigal945         103684
 ~~~~
 
-#### Major Cities in nodes
+### Major Cities in nodes
 ~~~~SQL
   SELECT value, COUNT(*) 
     FROM nodes_tags 
