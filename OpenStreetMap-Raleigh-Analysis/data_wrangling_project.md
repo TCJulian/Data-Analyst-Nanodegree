@@ -14,7 +14,9 @@ After importing the CSV files into a SQLite database, I explored the dataset and
 * ZIP+4 postal code format (_"27603-1407"_)
 * Inconsistent street name abbreviations (_"Crawford Ct", "Chapel Hill Rd"_)
 * tiger and NHD data sources in second level `"k"` tags
-* Carriage return values in database entries upon XML to CSV converion
+* Carriage return values in database entries upon XML to CSV conversion
+
+While all of these could be addressed, I will be focusing on the problems 
 
 ### Standardizing Phone Numbers
 Phone numbers in the dataset came in various formats. Some had the +1 country code while others included parentheses around the 3-digit area code. The format for spacing also varied between numbers, with some using dashes to separate the different sections while others used spaces.
@@ -46,6 +48,7 @@ The most popular format for postal codes in this data set was the ZIP+4 format (
 To standardize the postal codes, all ZIP+4 formats were trimmed of their last four digits and the trailing `"-"`.
 Other cleaning was also done, including removing any non-digit characters.
 
+After cleaning, the following query that counts the number of each zipcode was done to ensure that the clean was successful:
 ~~~~SQL
   SELECT value, COUNT(*) 
     FROM nodes_tags 
@@ -66,12 +69,13 @@ ORDER BY COUNT(*) DESC
 27707|40
 27514|33
 ~~~~
+All of the above postal codes reulting form the query appear to be correct, as they all correspond to postal codes found in the Raleigh-Durham area.
 
 ### Street Name Abbreviations
 
 Using a combination of expected values, mappings, and regular expressions, I was able to make a system that corrects the most popular abbrevations in street names. 
 
-Implemented in all of the audit scripts code that writes the changes to a text file, so that the changes can be reviewed after the XML to CVS conversion and audit is complete. 
+Implemented in all of the audit scripts is code that writes any changes to a text file. The changes can be reviewed after the XML to CVS conversion and audit is complete to see missing or unexpected values.
 
 A sample of this text file is provided below. The left side is the old value, while the right side is the corrected value: 
 ~~~~
@@ -87,11 +91,24 @@ changelist_postal.txt
 [["Durham-Chapel Hill Blvd.", "Durham-Chapel Hill Boulevard"]]
 ~~~~
 
-Exceptions not corrected by the audit remained unchanged in the final CSV file, while a special reply is inserted in the text file to bring attention to the exception. A perfect example is the `"Meadowmont Village CIrcle"` entry. This exception allows the user to review the exception and update the mapping in the script accordingly.
+Exceptions not corrected by the audit remained unchanged in the final CSV file, while a special reply is inserted in the text file to bring attention to the exception (`"***Unknown Mapping. No changes made.***"`). A perfect example is the `"Meadowmont Village CIrcle"` entry. This exception allows the user to review the exception and update the mapping in the script accordingly.
 
 ### Removing carriage return values from database
 
-After creating the database tables in SQLite, I attempted to import the CSV files. However, upon doing do, I found that many of the values, especially those 
+After creating the database tables in SQLite, I attempted to import the CSV files. However, upon doing do, I found that many of the values, especially those in the last fields of each table, ended in carriage return values. These values made it impossible to query anything in the final fields of those tables. 
+
+It took me a little bit of investigative work to find out what this issue was. I had to explore the values directly in Python to that the values had carriage returns.:
+~~~~PYTHON
+cursor.execute("SELECT * FROM ways_tags LIMIT 5")
+pp.pprint(cursor.fetchall())
+~~~~
+~~~~
+[(8322822, u'foot', u'yes', u'regular\r'),
+ (8322822, u'name', u'North/South Greenway', u'regular\r'),
+ (8322822, u'bicycle', u'yes', u'regular\r'),
+ (8322822, u'highway', u'footway', u'regular\r'),
+ (8322822, u'surface', u'asphalt', u'regular\r')]
+ ~~~~
 
 To resolve this issue, I wrote a short Python script that programmatically removes the carriage return values from the database values.
 ~~~~PYTHON
