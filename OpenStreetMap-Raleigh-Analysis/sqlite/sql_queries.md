@@ -84,6 +84,16 @@ ORDER BY COUNT(*) DESC
    LIMIT 10;
 ~~~~
 
+#### Top Twenty Postal Codes
+~~~~SQL
+  SELECT value, COUNT(*) 
+    FROM nodes_tags 
+   WHERE key = "postcode" 
+GROUP BY value 
+ORDER BY COUNT(*) DESC 
+   LIMIT 20;
+~~~~
+
 #### Top Ten Amenities for nodes
 ~~~~SQL
    SELECT value, COUNT(*) 
