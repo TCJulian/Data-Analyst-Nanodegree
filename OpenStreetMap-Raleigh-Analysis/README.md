@@ -8,6 +8,8 @@ The final report from the analysis can be viewed from [data_wrangling_project.md
 
 ### docs
 
+* [changelist.txt files](https://github.com/TCJulian/Data-Analyst-Nanodegree/tree/master/OpenStreetMap-Raleigh-Analysis/docs)
+    * Each of these files list the changes that were made to the XML data during its conversion to CSV as a result of the audits.
 * [region-info.txt](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/docs/region-info.txt)
     * A brief description of the region explored and where the data was collected.
 * [resources.md](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/docs/resources.md)
