@@ -1,7 +1,6 @@
 # OpenStreet Map Data Wrangling Project
 
-## Overview
-
+## Overview of Area
 Raleigh-Durham, NC OSM file download: https://mapzen.com/data/metro-extracts/metro/raleigh_north-carolina/
 
 Audit and conversion from XML to CSV took approximately 30 minutes.
@@ -16,7 +15,7 @@ After importing the CSV files into a SQLite database, I explored the dataset and
 * tiger and NHD data sources in second level `"k"` tags
 * Carriage return values in database entries upon XML to CSV conversion
 
-While all of these could be addressed, I will be focusing on the problems 
+While all of these issues can be discussed, I will be focusing on the major audits that were done for this project.
 
 ### Standardizing Phone Numbers
 Phone numbers in the dataset came in various formats. Some had the +1 country code while others included parentheses around the 3-digit area code. The format for spacing also varied between numbers, with some using dashes to separate the different sections while others used spaces.
@@ -43,12 +42,12 @@ With all of the numbers in the same format, querying and sorting phone numbers f
 
 ### Trimming Postal Codes
 
-The most popular format for postal codes in this data set was the ZIP+4 format (_"27603-1407"_). While this type of postal code provides an extra level of detail, it also makes querying and aggregates postal codes together much more difficult.
+The most popular format for postal codes in this dataset was the ZIP+4 format (_"27603-1407"_). While this type of postal code provides an extra level of detail, it also makes querying and aggregating postal codes together much more difficult.
 
 To standardize the postal codes, all ZIP+4 formats were trimmed of their last four digits and the trailing `"-"`.
-Other cleaning was also done, including removing any non-digit characters.
+Other cleaning was also done, including removal of any non-digit characters.
 
-After cleaning, the following query that counts the number of each zipcode was done to ensure that the clean was successful:
+After cleaning, a query that counts the number of each zipcode was done to ensure that the clean was successful:
 ~~~~SQL
   SELECT value, COUNT(*) 
     FROM nodes_tags 
@@ -69,15 +68,15 @@ ORDER BY COUNT(*) DESC
 27707|40
 27514|33
 ~~~~
-All of the above postal codes reulting form the query appear to be correct, as they all correspond to postal codes found in the Raleigh-Durham area.
+All of the above postal codes resulting from the query appear to be correct, as they all correspond to postal codes found in the Raleigh-Durham area.
 
 ### Street Name Abbreviations
 
 Using a combination of expected values, mappings, and regular expressions, I was able to make a system that corrects the most popular abbrevations in street names. 
 
-Implemented in all of the audit scripts is code that writes any changes to a text file. The changes can be reviewed after the XML to CVS conversion and audit is complete to see missing or unexpected values.
+Implemented in all of the audit scripts is code that writes any changes to a text file. The changes can be reviewed after the XML to CVS conversion and audit is complete to resolve any missing or unexpected values.
 
-A sample of this text file is provided below. The left side is the old value, while the right side is the corrected value: 
+A sample of this changelist file is provided below. The left side is the old value, while the right side is the corrected value: 
 ~~~~
 changelist_postal.txt
 
@@ -95,9 +94,9 @@ Exceptions not corrected by the audit remained unchanged in the final CSV file, 
 
 ### Removing carriage return values from database
 
-After creating the database tables in SQLite, I attempted to import the CSV files. However, upon doing do, I found that many of the values, especially those in the last fields of each table, ended in carriage return values. These values made it impossible to query anything in the final fields of those tables. 
+After creating the database tables in SQLite, I attempted to import the CSV files. However, upon doing so, I found that many of the values, especially those in the last fields of each table, ended in carriage return values. These values made it impossible to query anything in the final fields of those tables. 
 
-It took me a little bit of investigative work to find out what this issue was. I had to explore the values directly in Python to that the values had carriage returns.:
+It took me a little bit of investigative work to actually find out that the issue was a control character. I had to explore the values directly in Python to see that the values had carriage returns:
 ~~~~PYTHON
 cursor.execute("SELECT * FROM ways_tags LIMIT 5")
 pp.pprint(cursor.fetchall())
@@ -129,7 +128,7 @@ conn.commit()
 conn.close()
 ~~~~
 
-## Overview of database 
+## Overview of database and Basic Stats
 
 ### Size of files
 ~~~~
