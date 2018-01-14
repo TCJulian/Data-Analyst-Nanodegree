@@ -129,6 +129,7 @@ conn.close()
 ~~~~
 
 ## Overview of database and Basic Stats
+This section covers some basic statistics about the database, queries done on the database, and other interesting findings from the queries.
 
 ### Size of files
 ~~~~
@@ -194,6 +195,7 @@ atm              78
 school           76
 parking          70
 ~~~~
+Interestly, `bicycle_parking` is the top listed amenity in the dataset. Perhaps Raleigh-Durham has a large biker population?
 
 ### Top Five Contributors
 ~~~~SQL
@@ -216,6 +218,7 @@ bdiscoe          129730
 woodpeck_fixbot  113815
 bigal945         103684
 ~~~~
+The top user, `jumbanho`, account for ~60% of all node/way entries in the database!
 
 ### Major Cities in nodes
 ~~~~SQL
@@ -264,6 +267,7 @@ max_lon          min_lon      max_lat     min_lat
 ---------------  -----------  ----------  ----------
 -78.577          -79.1159995  36.0509986  35.759
 ~~~~
+[If you map these coordinates, you can draw the square area that the data was retrieved from by MapZen.](https://www.darrinward.com/lat-long/?id=5a5a8ca8350953.90505480)
 
 ## Ideas for Additional Improvement
 
