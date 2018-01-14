@@ -15,6 +15,12 @@ Audit and conversion from XML to csv took approximately 30 minutes.
 * tiger and NHD data sources in second level "key" tags
 * Carriage return values in SQL entries upon XML to csv converions
 
+### Standardizing Phone Numbers
+
+### Trimming Postal Codes
+
+### Street Name Abbreviations
+
 ## Overview of database 
 
 ### Size of files
@@ -152,17 +158,6 @@ max_lon          min_lon      max_lat     min_lat
 -78.577          -79.1159995  36.0509986  35.759
 ~~~~
 
-## Resources
+## Ideas for Additional Improvement
 
-* [TagInfo](https://taginfo.openstreetmap.org/keys). Identifies the usage and meaning of different keys in OSM files. 
-* Python Documentation
-  * [regex](https://docs.python.org/3/library/re.html?s)
-  * [The ElementTree XML API](https://docs.python.org/3/library/xml.etree.elementtree.html?)
-* SQL Style Guides
-  * [sqlstyle](http://www.sqlstyle.guide/)
-* SQL Tutorials:
-  * [UNION clause](https://www.tutorialspoint.com/sqlite/sqlite_unions_clause.htm)
-* StackOverflow
-  * [Printing Dictionaries to Files](https://stackoverflow.com/questions/36965507/writing-a-dictionary-to-a-text-file-in-python)
-  * [Removing carriage return values from sqlite](https://pvanb.wordpress.com/2011/01/13/finding-and-removing-carriage-returns-in-your-sqlite-table/)
-  * [Using Variables in re](https://stackoverflow.com/questions/6930982/how-to-use-a-variable-inside-a-regular-expression)
+## Conclusion
