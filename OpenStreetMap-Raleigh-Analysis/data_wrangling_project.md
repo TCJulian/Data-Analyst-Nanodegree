@@ -2,16 +2,16 @@
 
 ## Overview
 
-Raleigh, North Carolina OSM file download: https://mapzen.com/data/metro-extracts/metro/raleigh_north-carolina/
+Raleigh-Durham, NC OSM file download: https://mapzen.com/data/metro-extracts/metro/raleigh_north-carolina/
 
-Audit and conversion from XML to csv took approximately 30 minutes.
+Audit and conversion from XML to CSV took approximately 30 minutes.
 
 ## Problems while Auditing/Converting OSM file
 
-* Depreciated second level "key" tags in node and way tags ("name_1", "Street_1", and "zipcode")
-* Various formats of phone numbers ("+1-(919)-680-6333", "919 908 1023")
-* Zip+4 postal code format ("27603-1407")
-* Inconsistent street name abbreviations ("Crawford Ct", "Chapel Hill Rd")
+* Depreciated second level "key" tags in node and way tags (_"name_1", "Street_1", and "zipcode"_)
+* Various formats of phone numbers (_"+1-(919)-680-6333", "919 908 1023"_)
+* Zip+4 postal code format (_"27603-1407"_)
+* Inconsistent street name abbreviations (_"Crawford Ct", "Chapel Hill Rd"_)
 * tiger and NHD data sources in second level "key" tags
 * Carriage return values in SQL entries upon XML to csv converions
 
