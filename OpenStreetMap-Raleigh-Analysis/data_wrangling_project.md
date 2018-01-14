@@ -68,7 +68,26 @@ ORDER BY COUNT(*) DESC
 
 ### Street Name Abbreviations
 
+Using a combination of expected values, mappings, and regular expressions, I was able to make a system that corrects the most popular abbrevations in street names. 
+
+Implemented in all of the audit scripts code that writes the changes to a text file, so that the changes can be reviewed after the XML to CVS conversion and audit is complete. The left side is the old value, while the right side is the corrected value. Exceptions not corrected by the audit remained unchanged in the final CSV file, while a special reply is inserted in the text file to bring attention to the exception. This exception allows the user to update the mapping in the script accordingly.
+
+A sample of this text file is provided below:
+~~~~
+[["Falls of Neuse Rd", "Falls of Neuse Road"]]
+[["Waterford Lake Dr", "Waterford Lake Drive"]]
+[["Waterford Lake Dr", "Waterford Lake Drive"]]
+[["Buck Jones Rd", "Buck Jones Road"]]
+[["Meadowmont Village CIrcle", "***Unknown Mapping. No changes made.***"]]
+[["Creedmoor Rd", "Creedmoor Road"]]
+[["Main at North Hills St", "Main at North Hills Street"]]
+[["Durham-Chapel Hill Blvd.", "Durham-Chapel Hill Boulevard"]]
+~~~~
 ### Removing carriage return values from database
+
+After creating the database tables in SQLite, I attempted to import the CSV files. However, upon doing do, I found that many of the values, especially those 
+
+To resolve this issue, I wrote a short Python script that programmatically removes the carriage return values from the database values.
 
 ## Overview of database 
 
