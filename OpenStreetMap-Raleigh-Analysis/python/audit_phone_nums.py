@@ -8,6 +8,7 @@ def audit_phone_nums(element, tag):
     element -- A shaped element, created by `osm_to_cvs` script
     tag -- The tag type (`node` or `way`) as a string
     """
+    
     def audit():
         """Checks each `phone` tag value, updates value in shaped element, and adds changes to changelist."""
         for tags in element['node_tags']:
