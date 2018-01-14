@@ -24,12 +24,17 @@ The final report from the analysis can be viewed from [data_wrangling_project.md
 * [audit_street_names.py](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/python/audit_street_names.py)
     * Stores the module for auditing street names when converting osm XML to CSV.
 * [clean_sql.py](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/python/clean_sql.py)
-    * 
+    * Short script used to remove carriage return values after importing CSV files into the database tables.
 * [create_sample_osm.py](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/python/create_sample_osm.py)
+   * Script provided by Udacity that creates a sample osm file from a larger osm file. Used to create "[sample.osm](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/docs/sample.osm)".
 * [osm_to_csv.py](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/python/osm_to_csv.py)
+   * Converts XML data from osm file into CSV and audits specific fields. Majority of code was provided by Udacity. Personal constributions are commented in the script.
 * [schema.py](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/python/schema.py)
+   * Schema that is used to format XML into CSV. Provided by Udacity.
 
 ### sqlite
 
 * [schema.txt](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/sqlite/schemas.txt)
+   * Schema used to create tables in sqlite before importing CSVs. Provided by Udacity.
 * [sql_queries.md](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/sqlite/sql_queries.md)
+   * A list of different queries done on the database.
