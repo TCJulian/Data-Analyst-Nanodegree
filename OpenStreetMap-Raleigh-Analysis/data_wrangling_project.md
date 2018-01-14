@@ -26,12 +26,14 @@ Here is a snippet of the code that audits the phone number into the above format
 ~~~~PYTHON
 correct_re = re.compile(r'1?\d{10}$')
 
-if not correct_re.search(num):
-    num = re.sub(r'\D', '', num)
+def check_phone(num):
+    """Returns phone number with all non-digit characters removed."""
     if not correct_re.search(num):
-        num = "***Unknown format. No changes made.***"
-        return num
-return num
+        num = re.sub(r'\D', '', num)
+        if not correct_re.search(num):
+            num = "***Unknown format. No changes made.***"
+            return num
+    return num
 ~~~~
 
 
