@@ -16,6 +16,24 @@ Audit and conversion from XML to CSV took approximately 30 minutes.
 * Carriage return values in SQL entries upon XML to csv converions
 
 ### Standardizing Phone Numbers
+Phone numbers in the dataset came in various formats. Some had the +1 country code, while other used parenthesis around the area code. Some uses dashes to separate the different sections of the number while other used spaces.
+
+In order to standardize these numbers, I used a regular expressions to strip any non-digit characters out of the phone number. The format I am looking for is an optional country code, followed by ten digits. 
+
+For example, the number `+1-(919)-680-6333` would become `19196806333`.
+
+Here is a snippet of the code that audits the phone number into the above format:
+~~~~PYTHON
+correct_re = re.compile(r'1?\d{10}$')
+
+if not correct_re.search(num):
+    num = re.sub(r'\D', '', num)
+    if not correct_re.search(num):
+        num = "***Unknown format. No changes made.***"
+        return num
+return num
+~~~~
+
 
 ### Trimming Postal Codes
 
@@ -127,7 +145,7 @@ Carrboro         143
 Chapel Hill      83
 ~~~~
 
-#### Major Counties in ways
+### Major Counties in ways
 ~~~~SQL
   SELECT value, COUNT(*) 
     FROM ways_tags 
