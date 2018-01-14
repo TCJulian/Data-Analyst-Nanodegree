@@ -7,6 +7,7 @@ Raleigh-Durham, NC OSM file download: https://mapzen.com/data/metro-extracts/met
 Audit and conversion from XML to CSV took approximately 30 minutes.
 
 ## Problems while Auditing/Converting OSM file
+After importing the CSV files into a SQLite database, I explored the dataset and ran into several problematic issues:
 
 * Depreciated second level `"k"` tags in `"nodes_tags"` and `"ways_tags"` (_"name_1", "Street_1", and "zipcode"_)
 * Various formats of phone numbers (_"+1-(919)-680-6333", "919 908 1023"_)
@@ -70,10 +71,12 @@ ORDER BY COUNT(*) DESC
 
 Using a combination of expected values, mappings, and regular expressions, I was able to make a system that corrects the most popular abbrevations in street names. 
 
-Implemented in all of the audit scripts code that writes the changes to a text file, so that the changes can be reviewed after the XML to CVS conversion and audit is complete. The left side is the old value, while the right side is the corrected value. Exceptions not corrected by the audit remained unchanged in the final CSV file, while a special reply is inserted in the text file to bring attention to the exception. This exception allows the user to update the mapping in the script accordingly.
+Implemented in all of the audit scripts code that writes the changes to a text file, so that the changes can be reviewed after the XML to CVS conversion and audit is complete. 
 
-A sample of this text file is provided below:
+A sample of this text file is provided below. The left side is the old value, while the right side is the corrected value: 
 ~~~~
+changelist_postal.txt
+
 [["Falls of Neuse Rd", "Falls of Neuse Road"]]
 [["Waterford Lake Dr", "Waterford Lake Drive"]]
 [["Waterford Lake Dr", "Waterford Lake Drive"]]
@@ -83,11 +86,31 @@ A sample of this text file is provided below:
 [["Main at North Hills St", "Main at North Hills Street"]]
 [["Durham-Chapel Hill Blvd.", "Durham-Chapel Hill Boulevard"]]
 ~~~~
+
+Exceptions not corrected by the audit remained unchanged in the final CSV file, while a special reply is inserted in the text file to bring attention to the exception. A perfect example is the `"Meadowmont Village CIrcle"` entry. This exception allows the user to review the exception and update the mapping in the script accordingly.
+
 ### Removing carriage return values from database
 
 After creating the database tables in SQLite, I attempted to import the CSV files. However, upon doing do, I found that many of the values, especially those 
 
 To resolve this issue, I wrote a short Python script that programmatically removes the carriage return values from the database values.
+~~~~PYTHON
+import sqlite3
+
+file_path = "C:\Users\sample_path\sqlite\OSMproject\OSM_db"
+
+conn = sqlite3.connect(file_path)
+cursor = conn.cursor()
+
+# Remove carriage returns characters from specific columns
+cursor.execute("UPDATE nodes SET timestamp=REPLACE(timestamp, '\r', '')")
+cursor.execute("UPDATE nodes_tags SET type=REPLACE(type, '\r', '')")
+cursor.execute("UPDATE ways SET timestamp=REPLACE(timestamp, '\r', '')")
+cursor.execute("UPDATE ways_tags SET type=REPLACE(type, '\r', '')")
+
+conn.commit()
+conn.close()
+~~~~
 
 ## Overview of database 
 
