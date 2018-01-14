@@ -1,4 +1,4 @@
-# Repository for Udacity Data Analyst Nanodegree Data Wrangling Project
+# Repository for Data Wrangling Project
 
 This projects consists of chosing a region, extracting XML data on the region from OpenStreetMap, auditing/cleaning the data in Python, converting the XML to CSV, importing the CSV into SQL, and analysing the resulting dataset using SQL queries.
 
@@ -11,8 +11,11 @@ The final report from the analysis can be viewed from [data_wrangling_project.md
 ### docs
 
 * [region-info.txt](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/docs/region-info.txt)
+  * A brief description of the region explored and where the data was collected.
 * [resources.md](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/docs/resources.md)
+  * A list of any third party resources, guides, or forums posts used as references for this project.
 * [sample.osm](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/docs/sample.osm)
+  * A 1-10 MB sample osm from the larger osm file used in the final analysis.
 
 ### python
 
