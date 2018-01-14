@@ -3,6 +3,7 @@
 
 import csv
 import codecs
+import time
 import pprint
 import re
 import xml.etree.cElementTree as ET
@@ -13,6 +14,8 @@ import schema
 import audit_postalcodes
 import audit_phone_nums
 import audit_street_names
+
+start_time = time.clock()
 
 OSM_PATH = "raleigh_north-carolina.osm"
 
@@ -183,8 +186,8 @@ def process_map(file_in, validate):
             el = shape_element(element)
             if el:
                 # Audit functions below were created by myself.
-                el = audit_postalcodes.audit_postcodes(el, element.tag)
-                el = audit_street_names.audit_streetnames(el, element.tag)
+                el = audit_postalcodes.audit_postalcodes(el, element.tag)
+                el = audit_street_names.audit_street_names(el, element.tag)
                 el = audit_phone_nums.audit_phone_nums(el, element.tag)
                 
                 if validate is True:
@@ -198,8 +201,8 @@ def process_map(file_in, validate):
                     way_nodes_writer.writerows(el['way_nodes'])
                     way_tags_writer.writerows(el['way_tags'])
 
-
 if __name__ == '__main__':
     # Note: Validation is ~ 10X slower. For large project, consider using a small
     # sample of the map when validating.
     process_map(OSM_PATH, validate=False)
+    print("OSM to csv conversion complete! Process took " + str(int((time.clock() - start_time) / 60)) + " minute(s), " + str(int((time.clock() - start_time) % 60)) + " second(s).")
