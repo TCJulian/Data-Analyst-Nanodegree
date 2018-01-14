@@ -12,3 +12,6 @@
   * [Printing Dictionaries to Files](https://stackoverflow.com/questions/36965507/writing-a-dictionary-to-a-text-file-in-python)
   * [Removing carriage return values from sqlite](https://pvanb.wordpress.com/2011/01/13/finding-and-removing-carriage-returns-in-your-sqlite-table/)
   * [Using Variables in re](https://stackoverflow.com/questions/6930982/how-to-use-a-variable-inside-a-regular-expression)
+* Other
+  * [US zip codes](https://www.unitedstateszipcodes.org/)
+  * [Zip codes prefixes](https://en.wikipedia.org/wiki/List_of_ZIP_code_prefixes)
