@@ -1,6 +1,6 @@
 # SQL Queries 
 
-This file holds all of the different queries done on the database. Not all are included in the final report.
+This file holds all of the different queries done on the database. All queries may not be included in the final report.
 ## General
 
 #### Total nodes and ways
