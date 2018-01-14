@@ -8,17 +8,17 @@ Audit and conversion from XML to CSV took approximately 30 minutes.
 
 ## Problems while Auditing/Converting OSM file
 
-* Depreciated second level "key" tags in node and way tags (_"name_1", "Street_1", and "zipcode"_)
+* Depreciated second level `"k"` tags in `"nodes_tags"` and `"ways_tags"` (_"name_1", "Street_1", and "zipcode"_)
 * Various formats of phone numbers (_"+1-(919)-680-6333", "919 908 1023"_)
-* Zip+4 postal code format (_"27603-1407"_)
+* ZIP+4 postal code format (_"27603-1407"_)
 * Inconsistent street name abbreviations (_"Crawford Ct", "Chapel Hill Rd"_)
-* tiger and NHD data sources in second level "key" tags
-* Carriage return values in SQL entries upon XML to csv converions
+* tiger and NHD data sources in second level `"k"` tags
+* Carriage return values in database entries upon XML to CSV converion
 
 ### Standardizing Phone Numbers
-Phone numbers in the dataset came in various formats. Some had the +1 country code, while other used parenthesis around the area code. Some uses dashes to separate the different sections of the number while other used spaces.
+Phone numbers in the dataset came in various formats. Some had the +1 country code while others included parentheses around the 3-digit area code. The format for spacing also varied between numbers, with some using dashes to separate the different sections while others used spaces.
 
-In order to standardize these numbers, I used a regular expressions to strip any non-digit characters out of the phone number. The format I am looking for is an optional country code, followed by ten digits. 
+In order to standardize these numbers, I used regular expressions to strip any non-digit characters out of the phone number. The standard format for this dataset would have an optional country code followed by ten digits. 
 
 For example, the number `+1-(919)-680-6333` would become `19196806333`.
 
@@ -36,10 +36,39 @@ def check_phone(num):
     return num
 ~~~~
 
+With all of the numbers in the same format, querying and sorting phone numbers from the database became much easier.
 
 ### Trimming Postal Codes
 
+The most popular format for postal codes in this data set was the ZIP+4 format (_"27603-1407"_). While this type of postal code provides an extra level of detail, it also makes querying and aggregates postal codes together much more difficult.
+
+To standardize the postal codes, all ZIP+4 formats were trimmed of their last four digits and the trailing `"-"`.
+Other cleaning was also done, including removing any non-digit characters.
+
+~~~~SQL
+  SELECT value, COUNT(*) 
+    FROM nodes_tags 
+   WHERE key = "postcode" 
+GROUP BY value 
+ORDER BY COUNT(*) DESC 
+   LIMIT 10;
+~~~~
+~~~~
+27701|164
+27513|149
+27510|143
+27511|94
+27560|66
+27519|52
+27601|47
+27705|44
+27707|40
+27514|33
+~~~~
+
 ### Street Name Abbreviations
+
+### Removing carriage return values from database
 
 ## Overview of database 
 
