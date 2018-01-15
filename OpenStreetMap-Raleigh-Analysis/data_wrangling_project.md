@@ -270,5 +270,7 @@ max_lon          min_lon      max_lat     min_lat
 [If you map these coordinates, you can draw the square area that the data was retrieved from by MapZen.](https://www.darrinward.com/lat-long/?id=5a5a8ca8350953.90505480)
 
 ## Ideas for Additional Improvement
+We can track unique contributions over time and 
 
 ## Conclusion
+Overall, this dataset felt like a sample of the Raleigh-Durham area. Though certainly not complete,  the dataset did cover . While improvements in uniformity of the data as well as updates to depreciated values can be made, the dataset is currently usable in it's current form. I just hope that contributions to the OpenStreetMap see a resurgence, as it provides coders like myself plenty of data to explore. 
