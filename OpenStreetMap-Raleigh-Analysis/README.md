@@ -16,6 +16,8 @@ The final report from the analysis can be viewed from [data_wrangling_project.md
     * A list of any third party resources, guides, or forums posts used as references for this project.
 * [sample.osm](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/docs/sample.osm)
   * A 1-10 MB sample osm from the larger osm file used in the final analysis.
+* [sub_year_vis.png](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/docs/sub_year_vis.png)
+  * A python bar graph png export used in the final report.
 
 ### python
 
