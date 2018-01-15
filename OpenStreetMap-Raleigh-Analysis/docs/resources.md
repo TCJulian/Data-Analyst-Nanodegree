@@ -5,6 +5,9 @@
   * [regex](https://docs.python.org/3/library/re.html?s)
   * [The ElementTree XML API](https://docs.python.org/3/library/xml.etree.elementtree.html?)
   * [datetime](https://docs.python.org/3/library/datetime.html)
+* pandas Documentation
+  * [value_counts()](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.value_counts.html)
+  * [Visualization](https://pandas.pydata.org/pandas-docs/stable/visualization.html#bar-plots)
 * SQL Style Guides
   * [sqlstyle](http://www.sqlstyle.guide/)
 * SQL Tutorials:
