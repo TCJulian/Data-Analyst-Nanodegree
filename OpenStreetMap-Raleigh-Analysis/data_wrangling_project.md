@@ -49,7 +49,7 @@ The most popular format for postal codes in this dataset was the ZIP+4 format (_
 To standardize the postal codes, all ZIP+4 formats were trimmed of their last four digits and the trailing `"-"`.
 Other cleaning was also done, including removal of any non-digit characters.
 
-After cleaning, a query that counts the number of each zipcode was done to ensure that the clean was successful:
+After cleaning, a query that counts the number of each zipcode was done to ensure that the audit was successful:
 ~~~~SQL
   SELECT value, COUNT(*) 
     FROM nodes_tags 
@@ -78,7 +78,7 @@ Using a combination of expected values, mappings, and regular expressions, I was
 
 Implemented in all of the audit scripts is code that writes any changes to a text file. The changes can be reviewed after the XML to CVS conversion and audit is complete to resolve any missing or unexpected values.
 
-A sample of this changelist file is provided below. The left side is the old value, while the right side is the corrected value: 
+A sample of the street name changelist file is provided below. The left side is the old value, while the right side is the corrected value: 
 ~~~~
 changelist_postal.txt
 
@@ -92,11 +92,11 @@ changelist_postal.txt
 [["Durham-Chapel Hill Blvd.", "Durham-Chapel Hill Boulevard"]]
 ~~~~
 
-Exceptions not corrected by the audit remained unchanged in the final CSV file, while a special reply is inserted in the text file to bring attention to the exception (`"***Unknown Mapping. No changes made.***"`). A perfect example is the `"Meadowmont Village CIrcle"` entry. This exception allows the user to review the exception and update the mapping in the script accordingly.
+Exceptions not corrected by the audit remained unchanged in the final CSV file, while a special reply is inserted in the text file to bring attention to the exception (`"***Unknown Mapping. No changes made.***"`). A perfect example is the `"Meadowmont Village CIrcle"` entry. This message allows the user to review the exception and update the mapping in the script accordingly for future audits.
 
 ### Removing carriage return values from database
 
-After creating the database tables in SQLite, I attempted to import the CSV files. However, upon doing so, I found that many of the values, especially those in the last fields of each table, ended in carriage return values. These values made it impossible to query anything in the final fields of those tables. 
+After creating the database tables in SQLite, I attempted to import the CSV files. However, upon doing so, I found that many of the values, especially those in the last fields of each table, ended in carriage return values. These values made it impossible to query anything in the final fields of those tables without having formatting issues. 
 
 It took me a little bit of investigative work to actually find out that the issue was a control character. I had to explore the values directly in Python to see that the values had carriage returns:
 ~~~~PYTHON
@@ -130,7 +130,7 @@ conn.commit()
 conn.close()
 ~~~~
 
-## Overview of database and Basic Stats
+## Overview of database and Basic Statistics
 This section covers some basic statistics about the database, queries done on the database, and other interesting findings from the queries.
 
 ### Size of files
@@ -147,13 +147,13 @@ nodes_tags.csv .....................   2.1 MB
 ### Number of Unique Users
 ~~~~SQL
 SELECT COUNT(*)
-    FROM (  SELECT user
-              FROM nodes
+  FROM (  SELECT user
+            FROM nodes
         
-             UNION
+           UNION
 
-            SELECT user
-              FROM ways) AS total_users;
+          SELECT user
+            FROM ways) AS total_users;
 ~~~~
 
 971
@@ -269,14 +269,15 @@ max_lon          min_lon      max_lat     min_lat
 ---------------  -----------  ----------  ----------
 -78.577          -79.1159995  36.0509986  35.759
 ~~~~
+
 [If you map these coordinates, you can draw the square area that the data was retrieved from by MapZen.](https://www.darrinward.com/lat-long/?id=5a5a8ca8350953.90505480)
 
 ## Ideas for Additional Improvement
-Before doing this project, I had never heard of the OpenStreetMap project. It is entirely possible that the project was much more popular when the Udacity Data Analyst Nanodegree was first formed, and thus was a more well known project that could be implemented in the course. Over time though, it is possible that node/way contributions to the project have decreased over the years as the movement has become less popular, or as more locations in Raleigh-Durham have already been mapped.
+Before doing this project, I had never heard of the OpenStreetMap project. It is entirely possible that the project was much more popular when the Udacity Data Analyst Nanodegree was first formed, and thus was a more well known project that could be implemented in the course. Over time though, it is possible that node/way contributions to the project have decreased over the years as the movement has become less popular, or as more locations in Raleigh-Durham have been mapped.
 
 In order to better understand the situation, I decided that I would explore the `timestamp` data included in all of the `nodes` and `ways` in the osm file. To do so, I explored aggregated user contributions by year and graphed the results to a bar grpah.
 
-First I needed a query to gather all of the `timestamp` data from the `nodes` and `ways` in the database.
+First, I needed a query to gather all of the `timestamp` data from the `nodes` and `ways` in the database.
 ~~~~SQL
   SELECT timestamp
     FROM (SELECT timestamp
@@ -289,7 +290,7 @@ First I needed a query to gather all of the `timestamp` data from the `nodes` an
 ORDER BY timestamp ASC;
 ~~~~
 
-Once all of the timestamps have been collected, the timestamps are imported into Python stripped of all datetime info except the year. User submissions for each year are then aggregated and counted..
+Once all of the timestamps had been collected, the timestamps were imported into Python  and stripped of all datetime info except the year. User submissions for each year were then aggregated and counted.
 ~~~~PYTHON
 # Collect timestamps from SQLite database
 cursor.execute("SELECT timestamp \
@@ -310,13 +311,13 @@ ts = pd.Series(reformed.value_counts(sort=False))
 ts = ts.sort_index(ascending=True)
 ~~~~
 
-The values are then graphed on a bar chart:
+The values were then graphed on a bar chart:
 
 ![graph](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/docs/sub_year_vis.png)
 
-The graph seems to suggest that node/way contribution to the Raleigh-Durham has decreased as the years have gone on. While one conclusion might be that OpenStreetMap is becoming less popular, it is entirely possible that the Raleigh-Durham area has been sufficienntly mapped, and only requires periodic updating. OpenStreetMap's popularity may also have not decreased globally at all, as the [forums](https://forum.openstreetmap.org/index.php) and [help](https://help.openstreetmap.org/) pages are full of recent posts. 
+The graph seems to suggest that node/way contribution to the Raleigh-Durham has decreased as the years have gone on. While one conclusion might be that OpenStreetMap is becoming less popular, it is entirwly possible that the Raleigh-Durham area has been sufficienntly mapped, and only requires periodic updating. OpenStreetMap's popularity may also have not decreased globally at all, as the [forums](https://forum.openstreetmap.org/index.php) and [help](https://help.openstreetmap.org/) pages are full of recent posts. 
 
-Regardless, in order to make the Raleigh-Durham project more relevent, it might make sense to make sub-regions within each country on OpenStreetMaps website. This would allow users in these sub-regions to collaborate with each other and make more SMART goals to ensure progress is made in the region. Greater emphasis on updating and improving existing would impact the amount of activity for the Raleigh-Durham area, especially in standardizing data across all values.
+Regardless, in order to make the Raleigh-Durham project more relevent, it might make sense to make sub-regions within each country on OpenStreetMaps forums and help pages. This would allow users in these sub-regions to collaborate with each other and make more SMART goals to ensure progress is made in the region. Greater emphasis on updating and improving existing would impact the amount of activity for the Raleigh-Durham area, especially in standardizing data across all values. However, updating existing data is much more difficult, time intensive, and tedious than mapping new areas. This might push currently developers away from the almost complete Raleigh-Durham region, and instead focus their effort abroad.
 
 ## Conclusion
-Overall, this dataset felt like a good representation of Raleigh-Durham area. Though certainly not complete, the dataset did include nodes from all over the Research Triangle. While improvements in the uniformity of the key-value pairs and updates to depreciated values can be made, the dataset is usable in its current form. I hope that contributions to the Raleigh-Durham OpenStreetMap region sees a resurgence in updates, as it provides coders like myself plenty of data to explore, analyze, and experiment with.
+Overall, this dataset felt like a good representation of Raleigh-Durham area. Though certainly not complete, the dataset did include nodes and ways from all over the Research Triangle. While improvements in the uniformity of the key-value pairs and updates to depreciated values can be made, the dataset is usable in its current form. I hope that contributions to the Raleigh-Durham OpenStreetMap region sees a resurgence in updates, as it provides coders like myself plenty of data to explore, analyze, and experiment with.
