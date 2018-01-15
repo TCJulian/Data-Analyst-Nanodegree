@@ -270,9 +270,11 @@ max_lon          min_lon      max_lat     min_lat
 [If you map these coordinates, you can draw the square area that the data was retrieved from by MapZen.](https://www.darrinward.com/lat-long/?id=5a5a8ca8350953.90505480)
 
 ## Ideas for Additional Improvement
-Before doing this project, I had never heard of the OpenStreetMap project. Though Perhaps contributions to the project have decreased over the years as the movement has become less popular.
+Before doing this project, I had never heard of the OpenStreetMap project. It is entirely possible that the project was much more popular when the Udacity Data Analyst Nanodegree was first formed, and thus was a more well known project that could be implemented in the course. Over time though, it is possible that contributions to the project have decreased over the years as the movement has become less popular. It is also possible that its popularity hasn't decreased globally or at all; only contributions to the Raleigh-Durham area may have decreased.
 
-We can track contributions over time by first gathering all of the `timestamp` data from the `nodes` and `ways` in the database.
+In order to better understand the situation, I decided that I would explore the `timestamp` data included in all of the `nodes` and `ways` in the osm file. To do so, I explored aggregated user contributions by year and graphed the results to a bar grpah.
+
+First I needed a query to gather all of the `timestamp` data from the `nodes` and `ways` in the database.
 ~~~~SQL
   SELECT timestamp
     FROM (SELECT timestamp
@@ -285,13 +287,13 @@ We can track contributions over time by first gathering all of the `timestamp` d
 ORDER BY timestamp ASC;
 ~~~~
 
-Once all of the timestamps have been colected, the timestamp are stripped of all datetime info except the year. User submissions for each year are then counted.
+Once all of the timestamps have been collected, the timestamps are imported into Python stripped of all datetime info except the year. User submissions for each year are then aggregated and counted..
 ~~~~PYTHON
 # Collect timestamps from SQLite database
 cursor.execute("SELECT timestamp FROM (SELECT timestamp FROM nodes UNION ALL SELECT timestamp FROM ways) AS total_rows ORDER BY timestamp ASC;")
 raw = cursor.fetchall()
 
-# Strip except timestamp data except for the years
+# Strip timestamp data except for the year
 stripped = []
 for x in listed:
     y = datetime.datetime.strptime(x, "%Y-%m-%dT%H:%M:%SZ")
@@ -302,25 +304,15 @@ for x in listed:
 reformed = pd.Series(stripped)
 ts = pd.Series(reformed.value_counts(sort=False))
 ts = ts.sort_index(ascending=True)
-ts
-~~~~
-~~~~
-2007       410
-2008      2818
-2009    572727
-2010    946485
-2011    145935
-2012    110974
-2013    166548
-2014     95447
-2015    297068
-2016    192915
-2017     57482
-dtype: int64
 ~~~~
 
 The values are then graphed on a bar chart:
+
 ![graph](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/docs/sub_year_vis.png)
 
+The graph seems to suggest that contribution to the Raleigh-Durham.
+
+In order to make the Raleigh-Durham project more relevent, 
+
 ## Conclusion
-Overall, this dataset felt like a sample of the Raleigh-Durham area. Though certainly not complete,  the dataset did cover . While improvements in uniformity of the data as well as updates to depreciated values can be made, the dataset is currently usable in it's current form. I just hope that contributions to the OpenStreetMap see a resurgence, as it provides coders like myself plenty of data to explore. 
+Overall, this dataset felt like a good representation of Raleigh-Durham area. Though certainly not complete, the dataset did cover . While improvements in the uniformity of the key-value pairs and updates to depreciated values can be made, the dataset is currently usable in its current form. I hope that contributions to the Raleigh-Durham OpenStreetMap region sees a resurgence in updates, as it provides coders like myself plenty of data to explore, 
