@@ -2,7 +2,7 @@
 
 This projects consists of chosing a region, extracting XML data on the region from OpenStreetMap, auditing/cleaning the data in Python, converting the XML to CSV, importing the CSV into SQL, and analysing the resulting dataset using SQL queries.
 
-The final report from the analysis can be viewed from [data_wrangling_project.md](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/data_wrangling_project.md).
+The final report from the analysis can be viewed from [data_wrangling_project.md](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/data_wrangling_project.md), or [data_wrangling_project.pdf](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/data_wrangling_project.pdf) if a pdf file is needed.
 
 ## Description of Files
 
