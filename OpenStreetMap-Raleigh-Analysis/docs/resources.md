@@ -4,6 +4,7 @@
 * Python Documentation
   * [regex](https://docs.python.org/3/library/re.html?s)
   * [The ElementTree XML API](https://docs.python.org/3/library/xml.etree.elementtree.html?)
+  * [datetime](https://docs.python.org/3/library/datetime.html)
 * SQL Style Guides
   * [sqlstyle](http://www.sqlstyle.guide/)
 * SQL Tutorials:
@@ -11,6 +12,7 @@
 * StackOverflow
   * [Printing Dictionaries to Files](https://stackoverflow.com/questions/36965507/writing-a-dictionary-to-a-text-file-in-python)
   * [Removing carriage return values from sqlite](https://pvanb.wordpress.com/2011/01/13/finding-and-removing-carriage-returns-in-your-sqlite-table/)
+  * [Converting datetime formats](https://stackoverflow.com/questions/6288892/convert-datetime-format)
   * [Using Variables in re](https://stackoverflow.com/questions/6930982/how-to-use-a-variable-inside-a-regular-expression)
 * Other
   * [US zip codes](https://www.unitedstateszipcodes.org/)
