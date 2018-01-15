@@ -3,7 +3,9 @@
 ## Overview of Area
 Raleigh-Durham, NC OSM file download: https://mapzen.com/data/metro-extracts/metro/raleigh_north-carolina/
 
-Audit and conversion from XML to CSV took approximately 30 minutes.
+Living not too far from this area (Greensboro), the Raleigh-Durham area, coined locally as the Research Triangle, has seen vast amounts of growth the past couple of years. With the diversity of cities, counties, and metro areas, this region should be very interesting to investigate.
+
+The orininal OSM file was 465 MB. Audit and conversion from XML to CSV took approximately 30 minutes.
 
 ## Problems while Auditing/Converting OSM file
 After importing the CSV files into a SQLite database, I explored the dataset and ran into several problematic issues:
