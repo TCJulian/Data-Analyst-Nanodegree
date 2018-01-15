@@ -270,8 +270,56 @@ max_lon          min_lon      max_lat     min_lat
 [If you map these coordinates, you can draw the square area that the data was retrieved from by MapZen.](https://www.darrinward.com/lat-long/?id=5a5a8ca8350953.90505480)
 
 ## Ideas for Additional Improvement
-We can track unique contributions over time and 
+Before doing this project, I had never heard of the OpenStreetMap project. Though Perhaps contributions to the project have decreased over the years as the movement has become less popular.
 
+We can track contributions over time by first gathering all of the `timestamp` data from the `nodes` and `ways` in the database.
+~~~~SQL
+  SELECT timestamp
+    FROM (SELECT timestamp
+            FROM nodes
+            
+           UNION ALL
+           
+          SELECT timestamp
+            FROM ways) AS total_rows
+ORDER BY timestamp ASC;
+~~~~
+
+Once all of the timestamps have been colected, the timestamp are stripped of all datetime info except the year. User submissions for each year are then counted.
+~~~~PYTHON
+# Collect timestamps from SQLite database
+cursor.execute("SELECT timestamp FROM (SELECT timestamp FROM nodes UNION ALL SELECT timestamp FROM ways) AS total_rows ORDER BY timestamp ASC;")
+raw = cursor.fetchall()
+
+# Strip except timestamp data except for the years
+stripped = []
+for x in listed:
+    y = datetime.datetime.strptime(x, "%Y-%m-%dT%H:%M:%SZ")
+    z = y.strftime("%Y")
+    stripped.append(z)
+    
+# Put timestamps into pandas Series and count number of submissions for each year
+reformed = pd.Series(stripped)
+ts = pd.Series(reformed.value_counts(sort=False))
+ts = ts.sort_index(ascending=True)
+ts
+~~~~
+~~~~
+2007       410
+2008      2818
+2009    572727
+2010    946485
+2011    145935
+2012    110974
+2013    166548
+2014     95447
+2015    297068
+2016    192915
+2017     57482
+dtype: int64
+~~~~
+
+The values are then graphed on a bar chart:
 ![graph](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/docs/sub_year_vis.png)
 
 ## Conclusion
