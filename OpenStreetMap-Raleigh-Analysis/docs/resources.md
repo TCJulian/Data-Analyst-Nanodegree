@@ -8,6 +8,7 @@
 * pandas Documentation
   * [value_counts()](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.value_counts.html)
   * [Visualization](https://pandas.pydata.org/pandas-docs/stable/visualization.html#bar-plots)
+* [Sample Project format](https://gist.github.com/carlward/54ec1c91b62a5f911c42#file-sample_project-md). Sample project provided by Udacity.
 * SQL Style Guides
   * [sqlstyle](http://www.sqlstyle.guide/)
 * SQL Tutorials:
