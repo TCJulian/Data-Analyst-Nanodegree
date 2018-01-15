@@ -272,5 +272,7 @@ max_lon          min_lon      max_lat     min_lat
 ## Ideas for Additional Improvement
 We can track unique contributions over time and 
 
+![graph](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/docs/sub_year_vis.png)
+
 ## Conclusion
 Overall, this dataset felt like a sample of the Raleigh-Durham area. Though certainly not complete,  the dataset did cover . While improvements in uniformity of the data as well as updates to depreciated values can be made, the dataset is currently usable in it's current form. I just hope that contributions to the OpenStreetMap see a resurgence, as it provides coders like myself plenty of data to explore. 
