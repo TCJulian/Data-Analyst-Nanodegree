@@ -15,7 +15,7 @@ After importing the CSV files into a SQLite database, I explored the dataset and
 * tiger and NHD data sources in second level `"k"` tags
 * Carriage return values in database entries upon XML to CSV conversion
 
-While all of these issues can be discussed, I will be focusing on the major audits that were done for this project.
+While all of these issues were found in my exploration of the dataset, I will be focusing on the major audits that were done for this project.
 
 ### Standardizing Phone Numbers
 Phone numbers in the dataset came in various formats. Some had the +1 country code while others included parentheses around the 3-digit area code. The format for spacing also varied between numbers, with some using dashes to separate the different sections while others used spaces.
@@ -270,7 +270,7 @@ max_lon          min_lon      max_lat     min_lat
 [If you map these coordinates, you can draw the square area that the data was retrieved from by MapZen.](https://www.darrinward.com/lat-long/?id=5a5a8ca8350953.90505480)
 
 ## Ideas for Additional Improvement
-Before doing this project, I had never heard of the OpenStreetMap project. It is entirely possible that the project was much more popular when the Udacity Data Analyst Nanodegree was first formed, and thus was a more well known project that could be implemented in the course. Over time though, it is possible that contributions to the project have decreased over the years as the movement has become less popular. It is also possible that its popularity hasn't decreased globally or at all; only contributions to the Raleigh-Durham area may have decreased.
+Before doing this project, I had never heard of the OpenStreetMap project. It is entirely possible that the project was much more popular when the Udacity Data Analyst Nanodegree was first formed, and thus was a more well known project that could be implemented in the course. Over time though, it is possible that node/way contributions to the project have decreased over the years as the movement has become less popular, or as more locations in Raleigh-Durham have already been mapped.
 
 In order to better understand the situation, I decided that I would explore the `timestamp` data included in all of the `nodes` and `ways` in the osm file. To do so, I explored aggregated user contributions by year and graphed the results to a bar grpah.
 
@@ -290,7 +290,9 @@ ORDER BY timestamp ASC;
 Once all of the timestamps have been collected, the timestamps are imported into Python stripped of all datetime info except the year. User submissions for each year are then aggregated and counted..
 ~~~~PYTHON
 # Collect timestamps from SQLite database
-cursor.execute("SELECT timestamp FROM (SELECT timestamp FROM nodes UNION ALL SELECT timestamp FROM ways) AS total_rows ORDER BY timestamp ASC;")
+cursor.execute("SELECT timestamp \
+               FROM (SELECT timestamp FROM nodes UNION ALL SELECT timestamp FROM ways) AS total_rows \
+               ORDER BY timestamp ASC;")
 raw = cursor.fetchall()
 
 # Strip timestamp data except for the year
@@ -310,9 +312,9 @@ The values are then graphed on a bar chart:
 
 ![graph](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/OpenStreetMap-Raleigh-Analysis/docs/sub_year_vis.png)
 
-The graph seems to suggest that contribution to the Raleigh-Durham.
+The graph seems to suggest that node/way contribution to the Raleigh-Durham has decreased as the years have gone on. While one conclusion might be that OpenStreetMap is becoming less popular, it is entirely possible that the Raleigh-Durham area has been sufficienntly mapped, and only requires periodic updating. OpenStreetMap's popularity may have not decreased globally at all, as the [forums](https://forum.openstreetmap.org/index.php) and [help](https://help.openstreetmap.org/) pages are full of recent posts. 
 
-In order to make the Raleigh-Durham project more relevent, 
+Regardless, in order to make the Raleigh-Durham project more relevent, it might make sense to make sub-regions within each country. This would allow users in these sub-regions to collaborate with each other and make more SMART goals.
 
 ## Conclusion
-Overall, this dataset felt like a good representation of Raleigh-Durham area. Though certainly not complete, the dataset did cover . While improvements in the uniformity of the key-value pairs and updates to depreciated values can be made, the dataset is currently usable in its current form. I hope that contributions to the Raleigh-Durham OpenStreetMap region sees a resurgence in updates, as it provides coders like myself plenty of data to explore, 
+Overall, this dataset felt like a good representation of Raleigh-Durham area. Though certainly not complete, the dataset did include nodes from all over the Research Triangle. While improvements in the uniformity of the key-value pairs and updates to depreciated values can be made, the dataset is usable in its current form. I hope that contributions to the Raleigh-Durham OpenStreetMap region sees a resurgence in updates, as it provides coders like myself plenty of data to explore, analyze, and experiment with.
