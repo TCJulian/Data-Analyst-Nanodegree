@@ -42,13 +42,26 @@ ORDER BY COUNT(*) DESC
    LIMIT 5;
 ~~~~
 
-### Max/Min Longitudes and Latitudes
+#### Max/Min Longitudes and Latitudes
 ~~~~SQL
 SELECT MAX(lon) AS max_lon, 
        MIN(lon) AS min_lon,
        MAX(lat) AS max_lat,
        MIN(lat) AS min_lat 
   FROM nodes;
+~~~~
+
+#### All timestamps
+~~~~SQL
+SELECT timestamp
+    FROM (SELECT timestamp
+            FROM nodes
+            
+           UNION ALL
+           
+          SELECT timestamp
+            FROM ways) AS total_rows
+ORDER BY timestamp ASC;
 ~~~~
 
 ## Nodes
