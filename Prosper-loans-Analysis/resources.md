@@ -8,3 +8,4 @@
 * Other
   * [R Color Brewer Tutorial](http://data.library.virginia.edu/setting-up-color-palettes-in-r/)
   * [ggplot2](http://ggplot2.tidyverse.org/reference/)
+  * [Hexadecimal Color Table](http://htmlcolorcodes.com/)
