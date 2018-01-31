@@ -2,7 +2,7 @@
 
 * R
   * Style
-    * [Google Style Guide](https://google.github.io/styleguide/Rguide.xml)
+    * [Google's R Style Guide](https://google.github.io/styleguide/Rguide.xml)
   * R Cookbook
     * [Changing the order of levels of a factor](http://www.cookbook-r.com/Manipulating_data/Changing_the_order_of_levels_of_a_factor/)
   * Packages
