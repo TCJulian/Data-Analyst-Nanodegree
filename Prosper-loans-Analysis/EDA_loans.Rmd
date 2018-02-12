@@ -78,7 +78,6 @@ str(loans)
 
 One of most important variables for a borrower when getting a loan is the interest rate. The interest rate is ultimately set by the lender and is decided based upon by a variaty of variables, the most popular one being Credit Score.
 
-
 ```{r echo=FALSE, BorrowerRate1}
 
 ggplot(loans, aes(x = BorrowerRate * 100)) + 
@@ -88,7 +87,7 @@ ggplot(loans, aes(x = BorrowerRate * 100)) +
        title = "Borrower Interest Rate Histogram")
 ```
 
-The interest rate curve seems to be slightly right skewed, with an abnormal spike at 32%. This could be because of overlapping binwidths. Lets graph `BorrowerRate` again,  but with 0.5 binwidths to investigate:
+The interest rate curve seems to be slightly right skewed, with an abnormal spike at 32%. This could be because of overlapping binwidths. Lets graph `BorrowerRate` again, but with 0.5 binwidths to investigate:
 
 ```{r echo=FALSE, BorrowerRate2}
 
@@ -98,6 +97,7 @@ ggplot(loans, aes(x = BorrowerRate * 100)) +
        y = "Count", 
        title = "Borrower Interest Rate Histogram (bw = 0.5)")
 ```
+
 Unfortunately, it seems binwidth is not the answer. 32% still has an extremely high appearance count. At the moment, there appears to be no answer as to why this rate occurs so frequently. One option would be to explore a subset of the dataset that only had 32% interest rate users and compare them with the entire population for differences. However, that is beyond the scope of this analysis: there are other variables to explore!
 
 ### Explore Average Credit Score
@@ -363,7 +363,8 @@ In an effort to make investments easier to assess for potential investors, Prosp
 levels(loans$CreditGrade)
 levels(loans$ProsperRating..Alpha.)
 ```
- Looking at the levels of the two varaiables, Credit Grade has an extra level called `NC`. The rest of both levels are the same. It is also important to note that the variables have no `NA` values. Rather, they are input as "". 
+ 
+Looking at the levels of the two varaiables, Credit Grade has an extra level called `NC`. The rest of both levels are the same. It is also important to note that the variables have no `NA` values. Rather, they are input as "". 
  
 ```{r CreditGrade_and_ProsperRating2}
 summary(loans$CreditGrade)
@@ -378,19 +379,19 @@ loans$ProsperRating..Alpha.[loans$ProsperRating..Alpha. == ""] <- NA
 loans$CreditGrade[loans$CreditGrade == ""] <- NA
 ```
 
-With the "" values removed, 
+With the "" values transformed into NA's, `ProsperRatings` and `CreditGrade` can now be combined into a single column and ordered from the lowest ratings to the highest rating.
 
 ```{r CreditGrade_and_ProsperRating3}
 # Combining Credit Grade and Prosper Rating into loans$ratings
 loans$ratings <- loans$CreditGrade
 loans$ratings[!is.na(loans$ProsperRating..Alpha.)] <- loans$ProsperRating..Alpha.[!is.na(loans$ProsperRating..Alpha.)]
 
-loans$ratings <- factor(ratings$combined, levels = c('NC', 'HR', 'E', 'D', 'C', 'B', 'A', 'AA'))
+loans$ratings <- factor(loans$ratings, levels = c('NC', 'HR', 'E', 'D', 'C', 'B', 'A', 'AA'))
 ```
 
 ```{r echo=FALSE, Plot_Ratings}
-ggplot(subset(ratings, !is.na(loans$ratings) & ratings$combined != "NC"), 
-       aes(x = combined)) +
+ggplot(subset(loans, !is.na(loans$ratings) & loans$ratings != "NC"), 
+       aes(x = ratings)) +
   geom_bar(fill = "#598BF7",
            color = "black") +
   labs(x = "Credit Rating", 
@@ -398,7 +399,19 @@ ggplot(subset(ratings, !is.na(loans$ratings) & ratings$combined != "NC"),
        title = "Credit Rating Histogram")
 ```
 
+The plot for combined Credit rating turns out very well. The data appears normally distributed with the 'C' rating having the most values. the height rating, 'AA', has the least amount of values.
+
 ### Explore Loan Status
+
+;kmn;okn
+
+```{r echo=FALSE, LoanStatus_Levels}
+levels(loans$LoanStatus)
+```
+
+In order to reduce the amount of categorical bins, several of the 'Past Due' bins can be combined. 'FinalPaymentInProgress' can also be lumped with 'Current' loans.
+
+Once the categorical bins have been combined, the levels can also be ordered from the most favorable status to the least favorable status.
 
 ```{r echo=FALSE, LoanStatus_Levels}
 # Combine "Past Due" levels
@@ -422,13 +435,26 @@ ggplot(data = loans, aes(x = LoanStatus)) +
 ```
 
 ### Explore Loan Amount
+
+Loans start at \$1000 and go up to a maximum of $35,000.
+
 ```{r echo=FALSE, LoanAmount}
 ggplot(data = loans, aes(x = LoanOriginalAmount)) +
   geom_histogram(binwidth = 1000,
                  fill = "#598BF7",
                  color = "black") +
-  scale_x_continuous(breaks = c(seq(0, 35000, 5000)))
+  scale_x_continuous(breaks = c(seq(0, 35000, 5000))) +
+  labs(x = "Loan Amount ($)",
+       y = "Count",
+       title = "Loan Amount Histogram")
 ```
+
+```{r}
+summary(loans$LoanOriginalAmount)
+
+```
+
+The loan amount data is right skewed with multi-modal peaks. These peaks are all at the \$5000 increments, which is probably attributable to the fact most people get loans at even amounts. 75% of the loans are $12000 or less, with only a handful of loans at the maximum amount of \$35,000.
 
 ### Explore Employment Status
 ```{r echo=FALSE, EmploymentStatus1}
