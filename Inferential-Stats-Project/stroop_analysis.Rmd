@@ -1,0 +1,22 @@
+---
+title: 'Inferential Statistics: Exploration of the Stroop Effect'
+author: "Tyler C Julian"
+date: "February 19, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Independent and Dependent variables
+
+### Hypothesis and Statistical Test
+
+### Descriptive Statistics
+
+### Visualizing the Dataset
+
+### ??? Test and Conclusion
+
+### 6. Reflection
