@@ -426,7 +426,8 @@ loans$LoanStatus <- factor(loans$LoanStatus,
 ```
 
 ```{r echo=FALSE, LoanStatus, fig.width=10}
-ggplot(data = loans, aes(x = LoanStatus)) +
+ggplot(data = subset(loans, loans$LoanStatus != 'Cancelled'), 
+       aes(x = LoanStatus)) +
   geom_bar(fill = "#598BF7",
            color = "black") +
   labs(x = "Status", 
@@ -434,11 +435,15 @@ ggplot(data = loans, aes(x = LoanStatus)) +
        title = "Loan Status Histogram")
 ```
 
+```{r echo=FALSE, LoanStatus2}
+table(loans$LoanStatus)
+```
+
 ### Explore Loan Amount
 
 Loans start at \$1000 and go up to a maximum of $35,000.
 
-```{r echo=FALSE, LoanAmount}
+```{r echo=FALSE, LoanAmount1}
 ggplot(data = loans, aes(x = LoanOriginalAmount)) +
   geom_histogram(binwidth = 1000,
                  fill = "#598BF7",
@@ -449,14 +454,15 @@ ggplot(data = loans, aes(x = LoanOriginalAmount)) +
        title = "Loan Amount Histogram")
 ```
 
-```{r}
+```{r echo=FALSE, LoanAmount2}
 summary(loans$LoanOriginalAmount)
-
 ```
 
 The loan amount data is right skewed with multi-modal peaks. These peaks are all at the \$5000 increments, which is probably attributable to the fact most people get loans at even amounts. 75% of the loans are $12000 or less, with only a handful of loans at the maximum amount of \$35,000.
 
 ### Explore Employment Status
+
+
 ```{r echo=FALSE, EmploymentStatus1}
 levels(loans$EmploymentStatus) <- c("Not available", "Employed", "Full-time", 
                                     "Not available", "Not employed", "Other", 
@@ -469,6 +475,8 @@ loans$EmploymentStatus <- factor(loans$EmploymentStatus,
                                             "Other", "Not available"))
 ```
 
+
+
 ```{r echo=FALSE, EmploymentStatus2}
 ggplot(data = subset(loans, loans$EmploymentStatus != "Not available"),
        aes(x = EmploymentStatus)) +
@@ -480,6 +488,9 @@ ggplot(data = subset(loans, loans$EmploymentStatus != "Not available"),
 ```
 
 ### Explore Employment Duration
+
+Along with Employment Status, lenders also consider the borrower's employment duration. Longer durations usually signify more stable income, and thus a safer investment.
+
 ```{r echo=FALSE, EmploymentStatusDuration1}
 ggplot(data = subset(loans, !is.na(loans$EmploymentStatusDuration)), 
        aes(x = EmploymentStatusDuration / 12)) +
@@ -491,8 +502,13 @@ ggplot(data = subset(loans, !is.na(loans$EmploymentStatusDuration)),
        y = "Count", 
        title = "Employment Duration Histogram")
 ```
-
 ```{r echo=FALSE, EmploymentStatusDuration2}
+summary(loans$EmploymentStatusDuration / 12)
+```
+
+The initial plot shows that the Employment Duration plot is right skewed and unimodal. Thre is a long tail with some values way beyond the 3rd quartile. 50% of
+
+```{r echo=FALSE, EmploymentStatusDuration3}
 ggplot(data = subset(loans, !is.na(loans$EmploymentStatusDuration)), 
        aes(x = (EmploymentStatusDuration / 12) + 1)) +
   geom_histogram(binwidth = 0.25,
