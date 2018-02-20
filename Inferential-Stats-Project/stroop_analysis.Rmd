@@ -17,19 +17,22 @@ The __dependent variable__ would the the amount of time it takes a participant t
 
 ### Hypothesis and Statistical Test
 
-The hypothesis can be pictured as:
+The __null hypothesis__ for this experiment is that there will not be a statistical difference in the average time between the congruent and incongruent conditions. 
+The __alternative hypothesis__ is that there will be a statistical difference in the average time between the congruent and incongruent conditions.
+
+These hypotheses can be pictured below, with _H~0~_ being the null hypothesis, _H~a~_ being the alternative hypothesis, _£g~c~_, being the average congruent time, and _£g~i~_ being the average incongruent time:
 
 \begin{align}
-H_0 : £g = £g_i \\
-H_a : £g ¡Ú £g_i
+H_0 : £g_c = £g_i \\
+H_a : £g_c ¡Ú £g_i
 \end{align}
 
-The statistical test that will be used is a two-tailed t-test. This t-test is chosen because the population parameters are unknown. It is two-tailed because we are unsure whether the times will rise or fall between word conditions.
+The statistical test that will be used for this experiment is a two-tailed t-test. This t-test is a dependent t-test with paired samples, and is chosen because the population parameters are unknown. It is two-tailed because we are unsure whether the times will rise or fall between word conditions.
 
 ### Descriptive Statistics
 
 ### Visualizing the Dataset
 
-### ??? Test and Conclusion
+### Two-Tailed T-Test and Conclusion
 
-### 6. Reflection
+### Reflection
