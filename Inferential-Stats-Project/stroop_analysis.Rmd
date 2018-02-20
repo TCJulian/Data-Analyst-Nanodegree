@@ -11,7 +11,20 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Independent and Dependent variables
 
+The __independent variable__ for this experiment would be the the conditions of the words. They change from congruent to incongruent between the two trials.
+
+The __dependent variable__ would the the amount of time it takes a participant to complete the test. This is measured in seconds. 
+
 ### Hypothesis and Statistical Test
+
+The hypothesis can be pictured as:
+
+\begin{align}
+H_0 : £g = £g_i \\
+H_a : £g ¡Ú £g_i
+\end{align}
+
+The statistical test that will be used is a two-tailed t-test. This t-test is chosen because the population parameters are unknown. It is two-tailed because we are unsure whether the times will rise or fall between word conditions.
 
 ### Descriptive Statistics
 
