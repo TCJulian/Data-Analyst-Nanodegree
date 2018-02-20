@@ -57,6 +57,61 @@ print.default(sd(stroop$incongruent))
 ```
 ### Visualizing the Dataset
 
+```{r}
+library(ggplot2)
+library(gridExtra)
+c_vis <- ggplot(data=stroop, aes(x = congruent)) +
+           geom_histogram(binwidth = 2, 
+                          fill = "blue",
+                          color = "black") +
+           scale_x_continuous(breaks = c(seq(8, 36, 2)))
+c_vis
+```
+
+```{r}
+ic_vis <- ggplot(data=stroop, aes(x = incongruent)) +
+            geom_histogram(binwidth = 2, 
+                           fill = "red",
+                           color = "black") +
+            scale_x_continuous(breaks = c(seq(8, 36, 2)))
+ic_vis
+```
+```{r}
+c_vis <- ggplot(data=stroop, aes(x = congruent)) +
+           geom_histogram(aes(y = ..density..),
+                          binwidth = 2, 
+                          fill = "blue",
+                          color = "black") +
+           geom_density() +
+           scale_x_continuous(limits = c(6, 38), breaks = c(seq(6, 38, 2)))
+
+ic_vis <- ggplot(data=stroop, aes(x = incongruent)) +
+            geom_histogram(aes(y = ..density..),
+                           binwidth = 2, 
+                           fill = "red",
+                           color = "black") +
+            geom_density() +
+            scale_x_continuous(limits = c(6, 38), breaks = c(seq(6, 38, 2)))
+
+grid.arrange(c_vis, ic_vis)
+```
+
+
+```{r}
+ggplot(data = stroop, aes(x = congruent)) +
+  geom_histogram(alpha = .5,
+                 binwidth = 2, 
+                 fill = "blue",
+                 color = "black") +
+  geom_histogram(data = stroop, 
+                 aes(x = incongruent),
+                 alpha = .5,
+                 binwidth = 2, 
+                 fill = "red",
+                 color = "black") +
+  scale_x_continuous(limits = c(6, 38), breaks = c(seq(6, 38, 2)))
+  
+```
 ### Two-Tailed T-Test and Conclusion
 
 ### Reflection
