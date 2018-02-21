@@ -9,11 +9,17 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+### Introduction
+
+The Stroop Effect, named after the original researcher John Ridley Stroop, is a psychological phenomenon that demonstrates the effect of interference on reaction time. The basis of the experiment consists of participants reading aloud  the color of each word from a list of colored words as fast and correctly as possible, with their final time being recorded. There are two trials, each with a unique condition: the first where the words are congruent and the second where the words are incongruent. _Congruent words_ are words where the content of the word matches the color of the word: for example, <span style="color:red">RED</span>, <span style="color:green">GREEN</span>, <span style="color:blue">BLUE</span>. _Incongruent words_ are words where the content of the word does not match the color: for example <span style="color:green">RED</span>, <span style="color:orange">PURPLE</span>, <span style="color:blue">PINK</span>. The amount of time it takes to complete each trial is measured and recorded for each participant. 
+
+In this project, the Stroop Effect will be explored again, but with a focus on the statistical context. The experiment will be run using a sample consisting of a provided dataset and my own recorded times. The independent and dependent variables of this study will be identified and a hypothesis testing will also be conducted. Ultimately, the sample dataset will undergo a statistical test, and a conclusion will be reached based on the results. 
+
 ### Independent and Dependent variables
 
-The __independent variable__ for this experiment would be the the conditions of the words. They change from congruent to incongruent between the two trials.
+The __independent variable__ for this experiment is the conditions of the words. They change from congruent to incongruent between the two trials.
 
-The __dependent variable__ would the the amount of time it takes a participant to complete the test. This is measured in seconds. 
+The __dependent variable__ is the amount of time it takes a participant to complete each trial, measured in seconds. 
 
 ### Hypothesis and Statistical Test
 
@@ -21,97 +27,138 @@ The __null hypothesis__ for this experiment is that there will not be a statisti
 
 The __alternative hypothesis__ is that there will be a statistical difference in the average time between the congruent and incongruent conditions.
 
-These hypotheses can be pictured below, with _H~0~_ being the null hypothesis, _H~a~_ being the alternative hypothesis, _£g~c~_, being the average congruent time, and _£g~i~_ being the average incongruent time:
+These hypotheses can be pictured mathematically below, with _H~0~_ being the null hypothesis, _H~a~_ being the alternative hypothesis, _£g~c~_, being the average congruent time, and _£g~i~_ being the average incongruent time:
 
 \begin{align}
 H_0 : £g_c = £g_i \\
 H_a : £g_c ¡Ú £g_i
 \end{align}
 
-The statistical test that will be used for this experiment is a __two-tailed t-test__. This t-test is a dependent t-test with paired samples, and is chosen because the population parameters are unknown. It is two-tailed because we are unsure whether the times will rise or fall between word conditions.
+The statistical test being used for this experiment is a __two-tailed t-test__. This t-test is a dependent t-test with paired samples, and is chosen because the population parameters are unknown. It is two-tailed because we are unsure whether the times will rise or fall between word conditions.
 
-### Descriptive Statistics
+### Loading the Dataset into R and Running the Experiment
 
-Descriptive statistics are pulled from [this dataset](https://drive.google.com/file/d/0B9Yf01UaIbUgQXpYb2NhZ29yX1U/view).
+The starting dataset consists of 24 paired observations to start with. This sample of records was retrieved from [this site](https://drive.google.com/file/d/0B9Yf01UaIbUgQXpYb2NhZ29yX1U/view), provided by Udacity.
 
-```{r}
-congruent <- c(12.079, 16.791, 9.564, 8.63, 14.669, 12.238, 14.692, 8.987, 
-               9.401, 14.48, 22.328, 15.298, 15.073, 16.929, 18.2, 12.13, 
+```{r, Read Data}
+congruent <- c(12.079, 16.791, 9.564, 8.63, 14.669, 12.238, 14.692, 8.987,
+               9.401, 14.48, 22.328, 15.298, 15.073, 16.929, 18.2, 12.13,
                18.495, 10.639, 11.344, 12.369, 12.944, 14.233, 19.71, 16.004)
 
 incongruent <- c(19.278, 18.741, 21.214, 15.687, 22.803, 20.878, 24.572, 17.394,
-                 20.762, 26.282, 24.524, 18.644, 17.51, 20.33, 35.255, 22.158, 
+                 20.762, 26.282, 24.524, 18.644, 17.51, 20.33, 35.255, 22.158,
                  25.139, 20.429, 17.425, 34.288, 23.894, 17.96, 22.058, 21.157)
 
 stroop <- data.frame(congruent, incongruent)
 ```
 
-```{r echo=FALSE}
+With the bulk of the sample loaded into R, I now need to run the experiment myself and add my times to the dataset.
+
+If you are interested, I encourage that you run the experiment yourself as well! [It is hosted by the University of Washington and is free to use](https://faculty.washington.edu/chudler/java/ready.html). It definitely helped me better understand the design of the experiment (plus, I found it quite fun).
+
+After running the test, I scored __10.278__ secs on my first (congruent) run and __18.169__ secs on my second (incongruent) run. I can now add my own results to the dataset: 
+
+```{r Add Personal Times}
+stroop <- rbind(stroop, c(10.278, 18.169))
+```
+
+With my own data now in the dataframe, that gives us a total sample size of 25 paired samples.
+
+### Descriptive Statistics
+
+With all of the observations saved into a dataframe, descriptive statistics can be computed from the dataset using R. Each treatment group, the congruent and incongruent groups, will be looked at seperately.
+
+#### Congruent Trial
+
+```{r echo=FALSE, Congruent Summary}
 summary(stroop$congruent)
 print.default(sd(stroop$congruent))
 ```
 
-```{r echo=FALSE}
+The mean and median for the congruent trial data are 14.23 and 13.90 seconds. The median and mean are relatively close to each other, which may suggest that the data is balanced and possibly normal. The standard devation is ~3.57.  
+
+#### Incongruent Trial
+
+```{r echo=FALSE, Incongruent Summary}
 summary(stroop$incongruent)
 print.default(sd(stroop$incongruent))
 ```
+
+Compared to the congruent trial data, the incongruent trial data has a much higher mean (21.86) and median (20.88). The standard deviation (~4.76) is also higher, meaning that there is more variation in the data compared to the congruent trial data. The incongruent trial data also has a very high maximum value.
+
 ### Visualizing the Dataset
 
-```{r}
+Although descriptive statistics provide a good summary of the data, they do not provide insight into the data's shape or distribution. In order to learn more about the two trials, they need to be visualized.
+
+Let's look at the congruent trial distribution first, visualized as a histogram:
+
+```{r warning=FALSE, Congruent Visual}
 library(ggplot2)
 library(gridExtra)
-c_vis <- ggplot(data=stroop, aes(x = congruent)) +
+
+ggplot(data = stroop, 
+       aes(x = congruent)) +
+  geom_histogram(binwidth = 2, 
+                 fill = "#538fef",
+                 color = "black") +
+  scale_x_continuous(breaks = c(seq(8, 36, 2))) +
+  labs(x = "Time (s)", 
+       y = "Frequency", 
+       title = "Congruent Trial")
+```
+
+How does this plot compare to the incongruent trial?
+
+```{r, Incongruent Visual}
+ggplot(data = stroop, 
+       aes(x = incongruent)) +
+  geom_histogram(binwidth = 2, 
+                 fill = "#538fef",
+                 color = "black") +
+  scale_x_continuous(breaks = c(seq(8, 36, 2))) +
+  labs(x = "Time (s)", 
+       y = "Frequency", 
+       title = "Incongruent Trial")
+```
+
+Because of the different x-axis limits between the two plots, it is difficult to compare the two trials side by side. By plotting both visuals together using the same x limits, it should be much easier to compare them. The addition of a vertical line for the mean and a density curve should also improve comparison between the two trials.
+
+```{r, Both Visual}
+c_vis <- ggplot(data = stroop, 
+                aes(x = congruent)) +
            geom_histogram(binwidth = 2, 
-                          fill = "blue",
-                          color = "black") +
-           scale_x_continuous(breaks = c(seq(8, 36, 2)))
-c_vis
-```
+                          fill = "#538fef",
+                          color = "black") + 
+           geom_density(aes(y = ..count.. * 2)) + ## scaled to better shape plot
+           geom_vline(color = "#ed3838", 
+                      xintercept = mean(congruent),
+                      size = 1.25,
+                      linetype = 2) +
+           scale_x_continuous(limits = c(4, 40), 
+                              breaks = c(seq(4, 40, 2))) +
+           labs(x = "Time (s)", 
+                y = "Frequency", 
+                title = "Congruent Trial")
 
-```{r}
-ic_vis <- ggplot(data=stroop, aes(x = incongruent)) +
+ic_vis <- ggplot(data=stroop, 
+                 aes(x = incongruent)) +
             geom_histogram(binwidth = 2, 
-                           fill = "red",
+                           fill = "#538fef",
                            color = "black") +
-            scale_x_continuous(breaks = c(seq(8, 36, 2)))
-ic_vis
-```
-```{r}
-c_vis <- ggplot(data=stroop, aes(x = congruent)) +
-           geom_histogram(aes(y = ..density..),
-                          binwidth = 2, 
-                          fill = "blue",
-                          color = "black") +
-           geom_density() +
-           scale_x_continuous(limits = c(6, 38), breaks = c(seq(6, 38, 2)))
-
-ic_vis <- ggplot(data=stroop, aes(x = incongruent)) +
-            geom_histogram(aes(y = ..density..),
-                           binwidth = 2, 
-                           fill = "red",
-                           color = "black") +
-            geom_density() +
-            scale_x_continuous(limits = c(6, 38), breaks = c(seq(6, 38, 2)))
+            geom_density(aes(y = ..count.. * 2)) + ##scaled here as well
+            geom_vline(color = "#ed3838", 
+                       xintercept = mean(incongruent),
+                       size = 1.25,
+                       linetype = 2) +
+            scale_x_continuous(limits = c(4, 40), 
+                               breaks = c(seq(4, 40, 2))) +
+            labs(x = "Time (s)", 
+                 y = "Frequency", 
+                 title = "Incongruent Trial")
 
 grid.arrange(c_vis, ic_vis)
 ```
 
-
-```{r}
-ggplot(data = stroop, aes(x = congruent)) +
-  geom_histogram(alpha = .5,
-                 binwidth = 2, 
-                 fill = "blue",
-                 color = "black") +
-  geom_histogram(data = stroop, 
-                 aes(x = incongruent),
-                 alpha = .5,
-                 binwidth = 2, 
-                 fill = "red",
-                 color = "black") +
-  scale_x_continuous(limits = c(6, 38), breaks = c(seq(6, 38, 2)))
-  
-```
 ### Two-Tailed T-Test and Conclusion
 
 ### Reflection
