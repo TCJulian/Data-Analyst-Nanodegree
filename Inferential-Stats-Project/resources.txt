@@ -3,3 +3,4 @@ Overlaying density with histograms: http://www.cookbook-r.com/Graphs/Plotting_di
 Sample Stroop Effect: https://faculty.washington.edu/chudler/java/ready.html\
 Stroop Effect Dataset: https://drive.google.com/file/d/0B9Yf01UaIbUgQXpYb2NhZ29yX1U/view
 Stroop Effect Wiki: https://en.wikipedia.org/wiki/Stroop_effect#Experiment
+Change color of text RMarkdown: https://stackoverflow.com/questions/29067541/rmarkdown-how-to-change-the-font-color
