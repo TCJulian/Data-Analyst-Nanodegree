@@ -1,8 +1,9 @@
 ggplot2 documentation: http://ggplot2.tidyverse.org/reference/index.html
 Overlaying density with histograms: http://www.cookbook-r.com/Graphs/Plotting_distributions_(ggplot2)/
-Sample Stroop Effect: https://faculty.washington.edu/chudler/java/ready.html\
-Stroop Effect Dataset: https://drive.google.com/file/d/0B9Yf01UaIbUgQXpYb2NhZ29yX1U/view
+Sample Stroop Effect Experiment: https://faculty.washington.edu/chudler/java/ready.html\
+Sample Stroop Effect Dataset: https://drive.google.com/file/d/0B9Yf01UaIbUgQXpYb2NhZ29yX1U/view
 Stroop Effect Wiki: https://en.wikipedia.org/wiki/Stroop_effect#Experiment
 Change color of text RMarkdown: https://stackoverflow.com/questions/29067541/rmarkdown-how-to-change-the-font-color
 Dependent t-test: https://libguides.library.kent.edu/SPSS/PairedSamplestTest
 Install latex package to rmd: https://tex.stackexchange.com/questions/171711/how-to-include-latex-package-in-r-markdown
+latex mathematics: https://en.wikibooks.org/wiki/LaTeX/Mathematics
