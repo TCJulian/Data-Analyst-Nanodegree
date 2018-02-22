@@ -185,7 +185,7 @@ In order to perform a paired sample t-test, there are [a couple requirements tha
 
 To use the paired t-test on this dataset, we assume that the distribution of the difference between paired values  is normal. We also assume that the sample was taken randomly.
 
-#### Calculating the Pieces
+#### Calculating the t-score Manually
 
 __The formula for the dependent t-test is as follows:__
 
@@ -236,9 +236,7 @@ se <- sdiff / sqrt(n)
 print(se)
 ```
 
-All the pieces are in place. It is time to calculate the t-statistic:
-
-#### Performing the t-test
+All the pieces are in place. It is time to calculate the t-value:
 
 ```{r, t-test}
 t_score <- xdiff / se
@@ -253,8 +251,22 @@ The p-value can be calculated usin the built-in R function `pt`:
 format(2*pt(t_score, 24), digits = 1, scientific = FALSE)
 ```
 
-Because the t-score is well below the t-critical value, we reject the null hypothesis. The congruent and incongruent trials are significantly different at the 0.05 confidence level, with a p-value < .001.
+#### Calculating t-score using R
+
+In the previous section, _t_ was mathematically calculated by hand. This was done intentionally to show the math behind the t-score.
+
+With R, a t-test can be run very easily using `t.test`:
+
+```{r, r_ttest}
+t.test(stroop$congruent, y=stroop$incongruent, paired =TRUE)
+```
+
+The results from the R t-test are identical to the results obtained manually.
 
 #### Conclusion
+
+Because the t-value (-8.36) is well below the t-critical value (-2.064), we reject the null hypothesis that the two groups are the same. The congruent and incongruent trials are significantly different at the 0.05 confidence level, with a p-value < .05.
+
+The incongruent words took much longer to read on average than the congruent words. One theory is that the incongruent words slow the processing time of the brain as to tries to say the correct color. Because the incongruent words give conflicting input, it hampers the brains ability to choose the color quickly. The congruent words are encoded correctly with there corresponding color, allowing to brain to quickly identify and pronounce the color. 
 
 ### Reflection
