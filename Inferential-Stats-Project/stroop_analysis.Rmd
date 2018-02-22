@@ -2,6 +2,8 @@
 title: 'Inferential Statistics: Exploration of the Stroop Effect'
 author: "Tyler C Julian"
 date: "February 19, 2018"
+header-includes:
+  - \usepackage{mathtools}
 output: html_document
 ---
 
@@ -27,14 +29,14 @@ The __null hypothesis__ for this experiment is that there will not be a statisti
 
 The __alternative hypothesis__ is that there will be a statistical difference in the average time between the congruent and incongruent conditions.
 
-These hypotheses can be pictured mathematically below, with _H~0~_ being the null hypothesis, _H~a~_ being the alternative hypothesis, _£g~c~_, being the average congruent time, and _£g~i~_ being the average incongruent time:
+These hypotheses can be pictured mathematically below, with $H_0$ being the null hypothesis, $H_a$ being the alternative hypothesis, $\mu_c$, being the average congruent time, and $\mu_i$ being the average incongruent time:
 
-\begin{align}
-H_0 : £g_c = £g_i \\
-H_a : £g_c ¡Ú £g_i
-\end{align}
+$$
+H_0 : \mu_c = \mu_i \\
+H_a : \mu_c â‰  \mu_i
+$$
 
-The statistical test being used for this experiment is a __two-tailed t-test__. This t-test is a dependent t-test with paired samples, and is chosen because the population parameters are unknown. It is two-tailed because we are unsure whether the times will rise or fall between word conditions.
+The statistical test being used for this experiment is a __two-tailed paired sample t-test__. The __confidence level__ will be set to  _0.05_. This t-test is a dependent t-test with paired samples and is chosen because the population parameters are unknown. It is two-tailed because we are unsure whether the times will rise or fall between word conditions.
 
 ### Loading the Dataset into R and Running the Experiment
 
@@ -66,20 +68,20 @@ With my own data now in the dataframe, that gives us a total sample size of 25 p
 
 ### Descriptive Statistics
 
-With all of the observations saved into a dataframe, descriptive statistics can be computed from the dataset using R. Each treatment group, the congruent and incongruent groups, will be looked at seperately.
+With all of the observations saved into a dataframe, descriptive statistics can be computed from the dataset using R. Each treatment group, the congruent and incongruent trial groups, will be looked at seperately.
 
 #### Congruent Trial
 
-```{r echo=FALSE, Congruent Summary}
+```{r echo=FALSE, Congruent_Summary}
 summary(stroop$congruent)
 print.default(sd(stroop$congruent))
 ```
 
-The mean and median for the congruent trial data are 14.23 and 13.90 seconds. The median and mean are relatively close to each other, which may suggest that the data is balanced and possibly normal. The standard devation is ~3.57.  
+The mean and median for the congruent trial data are 14.23 and 13.90 seconds. The median and mean are relatively close to each other, which may suggest that the data is evenly distributed and possibly normal. The standard devation is ~3.57.  
 
 #### Incongruent Trial
 
-```{r echo=FALSE, Incongruent Summary}
+```{r echo=FALSE, Incongruent_Summary}
 summary(stroop$incongruent)
 print.default(sd(stroop$incongruent))
 ```
@@ -92,7 +94,7 @@ Although descriptive statistics provide a good summary of the data, they do not 
 
 Let's look at the congruent trial distribution first, visualized as a histogram:
 
-```{r warning=FALSE, Congruent Visual}
+```{r warning=FALSE, Congruent_Visual}
 library(ggplot2)
 library(gridExtra)
 
@@ -107,9 +109,11 @@ ggplot(data = stroop,
        title = "Congruent Trial")
 ```
 
+This distribution has a semi-normal shape with a majority of the values clustered near the median.
+
 How does this plot compare to the incongruent trial?
 
-```{r, Incongruent Visual}
+```{r, Incongruent_Visual}
 ggplot(data = stroop, 
        aes(x = incongruent)) +
   geom_histogram(binwidth = 2, 
@@ -121,9 +125,13 @@ ggplot(data = stroop,
        title = "Incongruent Trial")
 ```
 
+The incongruent trial data is right skewed, with a large gap between 26 and 34 seconds. These could potentially be outliers.
+
+*****
+
 Because of the different x-axis limits between the two plots, it is difficult to compare the two trials side by side. By plotting both visuals together using the same x limits, it should be much easier to compare them. The addition of a vertical line for the mean and a density curve should also improve comparison between the two trials.
 
-```{r, Both Visual}
+```{r, Both_Visual}
 c_vis <- ggplot(data = stroop, 
                 aes(x = congruent)) +
            geom_histogram(binwidth = 2, 
@@ -159,6 +167,94 @@ ic_vis <- ggplot(data=stroop,
 grid.arrange(c_vis, ic_vis)
 ```
 
-### Two-Tailed T-Test and Conclusion
+This visualization really captures everything we need to compare the two distributions.
+
+It is clear that the incongruent trial took longer to complete times on average than the congruent trial. But is this difference significant, or is the difference jsut due to chance? Only a statistical test can answer that.
+
+### t-test and Conclusion
+
+#### Pair Sample t-test Assumptions
+
+In order to perform a paired sample t-test, there are [a couple requirements that must be met](https://libguides.library.kent.edu/SPSS/PairedSamplestTest):
+
+1. Dependent variable must be continuous.
+2. Samples/groups must be related (Ex: Person 1 takes both congruent and incongruent test)
+3. Random sample from population
+4. Approximately normal distribution of the difference between paired values
+5. No outliers in difference between paired groups
+
+To use the paired t-test on this dataset, we assume that the distribution of the difference between paired values  is normal. We also assume that the sample was taken randomly.
+
+#### Calculating the Pieces
+
+__The formula for the dependent t-test is as follows:__
+
+$$
+t = \frac{\overline{x}_{diff} - 0}{s_\overline{x}}
+$$
+
+__where:__
+
+$$
+s_\overline{x} = \frac{s_{diff}}{\sqrt{n}}
+$$
+
+__where:__
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$\overline{x}_{diff}$ = the difference between $\overline{x}_c$ and $\overline{x}_i$. \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$s_\overline{x}$ = the standard error of the mean. \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$s_{diff}$ = the standard deviation of the differences. \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$n$ = the sample size. \
+  
+
+Lets start by solving for $\overline{x}_{diff}$. In order to solve $\overline{x}_{diff}$, a seperate column for the difference between the data points in the congruent and incongruent trials is created.
+
+```{r, Difference}
+stroop$difference <- stroop$congruent - stroop$incongruent
+```
+
+The difference mean is then calculated and stored in `xdiff`:
+
+```{r, xdiff}
+xdiff <- mean(stroop$difference)
+print(xdiff)
+```
+
+Now to find $s_\overline{x}$. To do that, $s_{diff}$ is calculated. `n` is also stored for later calculations:
+
+```{r, SD_Diff}
+sdiff <- sd(stroop$difference)
+n <- 25
+
+print(sdiff)
+```
+
+With 4.76 as $s_{diff}$ and 25 as $n$, $s_\overline{x}$ can now be calculated.
+
+```{r, SE}
+se <- sdiff / sqrt(n)
+print(se)
+```
+
+All the pieces are in place. It is time to calculate the t-statistic:
+
+#### Performing the t-test
+
+```{r, t-test}
+t_score <- xdiff / se
+print(t_score)
+```
+
+Using the [t-table](https://s3.amazonaws.com/udacity-hosted-downloads/t-table.jpg), the __t-critical value__ is Â±2.064, based upon a two-tailed test, 24 degrees of freedom, and a 0.05 confidence level.
+
+The p-value can be calculated usin the built-in R function `pt`:
+
+```{r}
+format(2*pt(t_score, 24), digits = 1, scientific = FALSE)
+```
+
+Because the t-score is well below the t-critical value, we reject the null hypothesis. The congruent and incongruent trials are significantly different at the 0.05 confidence level, with a p-value < .001.
+
+#### Conclusion
 
 ### Reflection
