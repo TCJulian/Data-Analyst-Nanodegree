@@ -1,7 +1,7 @@
 ---
 title: 'Inferential Statistics: Exploration of the Stroop Effect'
 author: "Tyler C Julian"
-date: "February 19, 2018"
+date: "February 22, 2018"
 header-includes:
   - \usepackage{mathtools}
 output: html_document
@@ -13,9 +13,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Introduction
 
-The Stroop Effect, named after the original researcher John Ridley Stroop, is a psychological phenomenon that demonstrates the effect of interference on reaction time. The basis of the experiment consists of participants reading aloud  the color of each word from a list of colored words as fast and correctly as possible, with their final time being recorded. There are two trials, each with a unique condition: the first where the words are congruent and the second where the words are incongruent. _Congruent words_ are words where the content of the word matches the color of the word: for example, <span style="color:red">RED</span>, <span style="color:green">GREEN</span>, <span style="color:blue">BLUE</span>. _Incongruent words_ are words where the content of the word does not match the color: for example <span style="color:green">RED</span>, <span style="color:orange">PURPLE</span>, <span style="color:blue">PINK</span>. The amount of time it takes to complete each trial is measured and recorded for each participant. 
+The Stroop Effect, named after the original researcher John Ridley Stroop, is a psychological phenomenon that demonstrates the effect of interference on reaction time. The basis of the experiment consists of participants reading aloud  the color of each word from a list of colored words as fast and correctly as possible, with their final time being recorded. There are two trials, each with a unique condition: the first where the words are congruent and the second where the words are incongruent. _Congruent words_ are words where the content of the word matches the color of the word: for example, <span style="color:red">RED</span>, <span style="color:green">GREEN</span>, <span style="color:blue">BLUE</span>. _Incongruent words_ are words where the content of the word does not match the color of the word: for example <span style="color:green">RED</span>, <span style="color:orange">PURPLE</span>, <span style="color:blue">PINK</span>. The amount of time it takes to complete each trial is measured and recorded for each participant. 
 
-In this project, the Stroop Effect will be explored again, but with a focus on the statistical context. The experiment will be run using a sample consisting of a provided dataset and my own recorded times. The independent and dependent variables of this study will be identified and a hypothesis testing will also be conducted. Ultimately, the sample dataset will undergo a statistical test, and a conclusion will be reached based on the results. 
+In this project, the Stroop Effect will be explored again, but with a focus on the statistical context. The experiment will be run using a provided dataset and my own recorded times. The independent and dependent variables of this study will be identified and a hypothesis testing will also be conducted. Ultimately, the sample dataset will undergo a statistical test, and a conclusion will be reached based on the results. 
 
 ### Independent and Dependent variables
 
@@ -23,13 +23,13 @@ The __independent variable__ for this experiment is the conditions of the words.
 
 The __dependent variable__ is the amount of time it takes a participant to complete each trial, measured in seconds. 
 
-### NUll and Alternative Hypothesis
+### Null and Alternative Hypothesis
 
-The __null hypothesis__ for this experiment is that there will not be a statistical difference in the average time between the congruent and incongruent conditions. 
+The __null hypothesis__ for this experiment is that there will not be a statistical difference between the congruent and incongruent trial times. 
 
-The __alternative hypothesis__ is that there will be a statistical difference in the average time between the congruent and incongruent conditions.
+The __alternative hypothesis__ is that there will be a statistical difference between the congruent and incongruent trial times.
 
-These hypotheses can be pictured mathematically below, with $H_0$ being the null hypothesis, $H_a$ being the alternative hypothesis, $\mu_c$, being the average congruent time, and $\mu_i$ being the average incongruent time:
+These hypotheses can be pictured mathematically below, with $H_0$ being the null hypothesis, $H_a$ being the alternative hypothesis, $\mu_c$, being the congruent times, and $\mu_i$ being the incongruent times:
 
 $$
 H_0 : \mu_c = \mu_i \\
@@ -38,7 +38,7 @@ $$
 
 ### Statistical Test: Paired t-test
 
-The statistical test being used for this experiment is a __two-tailed paired sample t-test__. The __confidence level__ will be set to  _0.05_. This t-test is a dependent t-test with paired samples and is chosen because the population parameters are unknown. It is two-tailed because we are unsure whether the times will rise or fall between word conditions.
+The statistical test being used for this experiment is a __two-tailed paired sample t-test__. The __confidence level__ is set to  0.05. This type of t-test is chosen because the population parameters are unknown and the sample data are related to each other.. It is two-tailed because we are unsure whether the times will rise or fall between word conditions.
 
 In order to perform a paired sample t-test, there are [a couple requirements that must be met](https://libguides.library.kent.edu/SPSS/PairedSamplestTest):
 
@@ -48,7 +48,7 @@ In order to perform a paired sample t-test, there are [a couple requirements tha
 4. Approximately normal distribution of the difference between paired values
 5. No outliers in difference between paired groups
 
-To use the paired t-test on this dataset, we assume that the distribution of the difference between paired values is normal. We also assume that the sample was taken randomly.
+To use the paired t-test on this dataset, it is assumed that the distribution of the difference between paired values is normal and there are no outliers. It is also assumed that the sample was taken randomly.
 
 ### Loading the Dataset into R and Running the Experiment
 
@@ -68,7 +68,7 @@ stroop <- data.frame(congruent, incongruent)
 
 With the bulk of the sample loaded into R, I now need to run the experiment myself and add my times to the dataset.
 
-If you are interested, I encourage that you run the experiment yourself as well! [It is hosted by the University of Washington and is free to use](https://faculty.washington.edu/chudler/java/ready.html). It definitely helped me better understand the design of the experiment (plus, I found it quite fun).
+If you are interested, I encourage that you run the experiment yourself as well! [It is hosted by the University of Washington, free to use, and only takes a couple of minutes](https://faculty.washington.edu/chudler/java/ready.html). It definitely helped me better understand the design of the experiment (plus, I found it quite fun).
 
 After running the test, I scored __10.278__ secs on my first (congruent) run and __18.169__ secs on my second (incongruent) run. I can now add my own results to the dataset: 
 
@@ -76,11 +76,11 @@ After running the test, I scored __10.278__ secs on my first (congruent) run and
 stroop <- rbind(stroop, c(10.278, 18.169))
 ```
 
-With my own data now in the dataframe, that gives us a total sample size of 25 paired samples.
+After the additions of my own data into the dataframe, the total sample size is 25 paired samples.
 
 ### Descriptive Statistics
 
-With all of the observations saved into a dataframe, descriptive statistics can be computed from the dataset using R. Each treatment group, the congruent and incongruent trial groups, will be looked at seperately.
+With all of the observations saved into a dataframe, descriptive statistics can be computed from the dataset using R. Each treatment group will be looked at seperately.
 
 #### Congruent Trial
 
@@ -89,7 +89,7 @@ summary(stroop$congruent)
 print.default(sd(stroop$congruent))
 ```
 
-The mean and median for the congruent trial data are 14.23 and 13.90 seconds. The median and mean are relatively close to each other, which may suggest that the data is evenly distributed and possibly normal. The standard devation is ~3.57.  
+The mean and median for the congruent trial data are 14.23 and 13.90 seconds respectively. The median and mean are relatively close to each other, which may suggest that the data is possibly normal. The standard devation is ~3.57.  
 
 #### Incongruent Trial
 
@@ -98,7 +98,7 @@ summary(stroop$incongruent)
 print.default(sd(stroop$incongruent))
 ```
 
-Compared to the congruent trial data, the incongruent trial data has a much higher mean (21.86) and median (20.88). The standard deviation (~4.76) is also higher, meaning that there is more variation in the data compared to the congruent trial data. The incongruent trial data also has a very high maximum value.
+Compared to the congruent trial data, the incongruent trial data has a much higher mean (21.86) and median (20.88). The standard deviation (~4.76) is also higher, meaning that there is more variation in the incongruent trial data compared to the congruent trial data. The incongruent trial data also has a very high maximum value, especially compared to the congruent trial's maximum value.
 
 ### Visualizing the Dataset
 
@@ -137,7 +137,7 @@ ggplot(data = stroop,
        title = "Incongruent Trial")
 ```
 
-The incongruent trial data is right skewed, with a large gap between 26 and 34 seconds. These could potentially be outliers.
+The incongruent trial data is right skewed, with a large gap between 26 and 34 seconds. There are two values greater than 34. ased on their distance form the rest of the data, they could potentially be outliers.
 
 *****
 
@@ -160,30 +160,32 @@ c_vis <- ggplot(data = stroop,
                 y = "Frequency", 
                 title = "Congruent Trial")
 
-ic_vis <- ggplot(data=stroop, 
+i_vis <- ggplot(data=stroop, 
                  aes(x = incongruent)) +
-            geom_histogram(binwidth = 2, 
+           geom_histogram(binwidth = 2, 
                            fill = "#538fef",
                            color = "black") +
-            geom_density(aes(y = ..count.. * 2)) + ##scaled here as well
-            geom_vline(color = "#ed3838", 
+           geom_density(aes(y = ..count.. * 2)) + ##scaled here as well
+           geom_vline(color = "#ed3838", 
                        xintercept = mean(incongruent),
                        size = 1.25,
                        linetype = 2) +
-            scale_x_continuous(limits = c(4, 40), 
+           scale_x_continuous(limits = c(4, 40), 
                                breaks = c(seq(4, 40, 2))) +
             labs(x = "Time (s)", 
                  y = "Frequency", 
                  title = "Incongruent Trial")
 
-grid.arrange(c_vis, ic_vis)
+grid.arrange(c_vis, i_vis)
 ```
 
-This visualization really captures everything we need to compare the two distributions.
-
-It is clear that the incongruent trial took longer to complete times on average than the congruent trial. But is this difference significant, or is the difference jsut due to chance? Only a statistical test can answer that.
+It is clear that the incongruent trial had on average longer completion times than the congruent trial. But is this difference significant, or is the difference due to chance? Only a statistical test can answer that.
 
 ### t-test and Conclusion
+
+The t-test will be able to determine whether the differences between the two trial groups are statistically significant. 
+
+For this project, the t-test will be performed both manually and through the use of the R programming language.
 
 #### Calculating the t-score Manually
 
@@ -213,7 +215,7 @@ Lets start by solving for $\overline{x}_{diff}$. In order to solve $\overline{x}
 stroop$difference <- stroop$congruent - stroop$incongruent
 ```
 
-The difference mean is then calculated and stored in `xdiff`:
+The mean difference is then calculated and stored in `xdiff`:
 
 ```{r, xdiff}
 xdiff <- mean(stroop$difference)
@@ -245,7 +247,11 @@ print(t_score)
 
 Using the [t-table](https://s3.amazonaws.com/udacity-hosted-downloads/t-table.jpg), the __t-critical value__ is ±2.064, based upon a two-tailed test, 24 degrees of freedom, and a 0.05 confidence level.
 
-The p-value can be calculated usin the built-in R function `pt`:
+Because the t-value is beyond the range of the t-critical value, the differences between the two groups are significant.
+
+In order to find the probability of gettting this t-value due to chance, the p-value can be calculated. 
+
+Mathematically, the p-value is not very easy to calculate by hand. Instead, the p-value can be calculated programmatically using the built-in R function `pt`:
 
 ```{r}
 format(2*pt(t_score, 24), digits = 1, scientific = FALSE)
@@ -258,7 +264,7 @@ In the previous section, _t_ was mathematically calculated by hand. This was don
 With R, a t-test can be run very easily using `t.test`:
 
 ```{r, r_ttest}
-t.test(stroop$congruent, y=stroop$incongruent, paired =TRUE)
+t.test(stroop$congruent, y = stroop$incongruent, paired = TRUE)
 ```
 
 The results from the R t-test are identical to the results obtained manually.
@@ -267,11 +273,11 @@ The results from the R t-test are identical to the results obtained manually.
 
 Because the t-value (-8.36) is well below the t-critical value (-2.064), we reject the null hypothesis that the two groups are the same. The congruent and incongruent trials are significantly different at the 0.05 confidence level, with a p-value < .05.
 
-The incongruent words took much longer to read on average than the congruent words. One theory is that the incongruent words slow the processing time of the brain as to tries to say the correct color. Because the incongruent words give conflicting input, it hampers the brains ability to choose the color quickly. The congruent words are encoded correctly with there corresponding color, allowing to brain to quickly identify and pronounce the color. 
+The incongruent words took much longer to read on average than the congruent words. One theory is that the incongruent words slow the processing time of the brain as to tries to say the correct color. Because the incongruent words give conflicting input, it hampers the brains ability to choose the color quickly. The congruent words are encoded correctly with their corresponding color, allowing to brain to quickly identify the correct color. 
 
 ### Reflection
 
-The Stroop Effect is an interesting phenomenon and makes since intuitively. But where how could these finding be used practically?
+The Stroop Effect is an interesting phenomenon and makes since intuitively. But how could these finding be used practically?
 
 The results of this study and the effect of encoding on the brain can be applied to good visualization techniques. Proper encoding of variables in visualizations allows viewers to quickly digest and understand the data. Poorly encoded visualizations have the opposite effect, and sometimes go beyond impeding understanding to causing complete misinterpretations of the data.
 
