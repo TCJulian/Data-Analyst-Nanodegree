@@ -23,7 +23,7 @@ The __independent variable__ for this experiment is the conditions of the words.
 
 The __dependent variable__ is the amount of time it takes a participant to complete each trial, measured in seconds. 
 
-### Hypothesis and Statistical Test
+### NUll and Alternative Hypothesis
 
 The __null hypothesis__ for this experiment is that there will not be a statistical difference in the average time between the congruent and incongruent conditions. 
 
@@ -36,7 +36,19 @@ H_0 : \mu_c = \mu_i \\
 H_a : \mu_c ≠ \mu_i
 $$
 
+### Statistical Test: Paired t-test
+
 The statistical test being used for this experiment is a __two-tailed paired sample t-test__. The __confidence level__ will be set to  _0.05_. This t-test is a dependent t-test with paired samples and is chosen because the population parameters are unknown. It is two-tailed because we are unsure whether the times will rise or fall between word conditions.
+
+In order to perform a paired sample t-test, there are [a couple requirements that must be met](https://libguides.library.kent.edu/SPSS/PairedSamplestTest):
+
+1. Dependent variable must be continuous.
+2. Samples/groups must be related (Ex: Person 1 takes both congruent and incongruent test)
+3. Random sample from population
+4. Approximately normal distribution of the difference between paired values
+5. No outliers in difference between paired groups
+
+To use the paired t-test on this dataset, we assume that the distribution of the difference between paired values is normal. We also assume that the sample was taken randomly.
 
 ### Loading the Dataset into R and Running the Experiment
 
@@ -172,18 +184,6 @@ This visualization really captures everything we need to compare the two distrib
 It is clear that the incongruent trial took longer to complete times on average than the congruent trial. But is this difference significant, or is the difference jsut due to chance? Only a statistical test can answer that.
 
 ### t-test and Conclusion
-
-#### Pair Sample t-test Assumptions
-
-In order to perform a paired sample t-test, there are [a couple requirements that must be met](https://libguides.library.kent.edu/SPSS/PairedSamplestTest):
-
-1. Dependent variable must be continuous.
-2. Samples/groups must be related (Ex: Person 1 takes both congruent and incongruent test)
-3. Random sample from population
-4. Approximately normal distribution of the difference between paired values
-5. No outliers in difference between paired groups
-
-To use the paired t-test on this dataset, we assume that the distribution of the difference between paired values  is normal. We also assume that the sample was taken randomly.
 
 #### Calculating the t-score Manually
 
