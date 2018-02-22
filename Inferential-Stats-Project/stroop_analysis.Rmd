@@ -270,3 +270,9 @@ Because the t-value (-8.36) is well below the t-critical value (-2.064), we reje
 The incongruent words took much longer to read on average than the congruent words. One theory is that the incongruent words slow the processing time of the brain as to tries to say the correct color. Because the incongruent words give conflicting input, it hampers the brains ability to choose the color quickly. The congruent words are encoded correctly with there corresponding color, allowing to brain to quickly identify and pronounce the color. 
 
 ### Reflection
+
+The Stroop Effect is an interesting phenomenon and makes since intuitively. But where how could these finding be used practically?
+
+The results of this study and the effect of encoding on the brain can be applied to good visualization techniques. Proper encoding of variables in visualizations allows viewers to quickly digest and understand the data. Poorly encoded visualizations have the opposite effect, and sometimes go beyond impeding understanding to causing complete misinterpretations of the data.
+
+Taking this further, you could run a similiar experiment to the Stroop Effect,  but use visualizations instead of colored words. Each participant is shown a series of visualizations with consistent encoding and asked a question regarding each plot. The time required to answer all the questions correctly is recorded. The trial is run again using poorly encoded visualizations and the time is recorded again. You could then compare to the two groups to see if the questions for the properly encoded visualizations were answered more quickly than those for the poorly encoded visualizations.
