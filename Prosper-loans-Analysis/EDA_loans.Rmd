@@ -54,36 +54,27 @@ dim(loans)
 
 The dataset contains 113,937 observations from 81 different variables.
 
+Lets look at a sample of those variables:
+
 ```{r, Variables_loans}
-colnames(loans)
+head(colnames(loans), 10)
 ```
 
 There are a multitude variables in this dataset, some of whose meaning may not be intuitive. This [reference](https://docs.google.com/spreadsheets/d/1gDyi_L4UvIrLTEC6Wri5nbaMmkGmLQBk-Yx3z0XDEtI/edit#gid=0), adapted from the Prosper API, provides context to each of the variables. 
-
-We can explore variables further by looking at their structure. The variable `BorrowerRate` contains data about the interest rates of borrowers without service fees included.
-
-```{r, StrBorrowerRate}
-str(loans$BorrowerRate)
-```
-
-Records in `BorrowerRate` are numbers, more specifically decimals values. This values can easily be transformed to their more familiar form of percentages by mulitplying them by 100.
-
-You can apply this same method to all of the variables in the dataset.
-
-```{r, StrLoans}
-str(loans)
-```
 
 ### Explore Borrower Interest Rate
 
 One of most important variables for a borrower when getting a loan is the interest rate. The interest rate is ultimately set by the lender and is decided based upon by a variaty of variables, the most popular one being Credit Score.
 
-```{r echo=FALSE, BorrowerRate1}
+```{r echo=FALSE, BorrowerRate_Histogram}
 
-ggplot(loans, aes(x = BorrowerRate * 100)) + 
-  geom_histogram(binwidth = 1, fill = "#598BF7", color = "black") +
+ggplot(loans, 
+       aes(x = BorrowerRate * 100)) + 
+  geom_histogram(binwidth = 1, 
+                 fill = "#598BF7", 
+                 color = "black") +
   labs(x = "Borrower Interest Rate (%)", 
-       y = "Count", 
+       y = "Count",
        title = "Borrower Interest Rate Histogram")
 ```
 
@@ -91,8 +82,11 @@ The interest rate curve seems to be slightly right skewed, with an abnormal spik
 
 ```{r echo=FALSE, BorrowerRate2}
 
-ggplot(loans, aes(x = BorrowerRate * 100)) + 
-  geom_histogram(binwidth = 0.5, fill = "#598BF7", color = "black") +
+ggplot(loans, 
+       aes(x = BorrowerRate * 100)) + 
+  geom_histogram(binwidth = 0.5, 
+                 fill = "#598BF7", 
+                 color = "black") +
   labs(x = "Borrower Interest Rate (%)", 
        y = "Count", 
        title = "Borrower Interest Rate Histogram (bw = 0.5)")
