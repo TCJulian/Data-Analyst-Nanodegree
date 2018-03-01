@@ -1,0 +1,9 @@
+Question 1:
+There are a couple of important parameters to consider for this question:
+1. The characters in s can only be used once by the anagram
+2. "None" and "" values have to return False
+3. Input characters must be strings, else return False
+With the current iteration of the function, the runtime is O(n), since the algorithm has to loop through all of the characters of s if it can't find t in s.
+
+Question 2:
+In the worst case, the runtime is O(n!). This is if the function has to iterate through every possible combination of two letters in the input. Because the function looks at the biggest combinations first,  it will return the first palindrome it finds immediately, which does reduce the average runtime. Although O(n!) is considered exponential time and is one of the longest runtimes possible, most strings are small in size.
