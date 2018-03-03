@@ -1,6 +1,7 @@
-# EDA of loans
+# Exploratory Data Analysis of Prosperity Loans
 _by Tyler Julian_
 _Last Updated: 1/30/2018_
+
 ========================================================
 
 ## Abstract
@@ -25,44 +26,33 @@ library(tidyr)
 loans <- read.csv('prosperLoanData.csv')
 ```
 
-#### WORK IN PROGRESS
-```{r}
-usa <- map_data('state')
-
- states.base <- ggplot(data = usa, 
-                       aes(x = long, y = lat, fill = region, group = group)) +
-  geom_polygon(color = 'black') +
-  coord_fixed(1.3) +
-  guides(fill = FALSE)
- 
- states.base + theme_nothing()
-```
-
 ## Data Source
 
-This dataset contains loan data from [Prosper](https://www.prosper.com/personal-loans/better-finances/?refac=GoogSearch&refmc=BorGenAcq&refd=cm:SEM-Brand%7C%7Cag:29761763651%7C%7Ckw:prosper%20loans%7C%7Cad:233096998244%7C%7Cdv:c%7C%7Cmt:e%7C%7Cap:1t1&gclid=EAIaIQobChMI9_O45P3z2AIV2AuBCh1i3QacEAAYASAAEgItg_D_BwE&flags=BetterFinancesLandingPage:WithoutLoanAmount), a website marketplace that brings investors and borrowers together to fund small to medium sized loans. Borrowers can get loans up to $35,000, with the interest rates set by Propser. Lenders get to choose what loans they want to fund, with higher risk loans providing a higher return.
+This dataset contains loan data from [Prosper](https://www.prosper.com/personal-loans/better-finances/?refac=GoogSearch&refmc=BorGenAcq&refd=cm:SEM-Brand%7C%7Cag:29761763651%7C%7Ckw:prosper%20loans%7C%7Cad:233096998244%7C%7Cdv:c%7C%7Cmt:e%7C%7Cap:1t1&gclid=EAIaIQobChMI9_O45P3z2AIV2AuBCh1i3QacEAAYASAAEgItg_D_BwE&flags=BetterFinancesLandingPage:WithoutLoanAmount), an online marketplace that brings investors and borrowers together to fund small to medium sized loans. Borrowers can get loans up to $35,000, with the interest rates set by Propser. Lenders get to choose what loans they want to fund, with higher risk loans providing a higher return.
 
-The dataset can be downloaded from this project's GitHub repositroy: [???????]()
+The dataset can be downloaded from this project's GitHub repository: [???????]()
 
-## Exploring the Dataset and its Variables
+## Initial Exploration
 
 A logical start to get a better understanding of the dataset would be to look at its shape and variables.
 
-```{r, Shape_loans}
+```{r, echo=FALSE, Shape_loans}
 dim(loans)
 ```
 
 The dataset contains 113,937 observations from 81 different variables.
 
-Lets look at a sample of those variables:
+Let's look at a sample of those variables:
 
-```{r, Variables_loans}
+```{r, echo=FALSE, Variables_loans}
 head(colnames(loans), 10)
 ```
 
-There are a multitude variables in this dataset, some of whose meaning may not be intuitive. This [reference](https://docs.google.com/spreadsheets/d/1gDyi_L4UvIrLTEC6Wri5nbaMmkGmLQBk-Yx3z0XDEtI/edit#gid=0), adapted from the Prosper API, provides context to each of the variables. 
+There are a multitude variables in this dataset, some of whose meaning may not be intuitive at first glance. This [reference](https://docs.google.com/spreadsheets/d/1gDyi_L4UvIrLTEC6Wri5nbaMmkGmLQBk-Yx3z0XDEtI/edit#gid=0), adapted from the Prosper API, provides context to each of the variables. 
 
-### Explore Borrower Interest Rate
+## Univariate Analysis
+
+### Borrower Interest Rate
 
 One of most important variables for a borrower when getting a loan is the interest rate. The interest rate is ultimately set by the lender and is decided based upon by a variaty of variables, the most popular one being Credit Score.
 
@@ -80,7 +70,7 @@ ggplot(loans,
 
 The interest rate curve seems to be slightly right skewed, with an abnormal spike at 32%. This could be because of overlapping binwidths. Lets graph `BorrowerRate` again, but with 0.5 binwidths to investigate:
 
-```{r echo=FALSE, BorrowerRate2}
+```{r echo=FALSE, BorrowerRate_Investigate}
 
 ggplot(loans, 
        aes(x = BorrowerRate * 100)) + 
@@ -92,27 +82,26 @@ ggplot(loans,
        title = "Borrower Interest Rate Histogram (bw = 0.5)")
 ```
 
-Unfortunately, it seems binwidth is not the answer. 32% still has an extremely high appearance count. At the moment, there appears to be no answer as to why this rate occurs so frequently. One option would be to explore a subset of the dataset that only had 32% interest rate users and compare them with the entire population for differences. However, that is beyond the scope of this analysis: there are other variables to explore!
+Unfortunately, it seems binwidth is not the answer. 32% still has an extremely high appearance count. At the moment, there appears to be no answer as to why this rate occurs so frequently. One option would be to explore a subset of the dataset that only had 32% interest rate users and compare them with the entire population for differences. However, that is beyond the scope of this analysis, as there are other variables to explore.
 
-### Explore Average Credit Score
+### Average Credit Score
 
-One of the most well known indicators of one's financial credibility, Credit Score is the most basic requirement for getting a loan. 
+As one of the most well known indicators of an individual's financial credibility, Credit Score is the most basic requirement for getting a loan. 
 
 This dataset does not provide a singular credit score, but rather a range. The two variables, `CreditScoreRangeLower` and `CreditScoreRangeUpper`, store the upper and lower bounds of a user's credit score. To visualize the data properly, the two ranges need to be combined into an average. The newly created variable will be named `CreditScoreAverage`.
 
-```{r, Create_AvgCreditScore}
+```{r, echo=FALSE, warning=FALSE, Create_CreditScoreAverage}
 # Create average credit score column in dataset
 loans <- mutate(loans, 
                 CreditScoreAverage = round((CreditScoreRangeLower + 
                                             CreditScoreRangeUpper) / 2))
-str(loans$CreditScoreAverage)
 summary(loans$CreditScoreAverage)
 ```
 
-With a mean of 694.6 and a median of 689, the distribution seems to be evenly distributed. There are 591 NA's in the data and the 1st and 3rd quartiles are within expectations. However, the minimum value seems way off the charts in terms of its distance from the rest of the data. Let's plot the data to get a better understanding of its shape.
+With a mean of 695.6 and a median of 690, the central tendency of the distribution seems to be consistent. There are 591 NA's in the data and the 1st and 3rd quartiles are within expectations. However, the minimum value seems way off the charts in terms of its distance from the rest of the data. Let's plot the data to get a better understanding of its shape.
 
-```{r, AvgCreditScore1}
-# Initial plot with low outliers
+```{r, echo=FALSE, warning=FALSE, AvgCreditScore_Histogram}
+# Initial plot with low outliers and no NAs
 ggplot(data = subset(loans, !is.na(loans$CreditScoreAverage)), 
        aes(x = CreditScoreAverage)) +
   geom_histogram(fill = "#598BF7", 
@@ -122,9 +111,9 @@ ggplot(data = subset(loans, !is.na(loans$CreditScoreAverage)),
        title = "Average Credit Score Histogram")
 ```
 
-There seems to be a handful of credit scores close to zero. These scores are abysmally low and are no where near the rest of the distribution. With this new knowledge, the data is plotted again with smaller binwidths, better breaks, and no outliers.
+There seems to be a handful of credit scores close to zero. Because these scores are abysmally low and are no where near the rest of the distribution, they are marked as outliers. With this new knowledge, the data is plotted again with smaller binwidths, better breaks, and without the outliers.
 
-```{r echo=FALSE, Avg_Credit_Score2}
+```{r echo=FALSE, warning=FALSE, AvgCreditScore_Outliers}
 # Plot without outlier and proper breaks
 ggplot(data = subset(loans, !is.na(loans$CreditScoreAverage)), 
        aes(x = CreditScoreAverage)) +
@@ -140,35 +129,32 @@ ggplot(data = subset(loans, !is.na(loans$CreditScoreAverage)),
 
 After those adjustments, the data now has a semi-bell curve. From 680 to 900, the shape of the plot is almost perfect in terms of being normal. From 440 to 680, it has more deviation, but still follows a normal shape.
 
-This plot follows the initial intuition about credit score. It makes sense that most people fall right in the middle of the ranges, with a majority of the scores floating around the average score of 700. You have a smaller subset of people that maybe haven't been up to date on payments or have defaulted, leading to very poor scores.There is also another subset of people who are maybe very diligent about their payments, resulting in high scores. 
+This plot follows the initial intuition about credit score. It makes sense that most people fall right in the middle of the ranges, with a majority of the scores floating around the average score of 700. You have a smaller subset of people that maybe haven't been up to date on payments or have defaulted, leading to very poor scores. There is also another subset of people who are maybe very diligent about their payments, resulting in high scores. 
 
-```{r echo=FALSE, Low_Average_Credit_Scores}
-
-loans.lowCS <- subset(loans, loans$CreditScoreAverage < 100)
-summary(loans.lowCS$CreditScoreAverage)
-```
-
-### Explore Income
+### Income
 
 Many lenders also look at a borrower's income when determining whether to fund a loan. A borrower with more disposable income should be more likely to pay their monthly payments on a loan and are thus considered a less risky investment. 
 
 Income for borrowers is stored in the variable `IncomeRange`:
 
-```{r IncomeRange1}
+```{r, echo=FALSE, IncomeRange_str}
 str(loans$IncomeRange)
 ```
 
-str() shows that `IncomeRange` is factored into levels:
+`str(IncomeRange)` shows that income is factored into levels:
 
-```{r IncomeRange2}
+```{r, echo=FALSE, IncomeRange_levels}
 levels(loans$IncomeRange)
 ```
 
 Two things to note:
-  1. The levels are not ordered. The values should be ordered from least to greatest.
-  2. Some of the levels should be combined. `Not employed` and `$0` are basically the same range, and can be combined to reduce the number of columns.
+
+1. The levels are not ordered.
+2. Some of the levels can be combined.  
   
-```{r IncomeRange3}
+For this analysis, the values need to be be ordered from least to greatest. This will provide a much more organized plot and move the data from nominal to ordinal. The levels `Not employed` and `$0`, while still technically having different meanings, both represent that the buyer does not have a primary career that provides income. As a result, these two levels be combined to reduce the complexity of the variable.
+  
+```{r, echo=FALSE, Income_relevel}
 # Order levels
 loans$IncomeRange <- factor(loans$IncomeRange, 
                             levels = c("Not displayed", "Not employed", 
@@ -189,7 +175,7 @@ levels(loans$IncomeRange)
 
 Now that the levels have been properly transformed, the non-NA data can be visualized as a barchart:
 
-```{r echo=FALSE, IncomeRange4}
+```{r, echo=FALSE, Income_Bar}
 # Plot barchart without NAs
 ggplot(data = subset(loans, loans$IncomeRange != "Not displayed"),
        aes(x = IncomeRange)) +
@@ -202,26 +188,26 @@ ggplot(data = subset(loans, loans$IncomeRange != "Not displayed"),
 
 Or as a table:
 
-```{r IncomeRange5}
+```{r, echo=FALSE, Income_table}
 table(loans$IncomeRange)
 ```
 
-`IncomeRange` shows that most borrowers have income that falls within two bins: `$25,000-49,999` and `$50,000-74,999`. There are more borrowers that fall above these ranges than below them. This might suggest that borrowers with higher reported incomes are more likely to take ou a loan than those with less money. More exploration combined with other variables is required.
+`IncomeRange` shows that most borrowers have income that falls within two bins: `$25,000-49,999` and `$50,000-74,999`. There are more borrowers that fall above these ranges than below them. This might suggest that borrowers with higher reported incomes are more likely to take out a loan than those with lower reported incomes. More exploration combined with other variables is required to validate this theory.
 
-### Explore Debt to Income Ratio
+### Debt to Income Ratio
 
-Debt to income ratio, stored as `DebtToIncomeRatio` is exactly what it sounds like: a borrower's debt divided by their current income at the time the credit profile was pulled. 
+Debt to income ratio, stored as `DebtToIncomeRatio`, is exactly what it sounds like: a borrower's debt divided by their current income at the time the credit profile was pulled. 
 
-```{r DebtIncomeRatio1}
+```{r, echo=FALSE, DebtIncomeSummary}
 str(loans$DebtToIncomeRatio)
 summary(loans$DebtToIncomeRatio)
 ```
 
 A quick look at the summary and structure of the variable shows that the median ratio is 0.22, while the mean is a bit higher at 0.276. The maximum is incredibly high, showing a debt to income ratio of over 1000%. A quick look at the variable reference page shows that 10.01 is the highest ratio able to be recorded.
 
-In order to deal with these potential outliers, the variable is graphed excluding the top 1% of values.
+In order to deal with these potential outliers, the top 1% of values is excluded from the resulting plot:
 
-```{r echo=FALSE, Explore_Debt_Income_Ratio}
+```{r echo=FALSE, warning=FALSE, DebtIncome_Histogram}
 ggplot(loans, aes(x = DebtToIncomeRatio)) +
   geom_histogram(binwidth = 0.025, 
                  fill = "#598BF7", 
@@ -237,32 +223,29 @@ ggplot(loans, aes(x = DebtToIncomeRatio)) +
   
 ```
 
-The resulting plot gives us a slightly right skewed curve with a long tail. There are small peaks at all of the 0.5 breaks, which may be how the data was rounded upon retrieval. The right skew would explain the higher mean than the median.
+The distribution of debt to income seems to be slightly right skewed with a long tail. There are small peaks at all of the 0.5 breaks, which may be how the data was rounded upon retrieval. The right skew would explain the higher mean than the median. It makes intuitive sense that the majority of individuals have a low debt to income ratio on average, with the count decreasing as the debt to income ratio climbs higher. It becomes increasingly hard to live as the debt to income ratio increases.
 
-### Explore Term Length
+#### Term Length
 
 Term length is the length of time the loan has until it has to be paid off. A longer term length means the borrowers has to pay less per month, but perhaps more interest over the life of the loan.
 
-```{r, Explore_Term_Length1}
-str(loans$Term)
+```{r, TermLength_Unique}
 unique(loans$Term)
 ```
 
-Looking at only the unique values of `Term`, it shows that the only terms offered by Propser is 12, 36, and 60 month terms. 
+Looking at only the unique values of `Term`, the only terms offered by Propser are 12, 36, and 60 term lengths. The API shows that this variable is measured in months. 
 
-The `Term` variable currently has no levels, but can be easily factored since there are so few unique values.
+The `Term` variable currently has no levels, but can be easily factored since there are so few unique values. Once factored, `Term` can be displayed as a table.
 
-```{r, TermLength2}
+```{r, echo=FALSE, TermLength_Factored}
 loans$Term <- factor(loans$Term, levels = c(12, 36, 60), ordered = TRUE)
 ```
 
-Once factored, `Term` can be displayed as a table.
-
-```{r, TermLength3}
+```{r, echo=FALSE, TermLength_Table}
 table(loans$Term)
 ```
 
-```{r echo=FALSE, TermLength4}
+```{r echo=FALSE, TermLength_Bar}
 ggplot(data = loans, aes(x = Term)) +
   geom_bar(fill = "#598BF7", 
            color = "black") +
@@ -271,20 +254,19 @@ ggplot(data = loans, aes(x = Term)) +
        title = "Term Length")
 ```
 
-It appears that the vast majority of loans have a term length of 36, accounting for 77% of all loans. Term lengths of 60 make up most of the remaining loans, with 12 month terms only accounting for 1.4%.
+It appears that the vast majority of loans have a term length of 36, accounting for 77% of all loans. Term lengths of 60 make up most of the remaining loans, with 12 month terms only accounting for 1.4% of all loans.
 
-### Explore Estimated Return
+### Estimated Return
 
-For lenders, how much return they receive from their investment is a very important factor when choosing which loans to fund. Prosper has a variable for this value, `EstimatedReturn`. This variable is calculated by taking the difference from a loan's `EstimatedEffectiveReturn` and `EstimatedLoss`. Both of these variables can be found in detail from the variable [reference page](https://docs.google.com/spreadsheets/d/1gDyi_L4UvIrLTEC6Wri5nbaMmkGmLQBk-Yx3z0XDEtI/edit#gid=0).
+For lenders, how much return they receive from their investment is a very important factor when choosing which loans to fund. Prosper has a variable for this value, `EstimatedReturn`, displayed as a percentage. This variable is calculated by taking the difference from a loan's `EstimatedEffectiveReturn` and `EstimatedLoss`. Both of these variables can be found in detail from the variable [reference page](https://docs.google.com/spreadsheets/d/1gDyi_L4UvIrLTEC6Wri5nbaMmkGmLQBk-Yx3z0XDEtI/edit#gid=0).
 
-```{r, EstimatedReturn1}
-str(loans$EstimatedReturn)
+```{r, echo=FALSE, EstimatedReturn_Summary}
 summary(loans$EstimatedReturn)
 ```
 
-Summary shows that the average expected return is aound 9.5%. This is slightly higher [6.7%, the average total return](https://www.prosper.com/invest) listed on their website. There are also a lot of NAs for this particular variable, which is probably becuase this variable wasn't tracked till July 2009.
+A summary shows that the average expected return is around 9.5%. This is slightly higher than [6.7% average total return](https://www.prosper.com/invest) listed on their website. There are also a lot of NAs for this particular variable, probably attributable to the fact that this variable wasn't be tracked until the start of July 2009.
 
-```{r, EstimatedReturn2}
+```{r, echo=FALSE, warning=FALSE, EstimatedReturn_Histogram}
 
 ggplot(loans, aes(x = EstimatedReturn * 100)) +
   geom_histogram(binwidth = 1, 
@@ -297,9 +279,9 @@ ggplot(loans, aes(x = EstimatedReturn * 100)) +
        title = "Estimated Return Histogram")
 ```
 
-The distribution seems to be normally distributed. However, some of the values seem to have very high counts, which makes it much harder to see the data in the tails. By scaling the y-axis by square roots, the tails should be easier to see.
+The distribution appears to be approximately normally distributed. However, some of the values seem to have very high counts, which makes it much harder to see the data in the tails. By scaling the y-axis by square roots, the tails should be easier to see.
 
-```{r echo=FALSE, Estimated_Return}
+```{r echo=FALSE, warning=FALSE, EstimatedReturn_yscaled}
 ggplot(loans, aes(x = EstimatedReturn * 100)) +
   geom_histogram(binwidth = 1, 
                  fill = "#598BF7", 
@@ -312,32 +294,36 @@ ggplot(loans, aes(x = EstimatedReturn * 100)) +
        title = "Estimated Return Histogram")
 ```
 
-Now the tails are much easier to see. The distribution does indeed remain approximately normally distributed, with the peak right around the mean and median.
+Now the tails are much easier to see. The distribution does indeed remain approximately normally distributed, with the peak right around the mean and median. Most of the estimated returns are positive. 
 
-### Explore Borrower State
+```{r, echo=FALSE, EstimatedReturn_positive }
+length(loans$EstimatedReturn[loans$EstimatedReturn > 0]) / length(loans$EstimatedReturn)
+```
+
+In fact, over 99% of all loans through Prosperity have a positive estimated return. From a lender standpoint, this is excellent news. However, porjections do not always live up to reality.
+
+### Borrower State
 
 `BorrowerState` is exactly what it sounds like: the state the borrower currently resides in when acquiring the loan.
 
-```{r Borrower_State1}
+```{r, echo=FALSE, BorrowerState_str}
 str(loans$BorrowerState)
 ```
 
 The structure of the variable shows that each state is treated as its own level. 
 
-```{r echo=FALSE, Borrower_State, fig.width = 12, fig.height=4}
+```{r echo=FALSE, BorrowerState_Bar, fig.width = 12, fig.height=4}
 ggplot(subset(loans, loans$BorrowerState != ''), (aes(x = BorrowerState))) +
   geom_bar()
 ```
 
 Quickly plotting the variable shows that the levels need to be reordered if they are going to be visualised in a bar chart.
 
-```{r Borrower_State2}
+```{r, echo=FALSE, BorrowerState_Order}
 loans$BorrowerState <- factor(loans$BorrowerState, level = names(sort(table(loans$BorrowerState), decreasing = TRUE)))
 ```
 
-Now that the variable's levels are ordered based off of their counts, the visualization should look much better.
-
-```{r echo=FALSE, Borrower_State3, fig.width = 12, fig.height=4}
+```{r echo=FALSE, BorrowerState_OrderedBar, fig.width = 12, fig.height=4}
 ggplot(data = subset(loans, loans$BorrowerState != ''), 
        (aes(x = BorrowerState))) +
   geom_bar(fill = "#598BF7", 
@@ -347,67 +333,64 @@ ggplot(data = subset(loans, loans$BorrowerState != ''),
        title = "Borrowers by State")
 ```
 
-California appears to have much more borrowers than any other state. This is understandable sense [Propser was founded in San Francisco California](https://www.prosper.com/plp/about/contact-us/). The states following California--Texas, New York, Florida--are also metro hubs with tech presences.
+California appears to have much more borrowers than any other state. This is understandable sense [Propser was founded in San Francisco California](https://www.prosper.com/plp/about/contact-us/). The states following California--Texas, New York, Florida--are also metro hubs with large tech industries.
 
-### Explore Credit Grade and Prosper Rating
+### Credit Grade and Prosper Rating
 
-In an effort to make investments easier to assess for potential investors, Prosper created the CreditGrade system. This was eventually replaced with the Prosper Rating in 2009, which is very similiar to CreditGrade. In order to make an effective visualization, these two variables need to be combined into one. 
+In an effort to make investments easier to assess for potential investors, Prosper created the CreditGrade scoringsystem. This was eventually replaced with the Prosper Rating system in 2009, which is very similiar to CreditGrade. In order to make an analyze these variables throughout all of the data, these two variables need to be combined into one. 
 
-```{r CreditGrade_and_ProsperRating1}
+```{r, echo=FALSE, Rating_levels}
 levels(loans$CreditGrade)
 levels(loans$ProsperRating..Alpha.)
 ```
  
-Looking at the levels of the two varaiables, Credit Grade has an extra level called `NC`. The rest of both levels are the same. It is also important to note that the variables have no `NA` values. Rather, they are input as "". 
+Looking at the levels of the two variables, Credit Grade has an extra level called `NC`. The rest of both levels are the same. It is also important to note that the variables have no `NA` values. Rather, they are input as "". 
  
-```{r CreditGrade_and_ProsperRating2}
+```{r, echo=FALSE, Rating_summary }
 summary(loans$CreditGrade)
 summary(loans$ProsperRating..Alpha.)
 ```
 
-In order to manipulate these variables effectively, the "" values need to be substituted with `NA`.
+In order to manipulate these variables effectively, the "" values need to be substituted with `NA`. Once the "" values transformed into NA's, `ProsperRatings` and `CreditGrade` can be combined into a single column and ordered from the lowest ratings to the highest rating.
  
-```{r CreditGrade_and_ProsperRating3}
+```{r, echo=FALSE, Rating_combine}
 # Remove NAs from CreditGrade and ProsperRating
 loans$ProsperRating..Alpha.[loans$ProsperRating..Alpha. == ""] <- NA
 loans$CreditGrade[loans$CreditGrade == ""] <- NA
-```
 
-With the "" values transformed into NA's, `ProsperRatings` and `CreditGrade` can now be combined into a single column and ordered from the lowest ratings to the highest rating.
-
-```{r CreditGrade_and_ProsperRating3}
 # Combining Credit Grade and Prosper Rating into loans$ratings
 loans$ratings <- loans$CreditGrade
 loans$ratings[!is.na(loans$ProsperRating..Alpha.)] <- loans$ProsperRating..Alpha.[!is.na(loans$ProsperRating..Alpha.)]
 
-loans$ratings <- factor(loans$ratings, levels = c('NC', 'HR', 'E', 'D', 'C', 'B', 'A', 'AA'))
+loans$ratings <- factor(loans$ratings, 
+                        levels = c('NC', 'HR', 'E', 'D', 'C', 'B', 'A', 'AA'))
 ```
 
-```{r echo=FALSE, Plot_Ratings}
+```{r, echo=FALSE, Ratings_Bar}
 ggplot(subset(loans, !is.na(loans$ratings) & loans$ratings != "NC"), 
        aes(x = ratings)) +
   geom_bar(fill = "#598BF7",
            color = "black") +
   labs(x = "Credit Rating", 
        y = "Count", 
-       title = "Credit Rating Histogram")
+       title = "Credit Rating Bar Chart")
 ```
 
-The plot for combined Credit rating turns out very well. The data appears normally distributed with the 'C' rating having the most values. the height rating, 'AA', has the least amount of values.
+The plot for combined Credit rating turns out very well. The data appears normally distributed with the `C` rating having the most values. The highest rating, `AA`, has the least amount of values.
 
-### Explore Loan Status
+### Loan Status
 
-;kmn;okn
+Each loan has a loan status associated with it. This determines whether the current loan has been completed, whether it is late on its payments, or whether it has been defaulted on.
 
 ```{r echo=FALSE, LoanStatus_Levels}
 levels(loans$LoanStatus)
 ```
 
-In order to reduce the amount of categorical bins, several of the 'Past Due' bins can be combined. 'FinalPaymentInProgress' can also be lumped with 'Current' loans.
+Currenlty, there is a lot of detail in the levels. However, the granularity of the data can be reduces by combining some of the levels. More specifically, some of the `Past Due` bins can be combined. `FinalPaymentInProgress` loans can also be lumped with `Current` loans.
 
 Once the categorical bins have been combined, the levels can also be ordered from the most favorable status to the least favorable status.
 
-```{r echo=FALSE, LoanStatus_Levels}
+```{r echo=FALSE, LoanStatus_Relevel}
 # Combine "Past Due" levels
 levels(loans$LoanStatus) <- c("Cancelled", "Chargedoff", "Completed", "Current",
                               "Defaulted", "Current", 
@@ -419,7 +402,7 @@ loans$LoanStatus <- factor(loans$LoanStatus,
                             levels = c("Completed", "Current", "PastDue (1-30 days)", "PastDue (>30 days)", "Defaulted", "Chargedoff", "Cancelled"))
 ```
 
-```{r echo=FALSE, LoanStatus, fig.width=10}
+```{r echo=FALSE, LoanStatus_Histogram, fig.width=8}
 ggplot(data = subset(loans, loans$LoanStatus != 'Cancelled'), 
        aes(x = LoanStatus)) +
   geom_bar(fill = "#598BF7",
@@ -429,15 +412,17 @@ ggplot(data = subset(loans, loans$LoanStatus != 'Cancelled'),
        title = "Loan Status Histogram")
 ```
 
-```{r echo=FALSE, LoanStatus2}
+```{r echo=FALSE, LoanStatus_Table}
 table(loans$LoanStatus)
 ```
 
-### Explore Loan Amount
+A vast majority of the loans are either completed or active with up-to-date payments. However, there is also a large minority of loans that either go into default or are chargedoff. These negative results account for approximately 15% of all loans from Prosperity.
 
-Loans start at \$1000 and go up to a maximum of $35,000.
+### Loan Amount
 
-```{r echo=FALSE, LoanAmount1}
+Loan amount is the total amount of cash given to the borrower once the loan is approved. Loans start at \$1000 and go up to a maximum of \$35,000.
+
+```{r echo=FALSE, LoanAmount_Histogram}
 ggplot(data = loans, aes(x = LoanOriginalAmount)) +
   geom_histogram(binwidth = 1000,
                  fill = "#598BF7",
@@ -448,16 +433,25 @@ ggplot(data = loans, aes(x = LoanOriginalAmount)) +
        title = "Loan Amount Histogram")
 ```
 
-```{r echo=FALSE, LoanAmount2}
+```{r echo=FALSE, LoanAmount_summary}
 summary(loans$LoanOriginalAmount)
 ```
 
 The loan amount data is right skewed with multi-modal peaks. These peaks are all at the \$5000 increments, which is probably attributable to the fact most people get loans at even amounts. 75% of the loans are $12000 or less, with only a handful of loans at the maximum amount of \$35,000.
 
-### Explore Employment Status
+### Employment Status
 
+Another common metric requested from lenders is the borrower's current employment status. Employment status gives the lender a gauge on the potential cashflow the borrower currently has. More cashflow usually represetns a safer loan.
 
-```{r echo=FALSE, EmploymentStatus1}
+```{r, echo=FALSE, EmploymentStatus_levels}
+levels(loans$EmploymentStatus)
+```
+
+Currently, the levels are not ordered and are listed nominally. `Not available` and `""` basically represent the same idea aand can be combined.
+
+To better analyse the variable, the levels will be porperly ordered and the two levels mentioned earlier will be combined.
+
+```{r echo=FALSE, EmploymentStatus_relevel}
 levels(loans$EmploymentStatus) <- c("Not available", "Employed", "Full-time", 
                                     "Not available", "Not employed", "Other", 
                                     "Part-time", "Retired", "Self-employed")
@@ -469,9 +463,7 @@ loans$EmploymentStatus <- factor(loans$EmploymentStatus,
                                             "Other", "Not available"))
 ```
 
-
-
-```{r echo=FALSE, EmploymentStatus2}
+```{r echo=FALSE, EmploymentStatus_Bar}
 ggplot(data = subset(loans, loans$EmploymentStatus != "Not available"),
        aes(x = EmploymentStatus)) +
   geom_bar(fill = "#598BF7",
@@ -481,9 +473,17 @@ ggplot(data = subset(loans, loans$EmploymentStatus != "Not available"),
       title = "Employment Status")
 ```
 
-### Explore Employment Duration
+Most borrowers are employed in some manner. Very few report being unemployed.
+
+### Employment Duration
 
 Along with Employment Status, lenders also consider the borrower's employment duration. Longer durations usually signify more stable income, and thus a safer investment.
+
+```{r, echo=FALSE, EmploymentStatusDuration_summary}
+summary(loans$EmploymentStatusDuration)
+```
+
+A summary of the variable as well as the Prosperity API confirm that `EmploymentStatusDuration` is measured in months. The variable will be viewed in years for the following plots, as years are much easier to visualize and understand.
 
 ```{r echo=FALSE, EmploymentStatusDuration1}
 ggplot(data = subset(loans, !is.na(loans$EmploymentStatusDuration)), 
@@ -500,42 +500,32 @@ ggplot(data = subset(loans, !is.na(loans$EmploymentStatusDuration)),
 summary(loans$EmploymentStatusDuration / 12)
 ```
 
-The initial plot shows that the Employment Duration plot is right skewed and unimodal. Thre is a long tail with some values way beyond the 3rd quartile. 50% of
+The initial plot shows that the data is right skewed and unimodal. Thre is a long tail with some values way beyond the 3rd quartile. 50% of borrowers have employment durations between two and five and a half years.
 
-```{r echo=FALSE, EmploymentStatusDuration3}
-ggplot(data = subset(loans, !is.na(loans$EmploymentStatusDuration)), 
-       aes(x = (EmploymentStatusDuration / 12) + 1)) +
-  geom_histogram(binwidth = 0.25,
-                 fill = "#598BF7",
-                 color = "black") +
-  scale_x_sqrt(breaks = c(1, 2.5, 5, 10, 20, 40, 65)) 
-```
+### Summary of Univariate Analysis
 
-> **Tip**: Make sure that you leave a blank line between the start / end of
-each code block and the end / start of your Markdown text so that it is
-formatted nicely in the knitted text. Note as well that text on consecutive
-lines is treated as a single space. Make sure you have a blank line between
-your paragraphs so that they too are formatted for easy readability.
+The dataset consists of 83 variables with 113,937 observations.
 
-# Univariate Analysis
+The variables of interest in this analysis are:
 
-> **Tip**: Now that you've completed your univariate explorations, it's time to
-reflect on and summarize what you've found. Use the questions below to help you
-gather your observations and add your own if you have other thoughts!
+  1. Interest Rate
+  2. Average Credit Score
+  3. Income
+  4. Debt/Income Ratio
+  5. Term Length
+  6. Estimated Return
+  7. Borrower State
+  8. Borrower Rating
+  9. Loan Status
+  10. Loan Amount
+  11. Employment Status
+  12. Employment Duration
+  
+The main features that are going to be explored are the variables that provide favorable conditions for both buyers and lenders.
 
-### What is the structure of your dataset?
+Investigating each of the above variables, escpecially those that might be correlated with farvorable conditions, might lead to more insight into understanding the underlying data.
 
-### What is/are the main feature(s) of interest in your dataset?
-
-### What other features in the dataset do you think will help support your \
-investigation into your feature(s) of interest?
-
-### Did you create any new variables from existing variables in the dataset?
-
-### Of the features you investigated, were there any unusual distributions? \
-Did you perform any operations on the data to tidy, adjust, or change the form \
-of the data? If so, why did you do this?
-
+Several variables were adapted and reordered, while one new variable, `Rating`, was recreated entirely. `EmploymentDuration` right skewed with a long tail.`LoanAmount` was multimodel, with several peaks throughout the distribution.
 
 # Bivariate Plots Section
 
@@ -571,13 +561,13 @@ ggplot(loans, aes(x = CreditScoreAverage, y = BorrowerRate)) +
 
 ### Credit Rating vs Borrower Interest Rate
 ```{r echo=FALSE, Rating_BorrowerRate}
-ggplot(subset(loans, !is.na(loans$rating) & loans$rating != "NC"), aes(x = rating, y = BorrowerRate)) + 
+ggplot(subset(loans, !is.na(loans$ratings) & loans$ratings != "NC"), aes(x = ratings, y = BorrowerRate)) + 
   geom_boxplot()
 ```
 
 ### Credit Rating vs. Credit Score
 ```{r echo=FALSE, Rating_AvgCreditScore}
-ggplot(subset(loans, !is.na(loans$rating) & loans$rating != "NC"), aes(x = rating, y = CreditScoreAverage)) + 
+ggplot(subset(loans, !is.na(loans$ratings) & loans$ratings != "NC"), aes(x = ratings, y = CreditScoreAverage)) + 
   geom_boxplot() +
   ylim(250, 900)
 ```
