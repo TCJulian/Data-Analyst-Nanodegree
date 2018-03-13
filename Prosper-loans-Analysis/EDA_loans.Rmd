@@ -523,46 +523,71 @@ The variables of interest in this analysis are:
   
 The main features that are going to be explored are the variables that provide favorable conditions for both buyers and lenders.
 
-Investigating each of the above variables, escpecially those that might be correlated with farvorable conditions, might lead to more insight into understanding the underlying data.
+Investigating each of the above variables, escpecially those that might be correlated with favorable conditions, might lead to more insight into understanding the underlying data.
 
 Several variables were adapted and reordered, while one new variable, `Rating`, was recreated entirely. `EmploymentDuration` right skewed with a long tail.`LoanAmount` was multimodel, with several peaks throughout the distribution.
 
-# Bivariate Plots Section
+# Bivariate Exploration
+Interest rate vs. Average Credit Score
+Interest rate vs. Borrower Rating
+Interest rate vs. Income
+Interest rate vs. Debt/Income Ratio
+Interest rate vs. Employment Status
+Interest rate vs. Employment Duration
+Loan Status vs. Estimated Return
+Loan Status vs. Borrower Rating
 
-> **Tip**: Based on what you saw in the univariate plots, what relationships
-between variables might be interesting to look at in this section? Don't limit
-yourself to relationships between a main output feature and one of the
-supporting variables. Try to look at relationships between supporting variables
-as well.
-
-### Loan Amount vs. Investors
-```{r echo=FALSE, LoanAmount_Investors}
-ggplot(loans, aes(x = LoanOriginalAmount, y = Investors)) +
-  geom_point(alpha = 0.25, size = 0.5, position = position_jitter(h = 0)) +
-  #scale_y_sqrt(breaks = c(0, 10, 50, 100, 250, 500, 1000)) +
-  scale_x_log10(breaks = c(1000, 2000, 5000, 10000, 20000, 35000)) +
-  labs(x = "Original Loan Amount ($)", y = "Number of Investors")
-```
-
-### Loan Amount vs. Borrower Interest Rate
+### Loan Amount vs. Interest Rate
 ```{r echo=FALSE, LoanAmount_BorrowerRate}
 ggplot(loans, aes(x = LoanOriginalAmount, y = BorrowerRate)) +
   geom_point(alpha = 0.25) +
   scale_x_sqrt(breaks = c(seq(1000, 36000, 5000)))
 ```
 
-### Average Credit Score vs Borrower Interest Rate
+### Average Credit Score vs. Interest Rate
 ```{r echo=FALSE, AvgCreditScore_BorrowerRate}
 ggplot(loans, aes(x = CreditScoreAverage, y = BorrowerRate)) +
-  geom_jitter(alpha = 0.05, size = .5) +
+  geom_jitter(alpha = 0.05, size = .75) +
   scale_x_continuous(limits = c(360, 900), breaks = c(seq(360, 920, 40))) +
-  ylim(0, 0.4)
+  ylim(0, 0.4) +
+  labs(x = 'Average Credit Score', 
+       y = 'Interest Rate',
+       title = "Interest Rate by Average Credit Score")
 ```
 
 ### Credit Rating vs Borrower Interest Rate
 ```{r echo=FALSE, Rating_BorrowerRate}
-ggplot(subset(loans, !is.na(loans$ratings) & loans$ratings != "NC"), aes(x = ratings, y = BorrowerRate)) + 
+ggplot(subset(loans, !is.na(loans$ratings) & loans$ratings != "NC"), 
+       aes(x = ratings, y = BorrowerRate)) + 
+  geom_boxplot(alpha = 0.10)
+```
+
+### Interest Rate vs. Income
+```{r echo=FALSE, InterestRate_Income}
+ggplot(data = loans,
+       aes(x = IncomeRange, y = BorrowerRate)) +
   geom_boxplot()
+```
+
+### Interest Rate vs. Debt/Income Ratio
+```{r echo=FALSE, InterestRate_DebtIncomeRatio}
+ggplot(data = loans,
+       aes(x = DebtToIncomeRatio, y = BorrowerRate)) +
+  geom_jitter(alpha = 0.1, size = .5)
+```
+
+### Interest Rate vs. Employment Status
+```{r echo=FALSE, InterestRate_EmploymentStatus}
+ggplot(data = loans,
+       aes(x = EmploymentStatus, y = BorrowerRate)) +
+  geom_boxplot()
+```
+
+### Interest Rate vs. Employment Duration
+```{r echo=FALSE, InterestRate_EmploymentDuration}
+ggplot(data = loans,
+       aes(x = EmploymentStatusDuration / 12, y = BorrowerRate)) +
+  geom_point(alpha = 0.2, size = .5)
 ```
 
 ### Credit Rating vs. Credit Score
@@ -571,6 +596,7 @@ ggplot(subset(loans, !is.na(loans$ratings) & loans$ratings != "NC"), aes(x = rat
   geom_boxplot() +
   ylim(250, 900)
 ```
+
 # Bivariate Analysis
 
 > **Tip**: As before, summarize what you found in your bivariate explorations
