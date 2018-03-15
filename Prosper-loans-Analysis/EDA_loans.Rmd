@@ -6,16 +6,14 @@ _Last Updated: 1/30/2018_
 
 ## Abstract
 
-In the finance, everyone is looking at getting the best deal. Best interest rate, best return, low risk and high reward... as both borrowers and lenders, we want it all. Unfortunately, in most cases, getting the best deal isn't always an option. Even worse is trying to understand the factors that affect your potential interest rate. Everyone knows about credit score, but what other factors impact interest rate? The amount of the loan? Where you live? How much income you have? And what about lenders? How much risk is involved in a "High Risk" account? Does return really fluctuate that much between a low risk and high risk account? Are there any factors that predict when an account will default? This dataset hopes to look at some of these issues.
+In the finance, everyone is looking at getting the best deal. Best interest rate, best return, low risk and high reward... as both borrowers and lenders, we want it all. This primarily takes form in the interest rate of a loan. Unfortunately, what borrowers want and what lenders want do not always line up. Even worse is trying to understand the factors that determine the interest rate. For borrowers, credit score is often the most used variable, but what other factors impact the loans? The amount of the loan? Where you live? How much income you have? And what about lenders? How much risk is involved in a "High Risk" account? Does return really fluctuate that much between a low risk and high risk account? Are there any factors that predict when an account will default? This project hopes to explore some of these issues and reveal the biggest factors that influence both lenders and borrowers.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
 # Load packages
 
 library(dplyr)
 library(ggplot2)
-library(ggmap)
 library(gridExtra)
-library(maps)
 library(RColorBrewer)
 library(tidyr)
 ```
@@ -30,7 +28,7 @@ loans <- read.csv('prosperLoanData.csv')
 
 This dataset contains loan data from [Prosper](https://www.prosper.com/personal-loans/better-finances/?refac=GoogSearch&refmc=BorGenAcq&refd=cm:SEM-Brand%7C%7Cag:29761763651%7C%7Ckw:prosper%20loans%7C%7Cad:233096998244%7C%7Cdv:c%7C%7Cmt:e%7C%7Cap:1t1&gclid=EAIaIQobChMI9_O45P3z2AIV2AuBCh1i3QacEAAYASAAEgItg_D_BwE&flags=BetterFinancesLandingPage:WithoutLoanAmount), an online marketplace that brings investors and borrowers together to fund small to medium sized loans. Borrowers can get loans up to $35,000, with the interest rates set by Propser. Lenders get to choose what loans they want to fund, with higher risk loans providing a higher return.
 
-The dataset can be downloaded from this project's GitHub repository: [???????]()
+The dataset can be downloaded from this project's GitHub repository: [prosperLoanData.csv](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/Prosper-loans-Analysis/prosperLoanData.csv)
 
 ## Initial Exploration
 
@@ -52,9 +50,11 @@ There are a multitude variables in this dataset, some of whose meaning may not b
 
 ## Univariate Analysis
 
+In this section, potential variables of interest will be explored for  
+
 ### Borrower Interest Rate
 
-One of most important variables for a borrower when getting a loan is the interest rate. The interest rate is ultimately set by the lender and is decided based upon by a variaty of variables, the most popular one being Credit Score.
+One of most important variables for both a borrower and a lender is the interest rate of the loan. The interest rate is ultimately set by Prosperity and is decided based upon by a variety of variables.
 
 ```{r echo=FALSE, BorrowerRate_Histogram}
 
@@ -537,14 +537,14 @@ Interest rate vs. Employment Duration
 Loan Status vs. Estimated Return
 Loan Status vs. Borrower Rating
 
-### Loan Amount vs. Interest Rate
+### Interest Rate vs. Loan Amount
 ```{r echo=FALSE, LoanAmount_BorrowerRate}
 ggplot(loans, aes(x = LoanOriginalAmount, y = BorrowerRate)) +
   geom_point(alpha = 0.25) +
   scale_x_sqrt(breaks = c(seq(1000, 36000, 5000)))
 ```
 
-### Average Credit Score vs. Interest Rate
+### Interest Rate vs. Average Credit Score
 ```{r echo=FALSE, AvgCreditScore_BorrowerRate}
 ggplot(loans, aes(x = CreditScoreAverage, y = BorrowerRate)) +
   geom_jitter(alpha = 0.05, size = .75) +
@@ -555,7 +555,7 @@ ggplot(loans, aes(x = CreditScoreAverage, y = BorrowerRate)) +
        title = "Interest Rate by Average Credit Score")
 ```
 
-### Credit Rating vs Borrower Interest Rate
+### Interest Rate vs. Rating
 ```{r echo=FALSE, Rating_BorrowerRate}
 ggplot(subset(loans, !is.na(loans$ratings) & loans$ratings != "NC"), 
        aes(x = ratings, y = BorrowerRate)) + 
@@ -597,7 +597,23 @@ ggplot(subset(loans, !is.na(loans$ratings) & loans$ratings != "NC"), aes(x = rat
   ylim(250, 900)
 ```
 
-# Bivariate Analysis
+### Loan Status vs. Credit Rating
+```{r echo=FALSE, Rating_AvgCreditScore, fig.width=10}
+ggplot(data = subset(loans, ratings != 'NC' & LoanStatus != 'Cancelled'),
+       aes(x = ratings)) + 
+  geom_bar() +
+    facet_grid(. ~ LoanStatus)
+```
+
+### Estimated Return vs. Credit Rating
+```{r echo=FALSE, Rating_AvgCreditScore, fig.width=10}
+ggplot(data = subset(loans, ratings != 'NC' & LoanStatus != 'Cancelled'),
+       aes(x = ratings)) + 
+  geom_bar() +
+    facet_grid(. ~ LoanStatus)
+```
+
+# Bivariate Reflection
 
 > **Tip**: As before, summarize what you found in your bivariate explorations
 here. Use the questions below to guide your discussion.
@@ -624,11 +640,12 @@ will do that.
 ### Loan Amount vs Borrower Rate by Credit Grade
 ```{r echo=FALSE, LoanAmount_BorrowerRate_Rating, fig.height=5, fig.width=10}
 ggplot(data = subset(loans, loans$ProsperRating..Alpha. != ""), 
-       aes(x = LoanOriginalAmount, y = BorrowerRate * 100, color = ProsperRating..Alpha.)) +
+       aes(x = LoanOriginalAmount, y = BorrowerRate * 100, color = ratings)) +
   geom_point(alpha = 0.5) +
   scale_x_sqrt(breaks = c(seq(1000, 36000, 5000))) + 
-  scale_color_brewer(palette = "BrBG", direction = -1) + 
-  labs(x = "Original Loan Amount ($)", y = "Borrower Interest Rate (%)")
+  scale_color_brewer(palette = "RdBu") + 
+  labs(x = "Original Loan Amount ($)", y = "Borrower Interest Rate (%)") +
+  theme(panel.background = element_rect(fill = 'dark grey'))
 ```
 
 ### Average Credit Score vs Borrower Rate by ?
