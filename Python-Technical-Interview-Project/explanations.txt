@@ -1,9 +1,64 @@
-Question 1:
+##### Question 1 #####
+Design:
 There are a couple of important parameters to consider for this question:
-1. The characters in s can only be used once by the anagram
-2. "None" and "" values have to return False
-3. Input characters must be strings, else return False
-With the current iteration of the function, the runtime is O(n), since the algorithm has to loop through all of the characters of s if it can't find t in s.
+1. The characters in 's' can only be used once by the anagram
+2. "None" and "" values should to return False
+3. Input characters must be strings
 
-Question 2:
-In the worst case, the runtime is O(n!). This is if the function has to iterate through every possible combination of two letters in the input. Because the function looks at the biggest combinations first,  it will return the first palindrome it finds immediately, which does reduce the average runtime. Although O(n!) is considered exponential time and is one of the longest runtimes possible, most strings are small in size.
+Efficiency:
+In the worst case, runtime efficiency is O(n), since the algorithm has to loop
+through all of the characters in 't'. The space efficiency is also O(n).
+
+##### Question 2 #####
+Design:
+The idea is to create a 'viewer' that captures substrings of a specific size.
+The viewer looks for palindromic substrings with the maximum character size
+possible first. With every iteration through the string, the amount of
+character size in the viewer decreases. In this fashion, the longest palindrome
+found is always returned first and there is no extra iteration.
+
+Efficiency:
+In the worst case, the runtime is O(n!). This is if the function has to iterate
+through every possible combination of substrings in the input. Because the
+function looks at the biggest combinations first, it will return the first
+palindrome it finds immediately, which does reduce the average runtime.
+Although O(n!) is considered exponential time and is one of the worst runtime
+efficiencies possible, most strings are small in size. The space efficiency is
+O(1), since all of the searching is done in-place.
+
+##### Question 3 #####
+Design:
+Kruskal's algorithm was used to find the minimum spanning tree in the graph.
+Custom built Tree, Node, and Edge class objects were created to make the tree.
+A recursive DFS function was used to detect cycles within the graph.
+
+Efficiency:
+Kruskal's algorithm has been shown to have a runtime efficiency of O(E log V)
+time, where 'E' is the number of edges and 'V' is the number of vertices.
+However, the implementation in this solution is longer than that, due to
+performing a DFS search whenever a new edge was added to the graph. This
+function's runtime is O((V + E)^n), as DFS is done for each edge added to the
+graph in order to check for cycles. The space efficiency is O(n), where is n is
+every element in the graph.
+
+##### Question 4 #####
+Design: Custom Tree and Node objects were created to built the BST. The lowest
+common ancestor was found by building a list of the first nodes ancestors and
+comparing each ancestor of the second node to the list. Once a match was found,
+the value was returned.
+
+Efficiency:
+At its worst, the time efficiency is O(n), where n is the total number of
+ancestors both nodes have. Space efficiency is O(n), where n is every element
+in the BST.
+
+##### Question 5 #####
+Design:
+LinkedList and Node class objects were used to construct the linked list.
+Solution utilizes the features of the linked list to iterate over the list and
+find the value at the correct position.
+
+Efficiency:
+At worst, the runtime efficiency is O(n). This occurs if the function has to
+iterate over the entire length of the linked list. The space efficiency is
+O(n), where n is every node in the linked list.
