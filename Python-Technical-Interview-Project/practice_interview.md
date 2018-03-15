@@ -1,7 +1,7 @@
 ### Question 1
-I would say the project that most reflects what I would be doing at 8 Rivers would be my project on OpenStreetmap data of the Raleigh-Durham area. OpenStreetMap is pretty much just Google maps but is completely open source for contributions.  In this project, I was tasked with selecting a geographic region and extracting, cleaning, and analyzing the map data using Python and SQL, very similiar to the skills needed for this position. The first step of this project was downloading the raw data in XML form. From there, the data was converted into CSV data and cleaned programmatically. 
+I would say the project that most reflects what I would be doing at 8 Rivers would be my project on OpenStreetMap data of the Raleigh-Durham area. OpenStreetMap is pretty much like Google maps, but is completely open source.  In this project, I was tasked with selecting a geographic region and extracting, cleaning, and analyzing the map data using Python and SQL, very similiar to the skills needed for this position. The first step of this project was downloading the raw data in XML form. From there, the data was converted into CSV data and cleaned programmatically. 
 
-In this cleaning, there were a couple of goals in mind. One was ensuring that the data within the same fields were consistent. A perfect example of a variable that needed to be cleaned was phone numbers.  Many of the numbers were in different formats: some had the country code, others used hyphens, parenthesis, or spaces while others didn’t... it was a mess. I ultimately picked a format that captured the most data and used regular expressions to adapt each record and ensure all the observations within that variable were consistent. After cleaning was finished, the CSV data was inserted into SQLite, where I could easily query the data for analysis. From the analysis, I found some very interesting trends on the user contribution. After aggregating user submissions, some users accounted for over 80% of all contributions, which I found pretty interesting. 
+In this cleaning, there were a couple of goals in mind. One was ensuring that the data within the same fields were consistent. A perfect example of a variable that needed to be cleaned was phone numbers.  Many of the numbers were in different formats: some had the country code, others used hyphens, parenthesis, or spaces while others didn’t... it was a mess. I ultimately picked a format that captured the most data and used regular expressions to adapt each record to this format and ensure all the observations within that variable were consistent. After cleaning was finished, the CSV data was inserted into an SQLite table, where I could easily query the data for analysis. From the analysis, I found some very interesting trends on the user contribution. After aggregating user submissions, some users accounted for over 80% of all contributions, which I found pretty interesting. 
 
 Overall, I think this project portrays my ability to work with messy data and cleaning it programmatically. I highly encourage that you check out the project for yourself through my LinkedIn page.
 
@@ -10,7 +10,7 @@ __Part 1:__
 
 _P(OOCC)_ = 1/14 or 0.072
 
-I started off this probability problem by drawing a probabilty tree. After creating the tree down to four levels, I followed the path _OOCC_ and multiplied the probabilities, giving the result of 1/14 or 0.072.
+I started off this probability problem by drawing a probabilty tree. After drawing the tree out to four levels, I followed the path _OOCC_ and multiplied the probabilities, giving the result of 1/14 or 0.072.
 
 __Part 2:__
 
@@ -57,6 +57,6 @@ While underfitting and overfitting are usually applied to machine learning, the 
 
 
 ### Question 6
-Within one year of working at 8 Rivers, I would love to slowly expand my work into areas of Data Science and Machine Learning and have an even deeper impact into the creation and implementation of new, globally impactful technologies by working with a wide variety of teams and being able to fully complete a project for a client.
+Within one year of working at 8 Rivers, I would love to slowly expand my work into areas of data science and machine learning and have an even deeper impact into the creation and implementation of new, globally impactful technologies. I would also like to work with a wide variety of teams and to fully complete a project for a client from start to finish.
 
-I would also like to be very familiar with all of the unique people here at 8 Rivers. One of the reasons I was very interested in applying for this job was that the organization consisted of very knowledgeable and experienced team members. Everyone seems to have extensive knowledge in their respective fields, and they seem like great people to work with and potentially be mentored by. 
+A personal goal beyond my career is that I would also like to be very familiar with all of the unique people here at 8 Rivers. One of the reasons I was very interested in applying for this job was that the organization consisted of very knowledgeable and experienced team members. Everyone seems to have extensive knowledge in their respective fields, and they seem like great people to work and grow with. 
