@@ -1,11 +1,11 @@
 ### Question 1
-I would say the project that most reflects what I would be doing at 8 Rivers would be my project on OpenStreetMap data of the Raleigh-Durham area. OpenStreetMap is pretty much like Google maps, but is completely open source.  In this project, I was tasked with selecting a geographic region and extracting, cleaning, and analyzing the map data using Python and SQL, very similiar to the skills needed for this position. The first step of this project was downloading the raw data in XML form. From there, the data was converted into CSV data and cleaned programmatically. 
+I would say the project that most reflects what I would be doing at 8 Rivers would be my project on OpenStreetMap data of the Raleigh-Durham area. OpenStreetMap is pretty much like Google maps, but is completely open source.  In this project, I was tasked with selecting a geographic region and extracting, cleaning, and analyzing the map data using Python and SQL, very similiar to the skills needed for this position. The first step of this project was downloading the raw data in XML form. From there, the data was converted into CSV data and cleaned programmatically.
 
-In this cleaning, there were a couple of goals in mind. One was ensuring that the data within the same fields were consistent. A perfect example of a variable that needed to be cleaned was phone numbers.  Many of the numbers were in different formats: some had the country code, others used hyphens, parenthesis, or spaces while others didn’t... it was a mess. I ultimately picked a format that captured the most data and used regular expressions to adapt each record to this format and ensure all the observations within that variable were consistent. After cleaning was finished, the CSV data was inserted into an SQLite table, where I could easily query the data for analysis. From the analysis, I found some very interesting trends on the user contribution. After aggregating user submissions, some users accounted for over 80% of all contributions, which I found pretty interesting. 
+In this cleaning, there were a couple of goals in mind. One was ensuring that the data within the same fields were consistent. A perfect example of a variable that needed to be cleaned was phone numbers.  Many of the numbers were in different formats: some had the country code, others used hyphens, parenthesis, or spaces while others didn’t... it was a mess. I ultimately picked a format that captured the most data and used regular expressions to adapt each record to this format and ensure all the observations within that variable were consistent. After cleaning was finished, the CSV data was inserted into an SQLite table, where I could easily query the data for analysis. From the analysis, I found some very interesting trends on the user contribution. After aggregating user submissions, some users accounted for over 80% of all contributions, which I found pretty interesting.
 
 Overall, I think this project portrays my ability to work with messy data and cleaning it programmatically. I highly encourage that you check out the project for yourself through my LinkedIn page.
 
-### Question 2	
+### Question 2
 __Part 1:__
 
 _P(OOCC)_ = 1/14 or 0.072
@@ -16,7 +16,7 @@ __Part 2:__
 
 _P(exactly 2 C)_ = 3/7 or 0.429
 
-One method of doing this problem it to collect all of the tree path probabilities that have exactly two _C_'s and then add them together. However, an even faster method is to realize that each tree path probability is the same; the order in which the two _C_'s and two _O_'s occur does not matter. You can use the probabilty of one tree path with exactly two _C_'s (1/14) and multiply it my the total number of tree paths with two _C_'s (6) to arrive at the final answer, which is 3/7 or 0.429.
+One method of doing this problem it to collect all of the tree path probabilities that have exactly two _C_'s and then add them together. However, an even faster method is to realize that each tree path probability is the same; the order in which the two _C_'s and two _O_'s occur does not matter. You can use the probability of one tree path with exactly two _C_'s and multiply it my the total number of tree paths with two _C_'s to arrive at the final answer. Interestingly enough, the answer to part one is the probability of a tree with exactly two _C_'s. Multiplying that probability (1/14) by the number of paths with exactly two _C_'s (6) returns the _P(exactly 2 C)_: 3/7 or 0.429.
 
 ### Question 3
 ~~~SQL
@@ -59,4 +59,4 @@ While underfitting and overfitting are usually applied to machine learning, the 
 ### Question 6
 Within one year of working at 8 Rivers, I would love to slowly expand my work into areas of data science and machine learning and have an even deeper impact into the creation and implementation of new, globally impactful technologies. I would also like to work with a wide variety of teams and to fully complete a project for a client from start to finish.
 
-A personal goal beyond my career is that I would also like to be very familiar with all of the unique people here at 8 Rivers. One of the reasons I was very interested in applying for this job was that the organization consisted of very knowledgeable and experienced team members. Everyone seems to have extensive knowledge in their respective fields, and they seem like great people to work and grow with. 
+A personal goal beyond my career is that I would also like to be very familiar with all of the unique people here at 8 Rivers. One of the reasons I was very interested in applying for this job was that the organization consisted of very knowledgeable and experienced team members. Everyone seems to have extensive knowledge in their respective fields, and they seem like great people to work and grow with.
