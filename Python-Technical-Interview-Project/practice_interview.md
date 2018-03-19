@@ -51,10 +51,15 @@ Overfitting and underfitting are both terms used to describe how a supervised le
 
 If an algorithm is underfitting a dataset, the algorithm is generalizing the data too much and isn't adjusting enough to the information from the features and the expected outputs. This is known as having high bias.
 
-If an algorithm is overfitting a dataset, the algorithm is doesn't generalize enough and often reacts to random noise, getting results that aren't the expected outputs. This is known as having high variance.
+If an algorithm is overfitting a dataset, the algorithm doesn't generalize enough and often reacts to random noise, getting results that aren't in the expected outputs. This is known as having high variance.
 
-While underfitting and overfitting are usually applied to machine learning, the general idea of proper fit is also applicable to other statistical analysis. A financial model may not be fitted properly with a linear regression. However, scaling the data in the model by _log_ or _sqrt_ might give said linear model a better fit.
+There are several methods to prevent, detect, and resolve over/underfitting. One of the easiest ways to avoid over/underfitting is to ensure that the learning algorithm being used is the most simple for the task at hand. If all of the features are categorical and the features are not too closely correlated, it might be better to implement a Naive Bayes algorithm rather than creating an ensemble of an SVM and a decision tree. Choosing the right algorithm for a machine learning problem is a skill I am constantly working on and hope to continue to cultivate as my experience grows.
 
+One way to detect for fit problems is by looking at the score results from the training and test sets. If the algorithm performs much better on the training set than the test set, it is possible that the data is being overfitted. If the training and testing results are poor, it is possible that the dataset is being underfitted. Cross validation can be used alongside the results to determine how much an algorithm is over or under fitting the data.
+
+Overfitting can be resolved by performing regularization, increasing the amount of data, or reducing the size of the model. Regularization reduces the complexity of the algorithm by adding weights to the estimator in the algorithm. Increasing the amount of data in the training set makes it harder for the algorithm to memorize the training data, which also leads to less overfitting. Reducing the size of the model also decreases the complexity of the algorithm, decreasing variance and increasing bias.
+
+Underfitting is resolved by increasing the complexity of algorithm. This is the opposite of how to treat overfitting. Increasing the complexity of the algorithm can be done by adding more features to the dataset. By adding more features, the algorithm is given more information to predict the results of a datapoint, and leads to less bias and more variance. 
 
 ### Question 6
 There are three overarching goals that I would like to accomplish a year from now while working at 8 Rivers: Gain more Data Science and Financial knowledge, complete a project for a client from start to finish, and meet the team members from all of the unique divisions within 8 Rivers.
@@ -63,4 +68,4 @@ Within one year of working at 8 Rivers, I would love to slowly expand my work in
 
 Beyond my career goals, I want to be familiar with all of the unique people and divisions here at 8 Rivers. One of the reasons I was very interested in applying for this job was that the organization consisted of very knowledgeable and experienced team members from all types of backgrounds. Everyone seems to have extensive knowledge in their respective fields, and they seem like great people to work and grow with.
 
-A longer, 5 year goal would be to complete to lead a section of a client project from start to finish. 8 Rivers has worked on some incredibly high-profile projects, such as the creation of the Allem Cycle for cleaner power plants and Thor Launch Systems for reducing the cost on interplanetary deliveries. I hope to be a major role in one of these projects as I grow in my capabilities as a data scientist.
+A longer, 5 year goal would be to play a leadership role in a client project and to participate in the project from start to finish. 8 Rivers has worked on some incredibly high-profile projects, such as the creation of the Allem Cycle for cleaner power plants and Thor Launch Systems for reducing the cost on interplanetary deliveries. I hope to be a much more crucial role in future projects of this scale as I grow in my capabilities as a data scientist.
