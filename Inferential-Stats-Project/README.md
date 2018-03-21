@@ -3,7 +3,7 @@
 ### Description of files
 
 __stroop_analysis.html__
-  * HTML file that contains the final report in the correct formatting. To view, clone the repository and view file in browser. 
+  * HTML file that contains the final report in the correct formatting. The file can be view through the browser through [this link](https://tcjulian.github.io/stroop_analysis.html). 
   * If you wish to view the file without downloading the entire repository, follow these instructions:
      1. Click on the HTML file in the Git Hub repository.
      2. In the top right, right click the `Raw` button.
