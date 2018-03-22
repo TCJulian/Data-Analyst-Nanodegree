@@ -1,4 +1,4 @@
-## Inferential Statistics Project Repository
+# Repository for Inferential Statistics Project 
 
 In this project, inferential statistics are performed while exploring the psychological phenomenom known as the Stroop Effect. A hypothesis is established and the independent and dependent variables of this study are identified. Ultimately, the results in the study undergo a t-test, and a conclusion is formed based off of the results.
 
