@@ -1,6 +1,6 @@
 # Repository for Exploratory Data Analysis Project
 
-This project consists of loading in a dataset performing EDA. During exploration, univariate, bivariate, and multivariate anslysis is done. Variables are plotted, tranformationed, and statistically summarized in orderto find interesting trends, patterns, or correlations. 
+This project consists of performing EDA on a dataset. During exploration, univariate, bivariate, and multivariate analysis is done on a variety of features. Variables are plotted, tranformationed, and statistically summarized in order to find interesting trends, patterns, or correlations. 
 
 The final report is best viewed in a browser through [this link](https://tcjulian.github.io/EDA_loans.html). 
 
