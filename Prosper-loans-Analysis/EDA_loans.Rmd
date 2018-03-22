@@ -192,6 +192,29 @@ table(loans$IncomeRange)
 
 `IncomeRange` shows that most borrowers have income that falls within two bins: `$25,000-49,999` and `$50,000-74,999`. There are more borrowers that fall above these ranges than below them. This might suggest that borrowers with higher reported incomes are more likely to take out a loan than those with lower reported incomes. More exploration combined with other variables is required to validate this theory.
 
+### Stated Monthly Income
+
+Monthly income is very similar to income range. The biggest and most important difference is that this variable is quantitative rather than qualitative.
+
+```{r, echo=FALSE, Monthly_Income_summary}
+summary(loans$StatedMonthlyIncome)
+```
+There is a very large outlier in dataset with one individual claiming to bring in almost 2 million dollars every month. The top 1% of the data will be removed so the distribution can be more clearly viewed.
+
+```{r, echo=FALSE, warning=FALSE, Monthly_Income_plot}
+ggplot(data = loans,
+       aes(x = StatedMonthlyIncome)) +
+  geom_histogram(fill = "#598BF7",
+                 color = "black", 
+                 binwidth = 500) +
+  lims(x = c(0, quantile(loans$StatedMonthlyIncome, prob=(.99)))) +
+  labs(x = "Monthly Income ($)",
+       y = "Count", 
+       title = "Monthly Income of Borrowers")
+```
+
+The Monthly Income distribution is skewed right with most individuals making about $4750.
+
 ### Debt to Income Ratio
 
 Debt to income ratio, stored as `DebtToIncomeRatio`, is exactly what it sounds like: a borrower's debt divided by their current income at the time the credit profile was pulled. 
@@ -504,7 +527,7 @@ The initial plot shows that the data is right skewed and unimodal. There is a lo
 
 The dataset consists of 83 variables with 113,937 observations.
 
-The variables of interest in this analysis are:
+__The variables of interest in this analysis are:__
 
   1. Interest Rate
   2. Average Credit Score
@@ -519,7 +542,7 @@ The variables of interest in this analysis are:
   11. Employment Status
   12. Employment Duration
   
-Some of the more important observations:
+__Some of the more important observations:__
 
  * The interest rate distribution was slightly right skewed, with a abnormal peak at 32%.
  * The average credit score was 690.
@@ -529,191 +552,273 @@ Some of the more important observations:
   
 The main feature of interest in this dataset is the borrower's interest rate. Remember that the goal is to make a model that can predict the interest rate of Prosper loan, given some list of variables.
 
-There are several variables that can be explored further that could potentially predict the interest rate a borrower has. Obviously Credit Score will be used. Income, Loan Amount, Employment Duration/Status, and Debt/Income Ratio all might be correlated with interest rate as well, and will definitely appear in the bivariate analysis. The Borrower Rating is another interesting variable to explore, especially with some of the other supporting variables.
+There are several variables that can be explored further that could potentially predict the interest rate a borrower has. Obviously `Average Credit Score` will be used. `Income`, `Loan Amount`, `Employment Duration/Status`, and `Debt/Income Ratio` all might be correlated with interest rate as well, and will definitely appear in the bivariate analysis. The `Borrower Rating` is another interesting variable to explore, especially with some of the other supporting variables.
 
-In this analysis, there were also several variables that were adapted so they could be properly used. Income, Term Length, LoanStatus, Borrower State, and Employment status all had thier levels added, combined, or reordered. One new variable, `Rating`, was recreated entirely using the two other rating variables.  
+In this analysis, there were also several variables that were adapted so they could be properly used. `Income`, `Term Length`, `Loan Status`, `Borrower State`, and `Employment Status` all had thier levels added, combined, or reordered. One new variable, `Rating`, was recreated entirely using the two other rating variables.  
 
 # Bivariate Exploration
-Interest rate vs. Average Credit Score
-Interest rate vs. Borrower Rating
-Interest rate vs. Income
-Interest rate vs. Debt/Income Ratio
-Interest rate vs. Employment Status
-Interest rate vs. Employment Duration
-Loan Status vs. Estimated Return
-Loan Status vs. Borrower Rating
-
-### Interest Rate vs. Loan Amount
-```{r echo=FALSE, LoanAmount_BorrowerRate}
-ggplot(loans, aes(x = LoanOriginalAmount, y = BorrowerRate)) +
-  geom_point(alpha = 0.25) +
-  scale_x_sqrt(breaks = c(seq(1000, 36000, 5000)))
-```
 
 ### Interest Rate vs. Average Credit Score
-```{r echo=FALSE, AvgCreditScore_BorrowerRate}
+
+A borrowers credit score is widely known as being the biggest factor in determining the interest rate of a loan. Considering that,  it will be the first variable paired with interest rate.
+
+```{r echo=FALSE, warning=FALSE, AvgCreditScore_BorrowerRate}
 ggplot(loans, aes(x = CreditScoreAverage, y = BorrowerRate)) +
-  geom_jitter(alpha = 0.05, size = .75) +
-  scale_x_continuous(limits = c(360, 900), breaks = c(seq(360, 920, 40))) +
+  geom_point(alpha = 0.1) +
+  scale_x_continuous(limits = c(400, 900), breaks = c(seq(400, 900, 50))) +
   ylim(0, 0.4) +
   labs(x = 'Average Credit Score', 
        y = 'Interest Rate',
        title = "Interest Rate by Average Credit Score")
 ```
 
+Because of the way credit scires were recorded by _Prosper_, the credit scores all lie along similiar x's, formed buckets of data. By adding some horizontal jitter, a better shape can be formed.
+
+```{r echo=FALSE, warning=FALSE, AvgCreditScore_BorrowerRate_jitter}
+ggplot(loans, aes(x = CreditScoreAverage, y = BorrowerRate)) +
+  geom_point(alpha = 0.1,
+             position = position_jitter(w = 9)) +
+  scale_x_continuous(limits = c(400, 900), breaks = c(seq(400, 900, 50))) +
+  ylim(0, 0.4) +
+  labs(x = 'Average Credit Score', 
+       y = 'Interest Rate',
+       title = "Interest Rate by Average Credit Score")
+```
+
+At first glance, it seems as if there might be a slight downward trend through the data. As credit score increases, the interest rate seems to decrease. 
+
+```{r, echo=FALSE, CreditScore_BorrowerRate_cor}
+cor(loans$CreditScoreAverage, loans$BorrowerRate, use = "complete.obs")
+```
+
+A short correlation test support this theory, reporting a moderate negative correlation between average credit score and interest rate. 
+
+```{r, echo=FALSE, CreditScore_BorrowerRate_lm}
+cs_ir <- lm(BorrowerRate ~ CreditScoreAverage, data=loans)
+summary(cs_ir)
+```
+
+While there is a correlation between this variable, average credit score only explains 21.3% of the variance in interest rate.
+
+With this first variable, the underlaying factors that may predict the interest rate of a loan are coming to the surface. However, credit score was an obvious first choice. What other variables in tandem with credit score might provide us with a strong predictor?
+
+### Interest Rate vs. Loan Amount
+
+The intuition that the size of the loan might impact interest rate makes sense. As the size of the loan goes up, lenders might require that the borrowers are more trust worthy and have less risk than an low sized loan.
+
+```{r echo=FALSE, LoanAmount_BorrowerRate}
+ggplot(loans, aes(x = LoanOriginalAmount, y = BorrowerRate)) +
+  geom_point(alpha = 0.25) 
+```
+
+```{r echo=FALSE, LoanAmount_BorrowerRate_jitter}
+ggplot(loans, aes(x = LoanOriginalAmount, y = BorrowerRate)) +
+  geom_point(alpha = 0.25, 
+             size = 0.6,
+             position = position_jitter(width = 0.25)) +
+  scale_x_continuous(breaks = c(seq(0, 35000, 5000))) +
+  labs(x = "Loan Amount ($)", 
+       y = "Interest Rate", 
+       title = "Interest rate by Loan Amount")
+```
+
+```{r, echo=FALSE, LoanAmount_BorrowerRate_cor}
+cor(loans$LoanOriginalAmount, loans$BorrowerRate, use = "complete.obs")
+```
+
+The scatterplot and the correlation test both support this theory. The small negative correlation means that as the size of the loan increases, the interest rate on average decreases a little as well. 
+ 
+However, it is importatnt to not attribute correlation with causation, and to be aware lurking variables may be present. Higher is loans may have low interest rates because only people with secure financial portfolios can afford them.
+ 
 ### Interest Rate vs. Rating
+
+The rating of a loan is the snapshot of a borrowers riskiness at _Prosper_. I suspect that there might be a relationship between the rating of a loan and its interest rate.
+
 ```{r echo=FALSE, Rating_BorrowerRate}
 ggplot(subset(loans, !is.na(loans$ratings) & loans$ratings != "NC"), 
        aes(x = ratings, y = BorrowerRate)) + 
-  geom_boxplot(alpha = 0.10)
+  geom_boxplot() +
+  labs(x = "Ratings",
+       y = "Interest Rate",
+       title = "Interest Rate by Ratings")
 ```
 
+There is clearly a strong relationship between interest rate and ratings; in fact it is the strongest we have seen so far. The difference between the median of the lowest rating and the highest rating is almost 25%! It could be that rating is tied to other variables that are correlated with interest rate, such as credict score or the amount of the loan. Regardless, this is definitely a varible that could be used to predict the interest rate of a loan.
+
 ### Interest Rate vs. Income
+
+It would make sense that individuals who have more cash flow are rewarded with lower interest rates, since it is more likely they will be able to pay their bills and thus will be a low risk loan.
+
 ```{r echo=FALSE, InterestRate_Income}
 ggplot(data = loans,
        aes(x = IncomeRange, y = BorrowerRate)) +
-  geom_boxplot()
+  geom_boxplot() +
+  labs(x = "Income Range ($)",
+       y = "Interest Rate",
+       title = "Interest Rate by Income Range")
 ```
 
-### Interest Rate vs. Debt/Income Ratio
-```{r echo=FALSE, InterestRate_DebtIncomeRatio}
+```{r echo=FALSE, warning=FALSE, InterestRate_DebtIncomeRatio}
 ggplot(data = loans,
-       aes(x = DebtToIncomeRatio, y = BorrowerRate)) +
-  geom_jitter(alpha = 0.1, size = .5)
+       aes(x = StatedMonthlyIncome, y = BorrowerRate)) +
+  geom_point(alpha = 0.1, size = 1) +
+  lims(x = c(0, quantile(loans$StatedMonthlyIncome, probs=(0.99)))) +
+  labs(x = "Monthly Income ($)",
+       y = "Interest Rate",
+       title = "Interest Rate by Monthly Income")
 ```
 
-### Interest Rate vs. Employment Status
+```{r, echo=FALSE, BorrowerRate_MonthlyIncome_corr}
+cor(loans$StatedMonthlyIncome, loans$BorrowerRate, use = "complete.obs")
+```
+
+There does appear to be a relationship between income and interest rate, but it is not very strong. Borrowers with more income do on average have lower interest rates, with each range having a slightly lower interest rate than the previous. Stated monthly income follows a similar pattern, but further shows how weak the correlation is.  
+
+These findings was surprising. I expected income to be correlated much more highly with interest rate. It could be because income can fluctuate greatly from month to month, and sometimes isn't verifiable. 
+
+### Interest Rate vs. Borrower State
+
+Where someone lives in the United States can usually have a profound impact on someones financials, due to cost of living, taxes, etc. Do interest rates also fluctuate in that same pattern? 
+
+```{r echo=FALSE, InterestRate_BorrowerState, fig.height=5, fig.width=11}
+ggplot(data = subset(loans, BorrowerState != ""),
+       aes(x = BorrowerState, y = BorrowerRate)) +
+  geom_boxplot() +
+  geom_hline(yintercept = 0.184, 
+             color = "red") +
+  lims(y = c(0, 0.4)) +
+  labs(x = "Borrower State",
+       y = "Interest Rate",
+       title = "Interest Rate by Borrower State")
+```
+
+This inital plot shows that interest rate does not differ between states for the most part. The horizontal red line is the median interest rate. Overall, there are slight deviations between the medians, but they all still lie close to the overall median interest rate. A few of the states that deviate the most are Maine, Iowa, Alabama, and Washington DC, however they also have a much lower smaple size and may have more variance.
+
+### Interest Rate vs. Employment
+
+Employment history and duration are other important metrics that might trend with interest rate.
+
 ```{r echo=FALSE, InterestRate_EmploymentStatus}
 ggplot(data = loans,
        aes(x = EmploymentStatus, y = BorrowerRate)) +
-  geom_boxplot()
+  geom_boxplot() +
+  labs(x = "Employment Status",
+       y = "Interest Rate",
+       title = "Interest Rate by Employment Status")
 ```
 
-### Interest Rate vs. Employment Duration
-```{r echo=FALSE, InterestRate_EmploymentDuration}
+For the most part, employment status does not seem too related to interest rate. Reporting as "Not employed" seems to be the only response that may be related to a higher interest rate. 
+
+```{r echo=FALSE, warning=FALSE, InterestRate_EmploymentDuration}
 ggplot(data = loans,
        aes(x = EmploymentStatusDuration / 12, y = BorrowerRate)) +
-  geom_point(alpha = 0.2, size = .5)
+  geom_point(alpha = 0.2, size = .5) +
+  lims(y = c(0, 0.4)) +
+  labs(x = "Employment Duration (years)",
+       y = "Interest Rate",
+       title = "Interest Rate by Employment Duration")
 ```
 
-### Credit Rating vs. Credit Score
-```{r echo=FALSE, Rating_AvgCreditScore}
-ggplot(subset(loans, !is.na(loans$ratings) & loans$ratings != "NC"), aes(x = ratings, y = CreditScoreAverage)) + 
-  geom_boxplot() +
-  ylim(250, 900)
+```{r}
+cor(loans$BorrowerRate, loans$EmploymentStatusDuration, use = "complete.obs")
 ```
 
-### Loan Status vs. Credit Rating
-```{r echo=FALSE, Rating_LoanStatus, fig.width=10}
-ggplot(data = subset(loans, ratings != 'NC' & LoanStatus != 'Cancelled'),
-       aes(x = ratings)) + 
-  geom_bar() +
-    facet_grid(. ~ LoanStatus)
-```
-
-### Estimated Return vs. Credit Rating
-```{r echo=FALSE, Return_AvgCreditScore, fig.width=10}
-ggplot(data = subset(loans, ratings != 'NC' & LoanStatus != 'Cancelled'),
-       aes(x = ratings)) + 
-  geom_bar() +
-    facet_grid(. ~ LoanStatus)
-```
+Unfortunately, there also does not seem to be any correlation between employment duration and interest rate, which I find surprising.
 
 # Bivariate Reflection
 
-> **Tip**: As before, summarize what you found in your bivariate explorations
-here. Use the questions below to guide your discussion.
+The bivariate section definitly shed some light into the relationships between interest rate and some of the other variables. Interest rate seems to be tied to credit score, though it does not account for a large portion of its variance, based on it's R^2 value. Surprisingly, interest rates did not fluctate much between different states, even though cost of living is different amongst each of them.
 
-### Talk about some of the relationships you observed in this part of the \
-investigation. How did the feature(s) of interest vary with other features in \
-the dataset?
-
-### Did you observe any interesting relationships between the other features \
-(not the main feature(s) of interest)?
-
-### What was the strongest relationship you found?
-
-
-# Multivariate Plots Section
-
-> **Tip**: Now it's time to put everything together. Based on what you found in
-the bivariate plots section, create a few multivariate plots to investigate
-more complex interactions between variables. Make sure that the plots that you
-create here are justified by the plots you explored in the previous section. If
-you plan on creating any mathematical models, this is the section where you
-will do that.
-
-### Loan Amount vs Borrower Rate by Credit Grade
-```{r echo=FALSE, LoanAmount_BorrowerRate_Rating, fig.height=5, fig.width=10}
-ggplot(data = subset(loans, loans$ProsperRating..Alpha. != ""), 
-       aes(x = LoanOriginalAmount, y = BorrowerRate * 100, color = ratings)) +
-  geom_point(alpha = 0.5) +
-  scale_x_sqrt(breaks = c(seq(1000, 36000, 5000))) + 
-  scale_color_brewer(palette = "RdBu") + 
-  labs(x = "Original Loan Amount ($)", y = "Borrower Interest Rate (%)") +
-  theme(panel.background = element_rect(fill = 'dark grey'))
-```
-
-### Average Credit Score vs Borrower Rate by ?
-```{r echo=FALSE, Multivariate_Plots}
-
-```
-
+The strongest relationships for interest rate were with average credit score and ratings, while the weakest relationships were with  employment duration, employment status, and income.
 
 # Multivariate Analysis
 
-### Talk about some of the relationships you observed in this part of the \
-investigation. Were there features that strengthened each other in terms of \
-looking at your feature(s) of interest?
-
-### Were there any interesting or surprising interactions between features?
-
-### OPTIONAL: Did you create any models with your dataset? Discuss the \
-strengths and limitations of your model.
-
-------
-
-# Final Plots and Summary
-
-> **Tip**: You've done a lot of exploration and have built up an understanding
-of the structure of and relationships between the variables in your dataset.
-Here, you will select three plots from all of your previous exploration to
-present here as a summary of some of your most interesting findings. Make sure
-that you have refined your selected plots for good titling, axis labels (with
-units), and good aesthetic choices (e.g. color, transparency). After each plot,
-make sure you justify why you chose each plot by describing what it shows.
-
-### Plot One
-```{r echo=FALSE, Plot_One}
-
+### Interest Rate by Rating Density Plot
+```{r echo=FALSE, warning=FALSE, BorrowerRate_Rating_density}
+ggplot(data = subset(loans, ratings != 'NC' & !is.na(ratings)),
+       aes(x = BorrowerRate*100, color = ratings)) +
+  geom_density(size = 1) +
+  lims(x = c(0, 40)) +
+  scale_color_brewer(palette = "Blues") +
+  guides(color = guide_legend(reverse=T)) + 
+  labs(x = "Interest Rate",
+       y = "Density",
+       title = "Density Plot of Interest Rate by Rating") +
+  theme(panel.background = element_rect(fill = '#AAAAAA'),
+        panel.grid.major = element_line(color = '#878787'),
+        panel.grid.minor = element_line(color = '#878787')) 
 ```
 
-### Description One
+This visualization really shows how each rating corresponds with a specific range of interest rates. The highest rating "AA" peaks at the low end of the interest rates. The rating under that, "A", peaks at a little higher interest rate. As you move down the tier list, the interest rates peak at higer and higher interest rates, with the High Risk accounts peaking at the 32% mark.
 
+### Loan Amount vs. Interest Rate by Rating
 
-### Plot Two
-```{r echo=FALSE, Plot_Two}
-
+```{r echo=FALSE, warning=FALSE, LoanAmount_BorrowerRate_Rating, fig.height=5, fig.width=10}
+ggplot(data = subset(loans, ratings != 'NC' & !is.na(ratings)), 
+       aes(x = LoanOriginalAmount, y = BorrowerRate, color = ratings)) +
+  geom_point(alpha = 0.5) +
+  scale_x_sqrt(breaks = c(0, 1000, 2500, 5000, 10000, 15000, 20000, 25000, 30000, 35000)) + 
+  scale_color_brewer(palette = "RdBu") + 
+  labs(x = "Original Loan Amount ($)", 
+       y = "Interest Rate",
+       title = "Interest rate vs. Loan Amount by Rating") +
+  theme(panel.background = element_rect(fill = '#AAAAAA'),
+        panel.grid.major = element_line(color = 'grey'),
+        panel.grid.minor = element_line(color = 'grey')) 
 ```
 
-### Description Two
+This plot does show the small correlation between rating and loan amount. Most of the high risk loans are for smaller loans less than $5,000. The higher loan amount have almost no high risk accounts and only "C" or higher ratings
 
+### Average Credit Score vs. Interest Rate by Rating
 
-### Plot Three
-```{r echo=FALSE, Plot_Three}
-
+```{r echo=FALSE, warning=FALSE, CreditScore_BorrowerRate_Rating, fig.height=5, fig.width=10}
+ggplot(data = subset(loans, ratings != 'NC' & !is.na(ratings)), 
+       aes(x = CreditScoreAverage, y = BorrowerRate * 100, color = ratings)) +
+  geom_point(alpha = 0.5) +
+  scale_x_continuous(limits = c(400, 900),
+                     breaks = c(seq(400, 900, 50))) + 
+  scale_color_brewer(palette = "RdBu") + 
+  labs(x = "Credit Score", 
+       y = "Borrower Interest Rate (%)",
+       title = "Relationship between Interest Rate, Credit Score, and Rating") +
+  theme(panel.background = element_rect(fill = '#AAAAAA'),
+        panel.grid.major = element_line(color = 'grey'),
+        panel.grid.minor = element_line(color = 'grey')) 
 ```
 
-### Description Three
+The inital coloring looks promising. However, due to the nature that of the method the credit scores were collected, jitter will be added to the plot, similiar to what was done in the univariate section.
+
+```{r echo=FALSE, warning=False, CreditScore_BorrowerRate_Rating_jitter, fig.height=5, fig.width=10}
+ggplot(data = subset(loans, ratings != 'NC' & !is.na(ratings)), 
+       aes(x = CreditScoreAverage, y = BorrowerRate, color = ratings)) +
+  geom_point(alpha = 0.5,
+             position = position_jitter(w = 9)) +
+  scale_x_continuous(limits = c(400, 900),
+                     breaks = c(seq(400, 900, 50))) + 
+  scale_color_brewer(palette = "RdBu") + 
+  lims(y = c(0, 0.4)) +
+  labs(x = "Credit Score", 
+       y = "Interest Rate",
+       title = "Interest Rate vs.Credit Score by Rating") +
+  theme(panel.background = element_rect(fill = '#AAAAAA'),
+        panel.grid.major = element_line(color = 'grey'),
+        panel.grid.minor = element_line(color = 'grey')) 
+```
+
+I believe that this plot perfectly captures the relationship between interest rates, credit score, and ratings. The lower, less risk accounts with a high credit score get teh best rating by _Propser_ and thus the lowest interest rate. As the credit score decreases, the average interest rate increases and the ratings begin to change. There is a nice progression of the ratings as both t interest rate increases and the credit score decreases.
 
 ------
 
 # Reflection
 
-> **Tip**: Here's the final step! Reflect on the exploration you performed and
-the insights you found. What were some of the struggles that you went through?
-What went well? What was surprising? Make sure you include an insight into
-future work that could be done with the dataset.
+Overall, this was a very interesting and enlightening dataset to explore. It was really surprising to me how impactful credit score was on interest rate, and how negligible income, locale, and employment were. Perhaps some of those other variables are used to determing whether a borrower can get a loan to begin with rather than what there interest rate will be.
 
-> **Tip**: Don't forget to remove this, and the other **Tip** sections before
-saving your final work and knitting the final report!
+The hardest part of this project was sifting through the vast amount of variables. There are so many potential combinations of categorical and continuous variables that I might have missed some interesting trends. I sometimes found myself at a dead end in the later bi/multivariate sections, wishing that I could go back and add more variables without increasing the bulk of the project. I think in the future I will use more visualization tools to preview as much of the data as possible first before diving into analyzing multiple variables at once. That way, I can sift through the variables that have no trends and go straight to the more impactful relationships.
+
+I definitely believe that more research can be done on this dataset. There are variables that I didn't explore due to the length of the project already. I would love to one day revisit this project and form a model that could accurately predict interest rate based off other variables like credit score or number of deliquent payments.
+
+
+
+
+
+
