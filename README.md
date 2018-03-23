@@ -1,2 +1,3 @@
-# Data-Analyst-Nanodegree
-A collection of projects performed for the Udacity Data Analyst Nanodegree
+# Data Analyst Nanodegree Project Repository
+
+A collection of projects for my Udacity Data Analyst Nanodegree.
