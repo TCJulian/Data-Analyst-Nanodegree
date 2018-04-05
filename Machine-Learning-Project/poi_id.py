@@ -10,17 +10,23 @@ from tester import dump_classifier_and_data
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
 ### The first feature must be "poi".
-features_list = ['poi','salary'] # You will need to use more features
+features_list = ['poi','salary', 'total_stock_value'] # You will need to use more features
 
 ### Load the dictionary containing the dataset
 with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
 
 ### Task 2: Remove outliers
+data_dict.pop('TOTAL')
+
 ### Task 3: Create new feature(s)
+# TODO:
+
 ### Store to my_dataset for easy export below.
 my_dataset = data_dict
-print(len(my_dataset))
+#my_dataset['METTS MARK'].keys())
+#print(len(my_dataset))
+
 ### Extract features and labels from dataset for local testing
 data = featureFormat(my_dataset, features_list, sort_keys = True)
 labels, features = targetFeatureSplit(data)
@@ -33,7 +39,9 @@ labels, features = targetFeatureSplit(data)
 
 # Provided to give you a starting point. Try a variety of classifiers.
 from sklearn.naive_bayes import GaussianNB
-clf = GaussianNB()
+from sklearn.svm import LinearSVC
+clf1 = GaussianNB()
+clf = LinearSVC()
 
 ### Task 5: Tune your classifier to achieve better than .3 precision and recall
 ### using our testing script. Check the tester.py script in the final project
@@ -43,9 +51,14 @@ clf = GaussianNB()
 ### http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.StratifiedShuffleSplit.html
 
 # Example starting point. Try investigating other evaluation techniques!
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 features_train, features_test, labels_train, labels_test = \
-    train_test_split(features, labels, test_size=0.3, random_state=42)
+    train_test_split(features, labels, test_size=0.1, random_state=42)
+
+clf.fit(features_train, labels_train)
+score = clf.score(features_test, labels_test)
+print(score)
+
 
 ### Task 6: Dump your classifier, dataset, and features_list so anyone can
 ### check your results. You do not need to change anything below, but make sure
