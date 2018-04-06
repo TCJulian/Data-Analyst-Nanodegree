@@ -90,7 +90,7 @@ As one of the most well known indicators of an individual's financial credibilit
 
 This dataset does not provide a singular credit score, but rather a range. The two variables, `CreditScoreRangeLower` and `CreditScoreRangeUpper`, store the upper and lower bounds of a user's credit score. To visualize the data properly, the two ranges need to be combined into an average. The newly created variable will be named `CreditScoreAverage`.
 
-```{r, echo=TRUE, Create_CreditScoreAverage}
+```{r, warning=FALSE, echo=FALSE, Create_CreditScoreAverage}
 # Create average credit score column in dataset
 loans <- mutate(loans, 
                 CreditScoreAverage = round((CreditScoreRangeLower + 
@@ -152,7 +152,7 @@ Two things to note:
   
 For this analysis, the values need to be be ordered from least to greatest. This will provide a much more organized plot and move the data type from nominal to ordinal. The levels `Not employed` and `$0`, while still technically having different meanings, both represent that the buyer does not have a primary career that provides income. As a result, these two levels be combined to reduce the complexity of the variable.
   
-```{r, echo=TRUE, Income_relevel}
+```{r, echo=FALSE, Income_relevel}
 # Order levels
 loans$IncomeRange <- factor(loans$IncomeRange, 
                             levels = c("Not displayed", "Not employed", 
@@ -254,7 +254,7 @@ Looking at only the unique values of `Term`, the only terms offered by _Prosper_
 
 The `Term` variable currently has no levels, but can be easily factored since there are so few unique values.
 
-```{r, echo=TRUE, TermLength_Factored}
+```{r, echo=FALSE, TermLength_Factored}
 loans$Term <- factor(loans$Term, levels = c(12, 36, 60), ordered = TRUE)
 ```
 
@@ -336,7 +336,7 @@ ggplot(subset(loans, loans$BorrowerState != ''), (aes(x = BorrowerState))) +
 
 Quickly plotting the variable shows that the levels need to be reordered if they are going to be visualised in a bar chart. This data will be reordered from highest count to lowest count.
 
-```{r, echo=TRUE, BorrowerState_Order}
+```{r, echo=FALSE, BorrowerState_Order}
 loans$BorrowerState <- factor(loans$BorrowerState, level = names(sort(table(loans$BorrowerState), decreasing = TRUE)))
 ```
 
@@ -365,7 +365,7 @@ Looking at the levels of the two variables, Credit Grade has an extra level call
 
 In order to manipulate these variables effectively, the "" values need to be substituted with `NA`. Once the "" values transformed into NA's, `ProsperRatings` and `CreditGrade` can be combined into a single column and ordered from the lowest ratings to the highest rating.
  
-```{r, echo=TRUE, Rating_combine}
+```{r, echo=FALSE, Rating_combine}
 # Remove NAs from CreditGrade and ProsperRating
 loans$ProsperRating..Alpha.[loans$ProsperRating..Alpha. == ""] <- NA
 loans$CreditGrade[loans$CreditGrade == ""] <- NA
@@ -437,7 +437,7 @@ Currently, there is a lot of detail in the levels. However, the granularity of t
 
 Once the categorical bins have been combined, the levels can also be ordered from the most favorable status to the least favorable status.
 
-```{r echo=TRUE, LoanStatus_Relevel}
+```{r echo=FALSE, LoanStatus_Relevel}
 # Combine "Past Due" levels
 levels(loans$LoanStatus) <- c("Cancelled", "Chargedoff", "Completed", "Current",
                               "Defaulted", "Current", 
@@ -503,7 +503,7 @@ Currently, the levels are not ordered and are listed nominally. `Not available` 
 
 To better analyse the variable, the levels will be ppoperly ordered and the two levels mentioned earlier will be removed from the plot.
 
-```{r echo=TRUE, EmploymentStatus_relevel}
+```{r echo=FALSE, EmploymentStatus_relevel}
 # Combine "" and "Not available"
 levels(loans$EmploymentStatus) <- c("Not available", "Employed", "Full-time", 
                                     "Not available", "Not employed", "Other", 
@@ -600,22 +600,10 @@ From the univariate exploration, there were a few unusual observations. The inte
 
 A borrower's credit score is widely known as being the biggest factor in determining the interest rate of a loan. Considering that,  it will be the first variable paired with interest rate.
 
-```{r echo=FALSE, warning=FALSE, AvgCreditScore_BorrowerRate}
-ggplot(loans, aes(x = CreditScoreAverage, y = BorrowerRate)) +
-  geom_point(alpha = 0.1) +
-  scale_x_continuous(limits = c(400, 900), breaks = c(seq(400, 900, 50))) +
-  ylim(0, 0.4) +
-  labs(x = 'Average Credit Score', 
-       y = 'Interest Rate',
-       title = "Interest Rate by Credit Score")
-```
-
-The initial plot shows that there may be a correlation between interest rate and credit score. However, it is hard to tell from the plot's current state. Because of the way credit scores were recorded by _Prosper_, the credit scores all lie along similiar x values. This causes overplotting issues as the plot forms buckets of data. By adding some horizontal jitter, a better distribution can be formed.
-
 ```{r echo=FALSE, warning=FALSE, AvgCreditScore_BorrowerRate_jitter}
 ggplot(loans, aes(x = CreditScoreAverage, y = BorrowerRate)) +
-  geom_point(alpha = 0.1,
-             position = position_jitter(w = 9)) +
+  geom_point(alpha = 0.02,
+             position = position_jitter(w = 8)) +
   scale_x_continuous(limits = c(400, 900), breaks = c(seq(400, 900, 50))) +
   ylim(0, 0.4) +
   labs(x = 'Average Credit Score', 
@@ -623,7 +611,7 @@ ggplot(loans, aes(x = CreditScoreAverage, y = BorrowerRate)) +
        title = "Interest Rate by Average Credit Score")
 ```
 
-With the visualization changes, there still seems to be a slight downward trend through the data. As credit score increases, the interest rate seems to decrease. This is a relationship that was expected.
+The initial plot shows that there may be a correlation between interest rate and credit score. There appears to be a slight downward trend in th data. As credit score increases, the interest rate seems to decrease. This is the relationship that was expected.
 
 ```{r, echo=FALSE, CreditScore_BorrowerRate_cor}
 cor(loans$CreditScoreAverage, loans$BorrowerRate, use = "complete.obs")
@@ -642,11 +630,6 @@ With this first variable, the underlaying factors that may predict the interest 
 ### Interest Rate vs. Loan Amount
 
 One intuition might be that the size of the loan might impact the interest rate. As the size of the loan goes up, lenders might require that the borrowers are more trust worthy and less risky compared to a small sized loan.
-
-```{r echo=FALSE, LoanAmount_BorrowerRate}
-ggplot(loans, aes(x = LoanOriginalAmount, y = BorrowerRate)) +
-  geom_point(alpha = 0.25) 
-```
 
 ```{r echo=FALSE, LoanAmount_BorrowerRate_jitter}
 ggplot(loans, aes(x = LoanOriginalAmount, y = BorrowerRate)) +
@@ -696,25 +679,13 @@ There is clearly a strong relationship between interest rate and ratings; in fac
 
 Similar to `Rating`, `_Prosper_ score` is another risk measurement of a borrower. The major difference is that it is used internally. I expect that there will be some sort of relationship between it and interest rate, just like with `Rating`.
 
-```{r echo=FALSE, warning=FALSE, InterestRate_ProsperScore}
-ggplot(loans, aes(x = ProsperScore, y = BorrowerRate)) +
-  geom_point(alpha = 0.1) +
-  scale_x_continuous(limits = c(0,10)) +
-  labs(x = "Prosper Score",
-       y = "Interest Rate",
-       title = "Interest Rate by Prosper Score")
-```
-
-Similar to the credit score scattercplot, the data points pool into buckets. Because `Prosper Score` is a discrete rather than continuous variable, the results have a lot of overplotting.
-
-This distribution will be replotted using better breaks, horizontal jitter, and a higher alpha level.
-
 ```{r echo=FALSE, warning=FALSE, InterestRate_ProsperScore_jitter}
-ggplot(loans, aes(x = ProsperScore, y = BorrowerRate)) +
+ggplot(subset(loans, loans$ProsperScore != 11),
+       aes(x = ProsperScore, y = BorrowerRate)) +
   geom_point(alpha = 0.05, 
              position = position_jitter(h=0)) +
-  scale_x_continuous(limits = c(0,10),
-                     breaks = c(seq(0, 12, 2))) +
+  scale_x_continuous(limits = c(0, 11),
+                     breaks = c(seq(1, 10, 1))) +
   labs(x = "Prosper Score",
        y = "Interest Rate",
        title = "Interest Rate by Prosper Score")
@@ -766,7 +737,10 @@ Where someone lives in the United States can usually have a profound impact on s
 
 ```{r echo=FALSE, InterestRate_BorrowerState, fig.height=5, fig.width=11}
 ggplot(data = subset(loans, BorrowerState != ""),
-       aes(x = reorder(BorrowerState, -BorrowerRate, FUN=median), y = BorrowerRate)) +
+       aes(x = reorder(BorrowerState,
+                       -BorrowerRate, 
+                       FUN=median), 
+           y = BorrowerRate)) +
   geom_boxplot() +
   geom_hline(yintercept = 0.184, 
              color = "red") + 
@@ -828,11 +802,12 @@ If borrower ratings and interest rate are truly related, there should be a clear
 
 ```{r echo=FALSE, warning=FALSE, BorrowerRate_Rating_density}
 ggplot(data = subset(loans, ratings != 'NC' & !is.na(ratings)),
-       aes(x = BorrowerRate*100, color = ratings)) +
-  geom_density(size = 1) +
+       aes(x = BorrowerRate*100, fill = ratings)) +
+  geom_density(size = .5,
+               alpha = .8) +
   lims(x = c(0, 40)) +
-  scale_color_brewer(palette = "Greens") +
-  guides(color = guide_legend(reverse=T)) + 
+  scale_fill_brewer(palette = "Greens") +
+  guides(fill = guide_legend(reverse=T)) + 
   labs(x = "Interest Rate",
        y = "Density",
        title = "Density Plot of Interest Rate by Rating") +
@@ -845,17 +820,18 @@ This density plot visualization really shows how each rating corresponds with a 
 
 This clear delineation of the rating further supports the strong relationship between interest rates and ratings.
 
-### Loan Amount vs. Interest Rate by Rating
+### Loan Amount  vs. Interest Rate by Rating
 
-Loan amount and interest rate had a slight negative correlation in the bivariate section. Let's explore this variable further, but with ratings in the mix as well.
+Loan amount and interest rate had a slight negative correlation in the bivariate section. Let's explore this variable further, but with ratings in the mix as well. 
 
-```{r echo=FALSE, warning=FALSE, LoanAmount_BorrowerRate_Rating, fig.height=5, fig.width=10}
+```{r echo=FALSE, warning=FALSE, LoanAmount_BorrowerRate_Rating, fig.height=4, fig.width=14}
 ggplot(data = subset(loans, ratings != 'NC' & !is.na(ratings)), 
-       aes(x = LoanOriginalAmount, y = BorrowerRate, color = ratings)) +
+       aes(x = LoanOriginalAmount/1000, y = BorrowerRate, color = ratings)) +
+  facet_grid(. ~ ratings) +
   geom_point(alpha = 0.5) +
-  scale_x_sqrt(breaks = c(0, 1000, 2500, 5000, 10000, 15000, 20000, 25000, 30000, 35000)) + 
+  scale_x_sqrt(breaks = c(0, 1, 5, 10, 17, 25, 35)) + 
   scale_color_brewer(palette = "RdBu") + 
-  labs(x = "Original Loan Amount ($)", 
+  labs(x = "Original Loan Amount ($, thousands)", 
        y = "Interest Rate",
        title = "Interest rate vs. Loan Amount by Rating") +
   theme(panel.background = element_rect(fill = '#AAAAAA'),
@@ -863,28 +839,11 @@ ggplot(data = subset(loans, ratings != 'NC' & !is.na(ratings)),
         panel.grid.minor = element_line(color = 'grey')) 
 ```
 
-This plot still shows the small correlation between rating and loan amount from the bivariate section. Most of the high risk loans are for smaller loans less than $5,000. The higher loan amount have almost no high risk accounts and only "C" or higher ratings. The banding in the color further demonstrate the strong relationship between ratings and interest rate seen in the previous plot.
+This plot still shows the small correlation between rating and loan amount from the bivariate section. Overall, there is a rightward shift in the distributions of loan amounts as the rating increases. Most of the high risk loans are for smaller loans less than $5,000. The loan amounts above \$25,000 contain almost no high risk accounts and only "B" or higher ratings. The downard trend in the interest rate a the rating increases further demonstrates the strong relationship between ratings and interest rate seen in the previous plot.
 
 ### Average Credit Score vs. Interest Rate by Rating
 
 Of all of the variables, credit score, rating, and interest rate are the variables that might be the most closely related. 
-
-```{r echo=FALSE, warning=FALSE, CreditScore_BorrowerRate_Rating, fig.height=5, fig.width=10}
-ggplot(data = subset(loans, ratings != 'NC' & !is.na(ratings)), 
-       aes(x = CreditScoreAverage, y = BorrowerRate, color = ratings)) +
-  geom_point(alpha = 0.5) +
-  scale_x_continuous(limits = c(400, 900),
-                     breaks = c(seq(400, 900, 50))) + 
-  scale_color_brewer(palette = "RdBu") + 
-  labs(x = "Credit Score", 
-       y = "Borrower Interest Rate",
-       title = "Interest Rate vs.Credit Score by Rating") +
-  theme(panel.background = element_rect(fill = '#AAAAAA'),
-        panel.grid.major = element_line(color = 'grey'),
-        panel.grid.minor = element_line(color = 'grey')) 
-```
-
-The initial coloring looks promising. There is a clear separation between the ratings are the credit score increases.  However, due to the method of how the credit scores were collected, horizontal jitter needs to be added to the plot to fix overplotting.
 
 ```{r, echo=FALSE, warning=FALSE, CreditScore_BorrowerRate_Rating_jitter, fig.height=5, fig.width=10}
 ggplot(data = subset(loans, ratings != 'NC' & !is.na(ratings)), 
@@ -903,7 +862,7 @@ ggplot(data = subset(loans, ratings != 'NC' & !is.na(ratings)),
         panel.grid.minor = element_line(color = 'grey')) 
 ```
 
-I believe that this plot perfectly captures the relationship between interest rate, credit score, and ratings. The lower, less risk accounts with high credit scores get the best ratings by _Propser_, and thus the lowest interest rates. As the credit score decreases, the average interest rate increases and the ratings begin to change. There is a nice progression of the ratings as both the interest rate increases and the credit score decreases.
+I believe that this plot perfectly captures the relationship between interest rate, credit score, and ratings. There is a clear separation between the ratings are the credit score increases. The lower, less risk accounts with high credit scores get the best ratings by _Propser_, and thus the lowest interest rates. As the credit score decreases, the average interest rate increases and the ratings begin to change. There is a nice progression of the ratings as both the interest rate increases and the credit score decreases.
 
 Something very peculiar is the band of "HR" borrowers that persist across the top of the distribution as the credit score increases. They all appear to be around, you guessed it, 32%. There must be a specfic scenario where a borrower has a decent credit score, but is still classified as a high risk investment. This phenomenon may be the subject of further study in the future.
 
@@ -933,19 +892,20 @@ The linear model that was built to predict interest rate can account for 91.5% o
 
 ```{r echo=FALSE, warning=FALSE, BorrowerRate_Rating_density_final}
 ggplot(data = subset(loans, ratings != 'NC' & !is.na(ratings)),
-       aes(x = BorrowerRate*100, color = ratings)) +
-  geom_density(size = 1) +
+       aes(x = BorrowerRate*100, fill = ratings)) +
+  geom_density(size = .5,
+               alpha = .8) +
   lims(x = c(0, 40)) +
-  scale_color_brewer(palette = "Greens") +
-  guides(color = guide_legend(reverse=T)) + 
+  scale_fill_brewer(palette = "Greens") +
+  guides(fill = guide_legend(reverse=T)) + 
   labs(x = "Interest Rate",
        y = "Density",
-       color = "Ratings",
        title = "Density Plot of Interest Rate by Rating") +
   theme(panel.background = element_rect(fill = '#AAAAAA'),
         panel.grid.major = element_line(color = '#878787'),
         panel.grid.minor = element_line(color = '#878787')) 
 ```
+
 #### Description
 
 Ratings are clearly segmented by interest rates. Low risk borrowers have higher occurences at low interest rates. As the risk level of the rating increases, borrower frequency peaks at higher and higher interest rates.  
@@ -954,7 +914,10 @@ Ratings are clearly segmented by interest rates. Low risk borrowers have higher 
 
 ```{r echo=FALSE, InterestRate_BorrowerState_final, fig.height=5, fig.width=11}
 ggplot(data = subset(loans, BorrowerState != ""),
-       aes(x = reorder(BorrowerState, -BorrowerRate, FUN=median), y = BorrowerRate)) +
+       aes(x = reorder(BorrowerState, 
+                       -BorrowerRate, 
+                       FUN=median), 
+           y = BorrowerRate)) +
   geom_boxplot(fill = "#666DFF") +
   geom_hline(yintercept = 0.184,
              size = .75,
@@ -984,9 +947,9 @@ ggplot(data = subset(loans, ratings != 'NC' & !is.na(ratings)),
   scale_color_brewer(palette = "RdBu") + 
   lims(y = c(0, 0.4)) +
   labs(x = "Credit Score", 
-       y = "Interest Rate",
+       y = "Interest Rate (%)",
        color = "Ratings",
-       title = "Interest Rate vs.Credit Score by Rating") +
+       title = "Interest Rate vs. Credit Score by Rating") +
   theme(panel.background = element_rect(fill = '#AAAAAA'),
         panel.grid.major = element_line(color = '#878787'),
         panel.grid.minor = element_line(color = '#878787')) 
