@@ -906,8 +906,6 @@ ggplot(data = subset(loans, ratings != 'NC' & !is.na(ratings)),
         panel.grid.minor = element_line(color = '#878787')) 
 ```
 
-#### Description
-
 Ratings are clearly segmented by interest rates. Low risk borrowers have higher occurences at low interest rates. As the risk level of the rating increases, borrower frequency peaks at higher and higher interest rates.  
 
 ### Interest Rates Across US States
