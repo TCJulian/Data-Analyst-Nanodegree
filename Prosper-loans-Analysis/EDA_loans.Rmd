@@ -778,7 +778,7 @@ ggplot(data = loans,
        title = "Interest Rate by Employment Duration")
 ```
 
-```{r}
+```{r, echo=FALSE, InterestRate_Employment_cor}
 cor(loans$BorrowerRate, loans$EmploymentStatusDuration, use = "complete.obs")
 ```
 
@@ -892,13 +892,13 @@ The linear model that was built to predict interest rate can account for 91.5% o
 
 ```{r echo=FALSE, warning=FALSE, BorrowerRate_Rating_density_final}
 ggplot(data = subset(loans, ratings != 'NC' & !is.na(ratings)),
-       aes(x = BorrowerRate*100, fill = ratings)) +
+       aes(x = BorrowerRate, fill = ratings)) +
   geom_density(size = .5,
                alpha = .8) +
-  lims(x = c(0, 40)) +
+  lims(x = c(0, .4)) +
   scale_fill_brewer(palette = "Greens") +
   guides(fill = guide_legend(reverse=T)) + 
-  labs(x = "Interest Rate",
+  labs(x = "Interest Rate (%)",
        y = "Density",
        title = "Density Plot of Interest Rate by Rating") +
   theme(panel.background = element_rect(fill = '#AAAAAA'),
