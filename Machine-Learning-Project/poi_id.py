@@ -18,8 +18,8 @@ from tester import test_classifier
 
 ### Below is a MASTER LIST used for testing:
 
-#features_list = ['poi', 'salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees', 'to_messages', 'from_poi_to_this_person', 'from_messages',
-#'from_this_person_to_poi', 'shared_receipt_with_poi', 'from_poi_to_this_person_ratio', 'from_this_person_to_poi_ratio']
+features_list = ['poi', 'salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees', 'to_messages', 'from_poi_to_this_person', 'from_messages',
+'from_this_person_to_poi', 'shared_receipt_with_poi', 'from_poi_to_this_person_ratio', 'from_this_person_to_poi_ratio']
 
 ### Final features used in classifier
 #features_list = ['poi', 'loan_advances', 'bonus', 'exercised_stock_options',  'from_this_person_to_poi_ratio']
@@ -95,10 +95,6 @@ plt.scatter(f1, f2, s=2, c=labels)
 
 print("Plotted features")
 
-### Scale data
-from sklearn.preprocessing import MinMaxScaler
-scaler = MinMaxScaler()
-
 ###################
 ### Classifiers ###
 ###################
@@ -106,12 +102,12 @@ scaler = MinMaxScaler()
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import GridSearchCV
-
+from sklearn.neighbors import KNeighborsClassifier
 ### Different classifiers used for testing
 clf_tree = DecisionTreeClassifier()
 clf_nb = GaussianNB()
 clf_svm = SVC()
+clf_kn = KNeighborsClassifier()
 
 print("Created classifiers")
 
@@ -126,40 +122,49 @@ print("Created classifiers")
 ### stratified shuffle split cross validation. For more info:
 ### http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.StratifiedShuffleSplit.html
 
-### Recursive feature slection for LinearSVM experimentation
-from sklearn.model_selection import StratifiedKFold
-from sklearn.feature_selection import RFECV
-#refcv = RFECV(estimator=clf, cv=StratifiedKFold(2), scoring='accuracy')
-#refcv.fit(features, labels)
-#print(refcv.n_features_)
-
-# Univariate feature selection
-from sklearn.feature_selection import SelectKBest
-from sklearn.feature_selection import chi2
-selector = SelectKBest(chi2, k='all')
-
 ### Split into training and testing sets
 from sklearn.model_selection import train_test_split
 features_train, features_test, labels_train, labels_test = \
     train_test_split(features, labels, test_size=0.1, random_state=42)
 
+### Scale data
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+
+### Univariate feature selection
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
+selector = SelectKBest(chi2, k='all')
+
+### PCA
+from sklearn.decomposition import PCA
+pca = PCA()
+
 ### Create Pipeline
 from sklearn.pipeline import Pipeline
 clf = Pipeline([('scaler', scaler),
                 ('SKB', selector),
-                ('classifier', clf_svm)])
-#clf.set_params(classifier__kernel='rbf', classifier__C=1)
+                ('PCA', pca),
+                ('classifier', clf_kn)])
+#clf.set_params(PCA__n_components=1, classifier__kernel='rbf', classifier__C=10, classifier__gamma=100000)
+#clf.set_params(classifier__min_samples_split=7, classifier__max_depth=None)
 clf.fit(features_train, labels_train)
 print(np.int64(clf.named_steps['SKB'].scores_))
+print([round(i, 2) for i in clf.named_steps['PCA'].explained_variance_ratio_])
 print(clf.score(features_test, labels_test))
 
 ### GridSearchCV for parameter tuning
-param_svm = dict(classifier__C=[1, 10, 100, 1000],
+from sklearn.model_selection import GridSearchCV
+param_svm = dict(PCA__n_components=[2, 4, 6, 8],
+                 classifier__C=[1, 10, 100, 1000],
                  classifier__kernel=['linear', 'rbf'],
-                 classifier__gamma=['auto', 1, 10, 100, 1000, 10000])
+                 classifier__gamma=['auto', 1, 10, 100, 1000, 10000, 100000])
 param_tree = dict(classifier__min_samples_split=[2, 3, 4, 5, 6, 7, 8, 9, 10],
-                  max_depth=[5, 10, 15, 20, 50])
-grid_search = GridSearchCV(clf, param_grid=param_svm)
+                  classifier__max_depth=[None, 5, 10, 15, 20, 50, 100])
+param_kn = dict(PCA__n_components=[2, 4, 6, 8],
+                classifier__n_neighbors=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15],
+                classifier__leaf_size=[10, 20, 30, 40 , 50])
+grid_search = GridSearchCV(clf, param_grid=param_kn)
 grid_search.fit(features_train, labels_train)
 print(grid_search.best_params_)
 print(grid_search.score(features_test, labels_test))
