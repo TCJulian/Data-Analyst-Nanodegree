@@ -28,12 +28,18 @@ features_list = ['poi', 'salary', 'bonus', 'total_stock_value', 'exercised_stock
 with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
 
-#######################
-### Remove outliers ###
-#######################
-
+###############################################
+### Outlier Removal and Dataset Exploration ###
+###############################################
+#print(data_dict['TOTAL'])
+total_records = len(data_dict)
+total_poi = len([v['poi'] for k, v in data_dict.items() if v['poi']])
+total_nonpoi = len([v['poi'] for k, v in data_dict.items() if not v['poi']])
+print('Total records: {}'.format(total_records))
+print('# of POIs: {}'.format(total_poi))
+print('# of nonPOIs: {}'.format(total_nonpoi))
 data_dict.pop('TOTAL')
-
+exit()
 ###########################
 ### Create new features ###
 ###########################
@@ -145,6 +151,7 @@ def run_classifier(classifier, params, scaler=None):
     clf = grid_search.best_estimator_
     print(grid_search.best_params_)
     test_classifier(clf, my_dataset, features_list)
+    return clf
 
 ### GridSearchCV for hyper-parameter tuning
 from sklearn.model_selection import GridSearchCV
@@ -158,7 +165,7 @@ param_knn = dict(classifier__n_neighbors=range(1, 25),
                  classifier__leaf_size=range(10, 110, 10),
                  classifier__metric=['euclidean', 'manhattan', 'minkowski'])
 
-run_classifier(clf_knn, param_knn, minmax)
+clf = run_classifier(clf_knn, param_knn, minmax)
 
 
 ### Task 6: Dump your classifier, dataset, and features_list so anyone can
@@ -166,4 +173,4 @@ run_classifier(clf_knn, param_knn, minmax)
 ### that the version of poi_id.py that you submit can be run on its own and
 ### generates the necessary .pkl files for validating your results.
 
-#dump_classifier_and_data(clf, my_dataset, features_list)
+dump_classifier_and_data(clf, my_dataset, features_list)
