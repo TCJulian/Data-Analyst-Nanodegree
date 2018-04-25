@@ -4,7 +4,7 @@ _Last Updated: 4/25/2018_
 ### Introduction
 After the fall of Enron on December 2, 2001, a massive data dump of information was released to the public following the Federal Energy Regulatory Commission's (FERC) investigation into the company. This dataset, known as the "Enron Corpus", contains over 600,000 emails from some of the top leadership at Enron.
 
-In this project, machine learning will be applied to this infamous Enron dataset. The goal is to create a classifier that can accurately identify whether an individual is a person of interest (POI) or not. A "person of interest" in this context is an individual working at Enron who potentially had insider knowledge on the fraud that was occuring in the inner working of Enron. For example, the CEO of Enron, Jeffery Skillings, would be considered a POI, based upon his knowledge and actions uncovered from the investigation.
+In this project, machine learning will be applied to this infamous Enron dataset. The goal is to create a classifier that can accurately identify whether an individual is a person of interest (POI) or not. A "person of interest" in the context of this prokect is an individual working at Enron who potentially had insider knowledge on the fraud that was occuring at Enron. For example, the CEO of Enron, Jefferey Skilling, would be considered a POI based upon his knowledge of the company and his fate following the investigation.
 
 Machine learning is the core mechanism that allows us to find and classify these POIs. It allows us to comb through thousands of data points and find the hidden relationships between them. These relationships result in being able to make a classifier that can identify whether an individual was a POI or not.
 
