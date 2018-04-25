@@ -18,25 +18,21 @@ from tester import test_classifier
 
 ### Below is a MASTER LIST used for testing:
 
-features_list = ['poi', 'salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees', 'to_messages', 'from_poi_to_this_person', 'from_messages',
-'from_this_person_to_poi', 'shared_receipt_with_poi', 'from_poi_to_this_person_ratio', 'from_this_person_to_poi_ratio']
+#features_list = ['poi', 'salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees', 'to_messages', 'from_poi_to_this_person', 'from_messages',
+#'from_this_person_to_poi', 'shared_receipt_with_poi', 'from_poi_to_this_person_ratio', 'from_this_person_to_poi_ratio']
 
 ### Final features used in classifier
-#features_list = ['poi', 'loan_advances', 'bonus', 'exercised_stock_options',  'from_this_person_to_poi_ratio']
+features_list = ['poi', 'salary', 'bonus', 'total_stock_value', 'exercised_stock_options', 'long_term_incentive']
 
 ### Load the dictionary containing the dataset
 with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
-
-print("Load dict")
 
 #######################
 ### Remove outliers ###
 #######################
 
 data_dict.pop('TOTAL')
-
-print("Remove outliers")
 
 ###########################
 ### Create new features ###
@@ -68,7 +64,9 @@ for key in data_dict.keys():
     except ZeroDivisionError:
         data_dict[key]['from_poi_to_this_person_ratio'] = 0
 
-print("Create new features")
+#################################################
+### Data Extraction and Feature Visualization ###
+#################################################
 
 ### Store to my_dataset for easy export below.
 my_dataset = data_dict
@@ -77,23 +75,19 @@ my_dataset = data_dict
 data = featureFormat(my_dataset, features_list, sort_keys = True)
 labels, features = targetFeatureSplit(data)
 
-print("Extracted features and labels")
-
-### Visualization code used for feature exploration
-import numpy as np
+### Visualization code used for univariate feature exploration
 import matplotlib.pyplot as plt
 
-f1 = []
-f2 = []
-for ii in features:
-    f1.append(ii[0])
-    f2.append(ii[1])
+for i in range(0, len(features_list)-1):
+    f1 = []
+    for ii in features:
+        f1.append(ii[i])
 
-fig, ax = plt.subplots()
-plt.scatter(f1, f2, s=2, c=labels)
-#plt.show()
-
-print("Plotted features")
+    fig, ax = plt.subplots()
+    ax.hist(f1, 30)
+    ax.set_title(features_list[i+1])
+    #plt.show()
+    plt.close('all')
 
 ###################
 ### Classifiers ###
@@ -103,73 +97,68 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
+
 ### Different classifiers used for testing
-clf_tree = DecisionTreeClassifier()
 clf_nb = GaussianNB()
 clf_svm = SVC()
-clf_kn = KNeighborsClassifier()
-
-print("Created classifiers")
+clf_tree = DecisionTreeClassifier()
+clf_knn = KNeighborsClassifier()
 
 ##############################
 ### Classifier Performance ###
 ##############################
 
-### Tune your classifier to achieve better than .3 precision and recall
-### using our testing script. Check the tester.py script in the final project
-### folder for details on the evaluation method, especially the test_classifier
-### function. Because of the small size of the dataset, the script uses
-### stratified shuffle split cross validation. For more info:
-### http://scikit-learn.org/stable/modules/generated/sklearn.cross_validation.StratifiedShuffleSplit.html
-
 ### Split into training and testing sets
+from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import train_test_split
 features_train, features_test, labels_train, labels_test = \
     train_test_split(features, labels, test_size=0.1, random_state=42)
 
 ### Scale data
 from sklearn.preprocessing import MinMaxScaler
-scaler = MinMaxScaler()
+from sklearn.preprocessing import Normalizer
+minmax = MinMaxScaler()
+normal = Normalizer()
 
 ### Univariate feature selection
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
-selector = SelectKBest(chi2, k='all')
+selector = SelectKBest(k=5)
 
-### PCA
-from sklearn.decomposition import PCA
-pca = PCA()
-
-### Create Pipeline
+### Explore feature scores for feature selection
 from sklearn.pipeline import Pipeline
-clf = Pipeline([('scaler', scaler),
-                ('SKB', selector),
-                ('PCA', pca),
-                ('classifier', clf_kn)])
-#clf.set_params(PCA__n_components=1, classifier__kernel='rbf', classifier__C=10, classifier__gamma=100000)
-#clf.set_params(classifier__min_samples_split=7, classifier__max_depth=None)
-clf.fit(features_train, labels_train)
-print(np.int64(clf.named_steps['SKB'].scores_))
-print([round(i, 2) for i in clf.named_steps['PCA'].explained_variance_ratio_])
-print(clf.score(features_test, labels_test))
+pipe = Pipeline([('SKB', selector),
+                 ('classifier', clf_nb)])
 
-### GridSearchCV for parameter tuning
+pipe.fit(features_train, labels_train)
+s = np.int64(pipe.named_steps['SKB'].scores_)
+f_scores = [(v, features_list[int(i[0])+1]) for i, v in np.ndenumerate(s)]
+print(sorted(f_scores, reverse=True)[:10])
+
+# function
+def run_classifier(classifier, params, scaler=None):
+    pipe = Pipeline([('scaler', scaler),
+                     ('classifier', classifier)])
+    cv = StratifiedShuffleSplit(n_splits=5, random_state=42)
+    grid_search = GridSearchCV(pipe, param_grid=params, cv=cv, scoring='f1')
+    grid_search.fit(features, labels)
+    clf = grid_search.best_estimator_
+    print(grid_search.best_params_)
+    test_classifier(clf, my_dataset, features_list)
+
+### GridSearchCV for hyper-parameter tuning
 from sklearn.model_selection import GridSearchCV
-param_svm = dict(PCA__n_components=[2, 4, 6, 8],
-                 classifier__C=[1, 10, 100, 1000],
+param_nb = dict()
+param_svm = dict(classifier__C=[1, 10, 100, 1000],
                  classifier__kernel=['linear', 'rbf'],
-                 classifier__gamma=['auto', 1, 10, 100, 1000, 10000, 100000])
-param_tree = dict(classifier__min_samples_split=[2, 3, 4, 5, 6, 7, 8, 9, 10],
+                 classifier__gamma=['auto', 1, 100, 100000])
+param_tree = dict(classifier__min_samples_split=range(2, 11),
                   classifier__max_depth=[None, 5, 10, 15, 20, 50, 100])
-param_kn = dict(PCA__n_components=[2, 4, 6, 8],
-                classifier__n_neighbors=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15],
-                classifier__leaf_size=[10, 20, 30, 40 , 50])
-grid_search = GridSearchCV(clf, param_grid=param_kn)
-grid_search.fit(features_train, labels_train)
-print(grid_search.best_params_)
-print(grid_search.score(features_test, labels_test))
+param_knn = dict(classifier__n_neighbors=range(1, 25),
+                 classifier__leaf_size=range(10, 110, 10),
+                 classifier__metric=['euclidean', 'manhattan', 'minkowski'])
 
-test_classifier(clf, my_dataset, features_list)
+run_classifier(clf_knn, param_knn, minmax)
 
 
 ### Task 6: Dump your classifier, dataset, and features_list so anyone can
@@ -177,4 +166,4 @@ test_classifier(clf, my_dataset, features_list)
 ### that the version of poi_id.py that you submit can be run on its own and
 ### generates the necessary .pkl files for validating your results.
 
-dump_classifier_and_data(clf, my_dataset, features_list)
+#dump_classifier_and_data(clf, my_dataset, features_list)
