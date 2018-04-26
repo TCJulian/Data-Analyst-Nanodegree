@@ -42,7 +42,7 @@ print('Number of nonPOIs: {}'.format(total_nonpoi))
 print('Number of features: {}'.format(len(data_dict['TOTAL'])))
 
 # Remove outlier
-#data_dict.pop('TOTAL')
+data_dict.pop('TOTAL')
 
 ### TODO: REMOVE
 #exit()
@@ -100,7 +100,7 @@ for i in range(0, len(features_list)-1):
     ax.hist(f1, 30)
     ax.set_title(features_list[i+1])
     plt.show()
-    fig.savefig('salary_outlier.png')
+    fig.savefig('images/salary.png')
     plt.close('all')
     break
 
