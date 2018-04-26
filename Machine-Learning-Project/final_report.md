@@ -23,13 +23,13 @@ Addressing outliers is essential to ensure that the data is being as representat
 
 In order to find extreme outliers, each of the featuers were plotted as histograms to view the distribution of the values. An outlier immediately revealed itself in the series of plots. 
 
-# PLOT
+![graph](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/Machine-Learning-Project/images/salary_outlier.png)
 
 Pulling the name of the record that had the max for these features showed that the entry was named `'TOTAL'`. Because this value is so much higher than any of the others in the distribution, this could be an entry left over when the financial data was imported into the python dictionary.  Because this record is the result of a collection error, the reocrd is removed from the dataset.
 
 After removing the `'TOTAL'` records, replotting the histograms revealed that there did not appear to be any other extreme outliers.
 
-# PLOT
+![graph](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/Machine-Learning-Project/images/salary.png)
 
 ### Missing Values
 Most classifiers will not work if there are `NaNs` present in teh training and test data. As such, missing data needs to be dealt with before the dataset can be applied to the algorithms. 
