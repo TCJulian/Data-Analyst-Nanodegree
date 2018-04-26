@@ -1,5 +1,5 @@
 ## Machine Learning: Classification of Persons of Interest in Enron Dataset
-_Last Updated: 4/25/2018_
+_Last Updated: 4/26/2018_
 
 ## Introduction
 After the fall of Enron on December 2, 2001, a massive data dump of information was released to the public following the Federal Energy Regulatory Commission's (FERC) investigation into the company. This dataset, known as the "Enron Corpus", contains over 600,000 emails from some of the top leadership at Enron.
@@ -38,12 +38,112 @@ Fortunately, the built in function provided by Udacity, `featureFormat`, already
 
 ## Feature Engineering and Selection
 ### New Features
+There were two new features that I made from the Enro dataset. The first one measured the ratio of emails a person recieved that were from POIs. The other measured the ratio of emails a person sent to POIs. It makes logical sense that a person who is sending and receiving a bunch of emails to and from POIs may be a POI themselves. 
+
+These features were made by dividing the total number of messages from/to a POI by the total number of from/to messages. As an example, imagine that Ken lay, the founder of Enron, sent a total of 500 emails. Of those 500 emails, 400 of them were to known POIs. Based on these numbers, Ken Lay would have a `from_this_person_to_poi_ratio` of 0.8.
+
 ### Feature Selection using SelectKBest
+In order to select the best features for the classifiers, SelectKBest was used. 
+
+The scores for each of the features, including the newly added features, are listed below:
+
+~~~python
+SelectKBest Scores:
+
+[(33, 'bonus'),
+ (21, 'salary'),
+ (16, 'total_stock_value'),
+ (16, 'from_this_person_to_poi_ratio'),
+ (15, 'exercised_stock_options'),
+ (12, 'long_term_incentive'),
+ (11, 'shared_receipt_with_poi'),
+ (11, 'deferred_income'),
+ (9, 'restricted_stock'),
+ (9, 'from_poi_to_this_person'),
+ (8, 'total_payments'),
+ (6, 'loan_advances'),
+ (4, 'expenses'),
+ (3, 'other'),
+ (3, 'from_this_person_to_poi'),
+ (3, 'from_poi_to_this_person_ratio'),
+ (2, 'to_messages'),
+ (2, 'director_fees'),
+ (0, 'restricted_stock_deferred'),
+ (0, 'from_messages'),
+ (0, 'deferral_payments')]
+ ~~~
+
+Trial and error was sued to find the right amount of features to be used in the algorithm. I ultimately decided on using the top five. 
+Because `from_this_person_to_poi_ratio` was included in this top five, it was incorporated as a feature in the final algorithm
+
+### Performance of New Features
+
+__Naive Bayes with New Feature__
+~~~python
+Features used:
+  [(22, 'total_stock_value'),
+   (22, 'exercised_stock_options'),
+   (17, 'bonus'),
+   (15, 'salary'),
+   (6, 'from_this_person_to_poi_ratio')]
+
+Performance:
+  Accuracy: 0.85629       
+  Precision: 0.49545    
+  Recall: 0.32650 
+  F1: 0.39361     
+  F2: 0.35040
+          Total predictions: 14000        
+          True positives:  653  
+          False positives:  665   
+          False negatives: 1347 
+          True negatives: 11335
+~~~
+
+This algorithm was tested again, but with the new features removed:
+
+__Naive Bayes without New Feature__
+~~~python
+Features used:
+  [(20, 'total_stock_value'),
+   (20, 'exercised_stock_options'),
+   (14, 'bonus'),
+   (12, 'salary'),
+   (8, 'long_term_incentive')]
+ 
+Performance:
+  Accuracy: 0.83723       
+  Precision: 0.45748    
+  Recall: 0.31200 
+  F1: 0.37099     
+  F2: 0.33319
+          Total predictions: 13000        
+          True positives:  624 
+          False positives:  740   
+          False negatives: 1376 
+          True negatives: 10260
+~~~
+
+All of the imporant metrics were higher when using the new feature in the Naive Bayes classifier.
+
 ### Feature Scaling
+Sometimes features need to be scaled appropriately in order for the classifiers to treat each feature equally. Some classifiers will break if the features aren't scaled properly.
+
+However, this does not mean that features should always be scaled. Scaling features can reduce the amount of information about the data points, and can reduce the performance of the classifier. This was true for the Naive Bayes classifier, which saw losses in all important metrics when a scaler was used.
 
 ## Classifier Selection and Parameter Tuning
+The best way I found to find the appropriate classiffier was to simply test them. It was important to realize that each of the classifiers needed different inputs when it came to feature scaling. 
+
 ### Classifiers Explored
-### Hyper-Parameter Tuing using GridSearchCV
+In total, I experimented with four different classifiers: Naive Bayes, SVMs, Decision Trees and K-Nearest Neighbors.
+
+#### Guassian Naive Bayes
+#### Support Vector Matrix
+#### Decision Trees
+#### K-Nearest Neighbor 
+
+### Hyper-Parameter Tuning using GridSearchCV
+In order to find the optimal for each of these classiffiers, GridSearchCv was used. 
 
 ## Validation
 ### What is Validation?
