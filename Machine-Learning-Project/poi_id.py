@@ -31,15 +31,19 @@ with open("final_project_dataset.pkl", "r") as data_file:
 ###############################################
 ### Outlier Removal and Dataset Exploration ###
 ###############################################
-#print(data_dict['TOTAL'])
+
 total_records = len(data_dict)
 total_poi = len([v['poi'] for k, v in data_dict.items() if v['poi']])
 total_nonpoi = len([v['poi'] for k, v in data_dict.items() if not v['poi']])
+
 print('Total records: {}'.format(total_records))
-print('# of POIs: {}'.format(total_poi))
-print('# of nonPOIs: {}'.format(total_nonpoi))
+print('Number of POIs: {}'.format(total_poi))
+print('Number of nonPOIs: {}'.format(total_nonpoi))
+print('Number of features: {}'.format(len(data_dict['TOTAL'])))
+
+# Remove outlier
 data_dict.pop('TOTAL')
-exit()
+
 ###########################
 ### Create new features ###
 ###########################
@@ -94,6 +98,8 @@ for i in range(0, len(features_list)-1):
     ax.set_title(features_list[i+1])
     #plt.show()
     plt.close('all')
+
+exit()
 
 ###################
 ### Classifiers ###
