@@ -42,7 +42,10 @@ print('Number of nonPOIs: {}'.format(total_nonpoi))
 print('Number of features: {}'.format(len(data_dict['TOTAL'])))
 
 # Remove outlier
-data_dict.pop('TOTAL')
+#data_dict.pop('TOTAL')
+
+### TODO: REMOVE
+#exit()
 
 ###########################
 ### Create new features ###
@@ -96,8 +99,10 @@ for i in range(0, len(features_list)-1):
     fig, ax = plt.subplots()
     ax.hist(f1, 30)
     ax.set_title(features_list[i+1])
-    #plt.show()
+    plt.show()
+    fig.savefig('salary_outlier.png')
     plt.close('all')
+    break
 
 exit()
 
