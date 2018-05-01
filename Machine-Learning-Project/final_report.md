@@ -21,26 +21,26 @@ This section covers to basic characteristics of the dataset:
 ### Outliers
 Addressing outliers is essential to ensure that the data is being as representative as possible for the classifiers. Howwever, due to the small size of the dataset, outliers should be treated in a very conservative manner. Only outliers that may be due to input error or other collection errors should be removed. 
 
-In order to find extreme outliers, each of the featuers were plotted as histograms to view the distribution of the values. An outlier immediately revealed itself in the series of plots. 
+In order to find extreme outliers, each of the features were plotted as a histogram to view the distribution of the values. An outlier immediately revealed itself in the series of plots. 
 
 ![graph](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/Machine-Learning-Project/images/salary_outlier.png)
 
-Pulling the name of the record that had the max for these features showed that the entry was named `'TOTAL'`. Because this value is so much higher than any of the others in the distribution, this could be an entry left over when the financial data was imported into the python dictionary.  Because this record is the result of a collection error, the reocrd is removed from the dataset.
+Pulling the name of the record that had the max for these features showed that the entry was named `'TOTAL'`. Because this value is so much higher than any of the others in the distribution, this could be an entry left over when the financial data was imported into the python dictionary.  Because this record is the result of a collection error, the record is removed from the dataset.
 
 After removing the `'TOTAL'` records, replotting the histograms revealed that there did not appear to be any other extreme outliers.
 
 ![graph](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/Machine-Learning-Project/images/salary.png)
 
 ### Missing Values
-Most classifiers will not work if there are `NaNs` present in teh training and test data. As such, missing data needs to be dealt with before the dataset can be applied to the algorithms. 
+Most classifiers will not work if there are `NaNs` present in the training and test data. As such, missing data needs to be dealt with before the dataset can be applied to the algorithms. 
 
-Fortunately, the built in function provided by Udacity, `featureFormat`, already addresses any missing values in the dataset. As it retrives the requested features from the dataset for the classifier, it sets an `NaNs` it encounters by setting them to zero. This ensures that every feature has a value and that no errors occur in the classification algorithms.
+Fortunately, the built in function provided by Udacity, `featureFormat`, already addresses any missing values in the dataset. As it retrieves the requested features from the dataset for the classifier, it sets any `NaNs` it encounters by setting them to zero. This ensures that every feature has a value and that no errors occur in the classification algorithms due to a missing value.
 
 ## Feature Engineering and Selection
 ### New Features
-There were two new features that I made from the Enro dataset. The first one measured the ratio of emails a person recieved that were from POIs. The other measured the ratio of emails a person sent to POIs. It makes logical sense that a person who is sending and receiving a bunch of emails to and from POIs may be a POI themselves. 
+There were two new features that I made from the Enron dataset. The first one measured the ratio of emails a person recieved that were from POIs. The other measured the ratio of emails a person sent to POIs. It makes logical sense that a person who is sending and receiving a bunch of emails to and from POIs may be a POI themselves. 
 
-These features were made by dividing the total number of messages from/to a POI by the total number of from/to messages. As an example, imagine that Ken lay, the founder of Enron, sent a total of 500 emails. Of those 500 emails, 400 of them were to known POIs. Based on these numbers, Ken Lay would have a `from_this_person_to_poi_ratio` of 0.8.
+These features were made by dividing the total number of messages from/to a POI by the total number of from/to messages. As an example, imagine that Ken Lay, the founder of Enron, sent a total of 500 emails. Of those 500 emails, 400 of them were to known POIs. Based on these numbers, Ken Lay would have a `from_this_person_to_poi_ratio` of 0.8.
 
 ### Feature Selection using SelectKBest
 In order to select the best features for the classifiers, SelectKBest was used. 
@@ -73,7 +73,7 @@ SelectKBest Scores:
  (0, 'deferral_payments')]
  ~~~
 
-Trial and error was sued to find the right amount of features to be used in the algorithm. I ultimately decided on using the top five. 
+Trial and error was used to find the right amount of features for the classifcation algorithm. I ultimately decided on using the top five. 
 Because `from_this_person_to_poi_ratio` was included in this top five, it was incorporated as a feature in the final algorithm
 
 ### Performance of New Features
