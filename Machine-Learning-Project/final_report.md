@@ -4,7 +4,7 @@ _Last Updated: 4/26/2018_
 ## Introduction
 After the fall of Enron on December 2, 2001, a massive data dump of information was released to the public following the Federal Energy Regulatory Commission's (FERC) investigation into the company. This dataset, known as the "Enron Corpus", contains over 600,000 emails from some of the top leadership at Enron.
 
-In this project, machine learning will be applied to this infamous Enron dataset. The goal is to create a classifier that can accurately identify whether an individual is a person of interest (POI) or not. A "person of interest" in the context of this prokect is an individual working at Enron who potentially had insider knowledge on the fraud that was occuring at Enron. For example, the CEO of Enron, Jefferey Skilling, would be considered a POI based upon his knowledge of the company and his fate following the investigation.
+In this project, machine learning will be applied to this infamous Enron dataset. The goal is to create a classifier that can accurately identify whether an individual is a person of interest (POI) or not. A "person of interest", in the context of this project, is an individual working at Enron who potentially had insider knowledge on the fraud that was occuring. For example, the CEO of Enron, Jefferey Skilling, would be considered a POI based upon his knowledge of the company and his fate following the investigation.
 
 Machine learning is the core mechanism that allows us to find and classify these POIs. It allows us to comb through thousands of data points and find the hidden relationships between them. These relationships result in being able to make a classifier that can identify whether an individual was a POI or not.
 
@@ -13,37 +13,41 @@ Before a machine learning classifier can be built, the dataset itself needs to b
 
 ### Basic Characteristics
 This section covers to basic characteristics of the dataset:
+
 * Total records: 146
 * Number of POIs: 18
 * Number of nonPOIs: 128
 * Number of features available: 21
+* Number of NaNs: 1358
+
+POIs only make up about 12.3% of the dataset. This characteristics is very important. Because the number of POIs is so small, extra care will need to be taken to ensure that the train and test sets have a equal percentage of POIs in both of them. 
 
 ### Outliers
 Addressing outliers is essential to ensure that the data is being as representative as possible for the classifiers. Howwever, due to the small size of the dataset, outliers should be treated in a very conservative manner. Only outliers that may be due to input error or other collection errors should be removed. 
 
-In order to find extreme outliers, each of the features were plotted as a histogram to view the distribution of the values. An outlier immediately revealed itself in the series of plots. 
+In order to find extreme outliers, each of the features were plotted as a histogram to view the distribution of the values. An outlier immediately revealed itself in the series of plots. Below is a histrogram of the slaraies of each person in the dataset:
 
 ![graph](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/Machine-Learning-Project/images/salary_outlier.png)
 
-Pulling the name of the record that had the max for these features showed that the entry was named `'TOTAL'`. Because this value is so much higher than any of the others in the distribution, this could be an entry left over when the financial data was imported into the python dictionary.  Because this record is the result of a collection error, the record is removed from the dataset.
+Pulling the name of the record that had the max salary showed that the entry was named `'TOTAL'` with a salary of $26,704,229. Because this value is so much higher than any of the others in the distribution, this could be an entry left over when the financial data was imported into the python dictionary.  Because this record is the result of a collection error, the record is removed from the dataset.
 
-After removing the `'TOTAL'` records, replotting the histograms revealed that there did not appear to be any other extreme outliers.
+After removing the `'TOTAL'` record, replotting the histograms revealed that there did not appear to be any other extreme outliers.
 
 ![graph](https://github.com/TCJulian/Data-Analyst-Nanodegree/blob/master/Machine-Learning-Project/images/salary.png)
 
 ### Missing Values
-Most classifiers will not work if there are `NaNs` present in the training and test data. As such, missing data needs to be dealt with before the dataset can be applied to the algorithms. 
+Most classifiers will not work if there are `NaNs` present in the training and test data. As such, missing data needs to be dealt with before the dataset can be applied to the machine learning algorithms. 
 
-Fortunately, the built in function provided by Udacity, `featureFormat`, already addresses any missing values in the dataset. As it retrieves the requested features from the dataset for the classifier, it sets any `NaNs` it encounters by setting them to zero. This ensures that every feature has a value and that no errors occur in the classification algorithms due to a missing value.
+Fortunately, the built-in function provided by Udacity, `featureFormat`, already addresses any missing values in the dataset. As it retrieves the requested features from the dataset for the classifier, it sets any `NaNs` it encounters to zero. This ensures that every feature has a value and that no errors occur in the classification algorithms due to a missing value.
 
 ## Feature Engineering and Selection
 ### New Features
-There were two new features that I made from the Enron dataset. The first one measured the ratio of emails a person recieved that were from POIs. The other measured the ratio of emails a person sent to POIs. It makes logical sense that a person who is sending and receiving a bunch of emails to and from POIs may be a POI themselves. 
+There were two new features that I made from the Enron dataset. The first one measured the ratio of emails a person recieved that were from POIs. The other measured the ratio of emails a person sent that were to POIs. It would make intuitive sense that a person who is sending and receiving a bunch of emails to and from POIs may be a POI themselves. Individuals with higher than average ratios in one or both of these features may flag them as a POI.
 
 These features were made by dividing the total number of messages from/to a POI by the total number of from/to messages. As an example, imagine that Ken Lay, the founder of Enron, sent a total of 500 emails. Of those 500 emails, 400 of them were to known POIs. Based on these numbers, Ken Lay would have a `from_this_person_to_poi_ratio` of 0.8.
 
 ### Feature Selection using SelectKBest
-In order to select the best features for the classifiers, SelectKBest was used. 
+As stated in the 'Basic Characteristics' section, there are a total of 21 features available to use in the classifiers. Adding the two features I created raises the number to 23.  In order to select the best features for the classifiers, SelectKBest was used to identify the most impactful features for the algorithm 
 
 The scores for each of the features, including the newly added features, are listed below:
 
